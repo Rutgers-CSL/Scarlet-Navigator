@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import Markdown from 'react-markdown';
 import { useNotesStore } from '@/lib/hooks/stores/useNotesStore';
+import { CourseID, SemesterID } from '@/types/models';
 
 interface NotesEditorProps {
-  id: string | number;
+  id: SemesterID | CourseID;
   showDisplayOption?: boolean;
   className?: string;
   title?: string;
@@ -21,6 +22,12 @@ export default function NotesEditor({
     notes[id]?.displayNextToSemester || false
   );
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  /**
+   * We don't want to see redundant notes on the board
+   * if the user has already added them to the board.
+   */
+  const showNotes = !showDisplayOption || !displayNextToSemester;
 
   useEffect(() => {
     if (textAreaRef.current) {
@@ -95,17 +102,27 @@ export default function NotesEditor({
           </div>
         </div>
       ) : (
-        <article
-          className='prose prose-sm cursor-pointer overflow-scroll rounded-md p-2 hover:bg-gray-100'
-          onClick={() => setIsEditing(true)}
-        >
-          {notes[id]?.note ? (
-            <Markdown>{notes[id].note}</Markdown>
-          ) : (
-            <span className='text-gray-500'>No notes added yet</span>
-          )}
-        </article>
+        <NotesDisplay notes={notes[id]?.note} showNotes={showNotes} />
       )}
     </div>
+  );
+}
+
+function NotesDisplay({
+  notes,
+  showNotes,
+}: {
+  notes: string;
+  showNotes: boolean;
+}) {
+  if (!showNotes) return <span></span>;
+
+  if (notes?.length === 0)
+    return <span className='text-gray-500'>No notes added yet</span>;
+
+  return (
+    <article className='prose prose-sm overflow-scroll rounded-md p-2'>
+      <Markdown>{notes}</Markdown>
+    </article>
   );
 }
