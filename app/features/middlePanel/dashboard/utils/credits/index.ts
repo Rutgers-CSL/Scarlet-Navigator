@@ -5,6 +5,13 @@ import {
   CoursesBySemesterID,
 } from '@/types/models';
 
+/**
+ * TODO:
+ * I believe that this should function should just take in the courses array.
+ * Why does it need to take in an array of course IDs and then a courses map?
+ *
+ * This seems a bit inelegant.
+ */
 export function calculateSemesterCredits(
   courseIds: CourseID[],
   courses: Record<CourseID, Course>
@@ -15,6 +22,12 @@ export function calculateSemesterCredits(
   }, 0);
 }
 
+/**
+ * TODO:
+ * The coursesBySemesterID variable needs to be deleted.
+ * It is redundant and a duplicate data structure,
+ * and I'm not sure why I've made it this way.
+ */
 export function calculateRunningCredits(
   semesterOrder: SemesterID[],
   coursesBySemesterID: CoursesBySemesterID,

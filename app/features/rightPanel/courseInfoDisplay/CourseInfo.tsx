@@ -1,7 +1,7 @@
-import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import { useState } from 'react';
+import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import CoreInput from '@/app/components/CoreInput';
-import NotesArea from './components/NotesArea';
+import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
 
 interface CourseInfoProps {
   id: string;
@@ -11,11 +11,13 @@ export default function CourseInfo({ id }: CourseInfoProps) {
   const currentCourse = useScheduleStore((state) => state.courses[id]);
   const globalCores = useScheduleStore((state) => state.globalCores);
   const updateCourse = useScheduleStore((state) => state.updateCourse);
+  const gradePoints = useSettingsStore((state) => state.gradePoints);
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
     name: '',
     credits: 0,
     cores: [] as string[],
+    grade: null as string | null,
   });
   const [currentCore, setCurrentCore] = useState('');
 
@@ -23,7 +25,7 @@ export default function CourseInfo({ id }: CourseInfoProps) {
     return <div className='p-4 text-gray-500'>Loading course... {id}</div>;
   }
 
-  const { name, credits, cores } = currentCourse;
+  const { name, credits, cores, grade } = currentCourse;
 
   const handleEditToggle = () => {
     if (!isEditing) {
@@ -31,6 +33,7 @@ export default function CourseInfo({ id }: CourseInfoProps) {
         name,
         credits,
         cores: cores || [],
+        grade,
       });
     }
     setIsEditing(!isEditing);
@@ -41,6 +44,7 @@ export default function CourseInfo({ id }: CourseInfoProps) {
       name: editForm.name,
       credits: editForm.credits,
       cores: editForm.cores,
+      grade: editForm.grade,
     });
     setIsEditing(false);
   };
@@ -77,7 +81,40 @@ export default function CourseInfo({ id }: CourseInfoProps) {
               credits
             )}
           </p>
+          <p>
+            <span className='font-medium'>Grade:</span>{' '}
+            {isEditing ? (
+              <select
+                value={editForm.grade || ''}
+                onChange={(e) =>
+                  setEditForm({
+                    ...editForm,
+                    grade: e.target.value || null,
+                  })
+                }
+                className='select select-bordered select-sm'
+              >
+                <option value=''>None</option>
+                {Object.keys(gradePoints).map((grade) => (
+                  <option key={grade} value={grade}>
+                    {grade}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              grade || 'N/A'
+            )}
+          </p>
         </div>
+      </div>
+
+      <div className='flex justify-center'>
+        <button
+          onClick={isEditing ? handleSubmit : handleEditToggle}
+          className='max-w-[200px] rounded-lg bg-gray-200 px-4 py-2 transition-colors hover:bg-gray-300'
+        >
+          {isEditing ? 'Save Changes' : 'Edit Course'}
+        </button>
       </div>
 
       <div>
@@ -114,17 +151,6 @@ export default function CourseInfo({ id }: CourseInfoProps) {
           </div>
         )}
       </div>
-
-      <div className='flex justify-center'>
-        <button
-          onClick={isEditing ? handleSubmit : handleEditToggle}
-          className='max-w-[200px] rounded-lg bg-gray-200 px-4 py-2 transition-colors hover:bg-gray-300'
-        >
-          {isEditing ? 'Save Changes' : 'Edit Course'}
-        </button>
-      </div>
-
-      <NotesArea id={id} />
     </div>
   );
 }

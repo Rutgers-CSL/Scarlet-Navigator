@@ -166,7 +166,12 @@ export function ScheduleBoard({
                   label={
                     minimal
                       ? undefined
-                      : `${useScheduleStore.getState().semesterByID[containerId]?.title || containerId} (${calculateSemesterCredits(coursesBySemesterID[containerId] || [], courses)} credits, Total: ${calculateRunningCredits(semesterOrder, coursesBySemesterID, courses, containerId)})`
+                      : `${
+                          useScheduleStore.getState().semesterByID[containerId]
+                            ?.title || containerId
+                        }
+                          (${calculateSemesterCredits(coursesBySemesterID[containerId] || [], courses)} credits,
+                          Total: ${calculateRunningCredits(semesterOrder, coursesBySemesterID, courses, containerId)})`
                   }
                   columns={columns}
                   items={coursesBySemesterID[containerId]}

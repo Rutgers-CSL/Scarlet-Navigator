@@ -7,6 +7,7 @@ import { Handle, Remove } from './components';
 
 import styles from './Item.module.scss';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
+import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
 import { CourseID } from '@/types/models';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import CoreList from '@/app/components/CoreList';
@@ -140,7 +141,15 @@ export const Item = React.memo(
             }}
           >
             <div className='flex flex-col gap-2'>
-              <div>{value}</div>
+              <div className='flex items-center gap-2'>
+                <div>{value}</div>
+                {course?.grade &&
+                  !useSettingsStore.getState().visuals.showGrades && (
+                    <div className='text-sm text-gray-600'>
+                      ({course.grade})
+                    </div>
+                  )}
+              </div>
               {showCores && course && course.cores.length > 0 && (
                 <div>
                   <CoreList color='blue' cores={course.cores} />
