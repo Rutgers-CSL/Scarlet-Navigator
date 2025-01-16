@@ -2,7 +2,10 @@ import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import { useState, useRef } from 'react';
 import NotesArea from './components/NotesArea';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
-import { calculateSemesterCredits, calculateRunningCredits } from '@/app/features/middlePanel/dashboard/utils/credits';
+import {
+  calculateSemesterCredits,
+  calculateRunningCredits,
+} from '@/app/features/middlePanel/dashboard/utils/credits';
 import CoreList from '@/app/components/CoreList';
 
 interface SemesterInfoProps {
@@ -15,7 +18,9 @@ export default function SemesterInfo({ id }: SemesterInfoProps) {
   const removeSemester = useScheduleStore((state) => state.removeSemester);
   const setCurrentInfo = useAuxiliaryStore((state) => state.setCurrentInfo);
   const courses = useScheduleStore((state) => state.courses);
-  const coursesBySemesterID = useScheduleStore((state) => state.coursesBySemesterID);
+  const coursesBySemesterID = useScheduleStore(
+    (state) => state.coursesBySemesterID
+  );
   const semesterOrder = useScheduleStore((state) => state.semesterOrder);
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
@@ -28,8 +33,16 @@ export default function SemesterInfo({ id }: SemesterInfoProps) {
   }
 
   const { title } = currentSemester;
-  const semesterCredits = calculateSemesterCredits(coursesBySemesterID[id] || [], courses);
-  const totalCredits = calculateRunningCredits(semesterOrder, coursesBySemesterID, courses, id);
+  const semesterCredits = calculateSemesterCredits(
+    coursesBySemesterID[id] || [],
+    courses
+  );
+  const totalCredits = calculateRunningCredits(
+    semesterOrder,
+    coursesBySemesterID,
+    courses,
+    id
+  );
 
   // Get all cores fulfilled in this semester
   const semesterCores = new Set<string>();
@@ -105,14 +118,15 @@ export default function SemesterInfo({ id }: SemesterInfoProps) {
 
       <div className='space-y-2'>
         <div>
-          <span className='font-medium'>Semester Credits:</span> {semesterCredits}
+          <span className='font-medium'>Semester Credits:</span>{' '}
+          {semesterCredits}
         </div>
         <div>
           <span className='font-medium'>Total Credits:</span> {totalCredits}
         </div>
         {semesterCores.size > 0 && (
           <div>
-            <span className='font-medium block mb-1'>Cores Fulfilled:</span>
+            <span className='mb-1 block font-medium'>Cores Fulfilled:</span>
             <CoreList color='blue' cores={Array.from(semesterCores)} />
           </div>
         )}

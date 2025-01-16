@@ -6,7 +6,6 @@ export enum STORE_NAMES {
   semesters = 'semesters',
 }
 
-
 /**
  * TODO:
  *
@@ -17,7 +16,7 @@ export enum STORE_NAMES {
  * One thing you can do to fix this is wherever you try to access
  * CoursesBySemesterID, replace it with a Store API that uses
  * the semester ID and returns semesterMap[semesterID].courses.
-*/
+ */
 
 type CourseID = string | UniqueIdentifier;
 type SemesterID = string | UniqueIdentifier;
@@ -37,6 +36,7 @@ export interface Course {
   name: string;
   credits: number;
   cores: string[];
+  grade: string | null;
 }
 
 export interface ScheduleState {

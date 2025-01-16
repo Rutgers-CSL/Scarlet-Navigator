@@ -82,6 +82,7 @@ export const useScheduleStore = create<ScheduleStore>()(
             name: name.trim(),
             credits: credits,
             cores: cores,
+            grade: null,
           };
 
           const updatedCores = new Set(state.globalCores);
@@ -257,6 +258,7 @@ function createCourseArray() {
       name: `Course ${++counter}`,
       credits: Math.floor(Math.random() * 4) + 1,
       cores: [`CORE${i + 1}`],
+      grade: null,
     };
   });
 }
@@ -272,6 +274,7 @@ const semesterArray: Semester[] = Array.from(
     id: `semester${i}`,
     courses: allCourses[i].map((course) => course.id),
     title: `Semester ${i + 1}`,
+    grade: null,
   })
 );
 
