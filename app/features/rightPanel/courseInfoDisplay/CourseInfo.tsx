@@ -135,10 +135,11 @@ export default function CourseInfo({ id }: CourseInfoProps) {
               cores.map((core) => (
                 <span
                   key={core}
-                  className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${globalCores.has(core)
-                    ? 'bg-blue-100 text-blue-800'
-                    : 'bg-green-100 text-green-800'
-                    }`}
+                  className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                    globalCores.has(core)
+                      ? 'bg-blue-100 text-blue-800'
+                      : 'bg-green-100 text-green-800'
+                  }`}
                 >
                   {core}
                 </span>
