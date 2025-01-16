@@ -3,11 +3,9 @@
 
 echo "🔍 Running pre-commit checks..."
 
-echo "\n🎨 Checking code formatting..."
-pnpm run format || {
-    echo "❌ Code formatting check failed. Please run 'pnpm run format:fix' to fix formatting issues."
-    exit 1
-}
+echo "\n🎨 Fixing code formatting..."
+pnpm run format:fix
+git add -A
 
 echo "\n🔬 Running ESLint..."
 pnpm run lint || {
