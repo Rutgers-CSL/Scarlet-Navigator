@@ -1,7 +1,8 @@
 import { useTransition } from 'react';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
-import InfoDisplay from './courseInfoDisplay/InfoDisplay';
+import InfoDisplay from './infoDisplay/InfoDisplay';
 import FulfillmentTracker from './fulfillmentTracker/FulfillmentTracker';
+import Settings from './settings/Settings';
 
 type Tab = 'info' | 'tracker' | 'settings';
 
@@ -68,11 +69,7 @@ export default function RightPanel() {
         >
           {activeTab === 'info' && <InfoDisplay />}
           {activeTab === 'tracker' && <FulfillmentTracker />}
-          {activeTab === 'settings' && (
-            <div className='p-4 text-gray-500'>
-              Settings panel coming soon...
-            </div>
-          )}
+          {activeTab === 'settings' && <Settings />}
         </div>
       </div>
     </div>
