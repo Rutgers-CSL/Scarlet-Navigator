@@ -29,9 +29,12 @@ import { Button } from './components/ui';
 import {
   calculateSemesterCredits,
   calculateRunningCredits,
+  getStudentStatus,
 } from './utils/credits';
 import { getColor, dropAnimation } from './utils/dnd';
 import NotesBox from './components/NotesBox';
+import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
+import { calculateSemesterGPA } from './utils/gpa';
 
 function UndoRedoControls() {
   const { undo, redo, past, future } = useHistoryStore();
@@ -100,6 +103,21 @@ export function ScheduleBoard({
     (state) => state.coursesBySemesterID
   );
   const courses = useScheduleStore((state) => state.courses);
+  const semesterByID = useScheduleStore((state) => state.semesterByID);
+
+  const showGPAsInSemesterTitles = useSettingsStore(
+    (state) => state.visuals.showGPAsInSemesterTitles
+  );
+  const goalCreditsForGraduation = useSettingsStore(
+    (state) => state.visuals.goalCreditsForGraduation
+  );
+  const showQuarterlyStudentTitlesOnSemesterTitles = useSettingsStore(
+    (state) => state.visuals.showQuarterlyStudentTitlesOnSemesterTitles
+  );
+  const gradePoints = useSettingsStore((state) => state.gradePoints);
+  const showCoreLabels = useSettingsStore(
+    (state) => state.visuals.showCoreLabelsInCoursesInsideScheduleBoard
+  );
 
   const { recentlyMovedToNewContainer, activeID } =
     useAuxiliaryStore.getState();
@@ -140,6 +158,47 @@ export function ScheduleBoard({
   const { handleAddColumn, handleEditSemester, handlePopulateSchedule } =
     useScheduleHandlers();
 
+  const getContainerTitle = (containerId: UniqueIdentifier) => {
+    const title = semesterByID[containerId as string]?.title || 'Untitled';
+
+    if (containerId === PLACEHOLDER_ID) return title;
+
+    const hasUngraded = (coursesBySemesterID[containerId] || []).some(
+      (courseId) => courses[courseId]?.grade === null
+    );
+
+    const gpaVal = hasUngraded
+      ? 'N/A'
+      : calculateSemesterGPA(
+          coursesBySemesterID[containerId] || [],
+          courses,
+          gradePoints
+        );
+
+    const gpaInfo = showGPAsInSemesterTitles ? ` (GPA: ${gpaVal})` : '';
+
+    const credits = calculateSemesterCredits(
+      coursesBySemesterID[containerId] || [],
+      courses
+    );
+
+    const totalCredits = calculateRunningCredits(
+      semesterOrder,
+      coursesBySemesterID,
+      courses,
+      containerId
+    );
+
+    const studentStatus = showQuarterlyStudentTitlesOnSemesterTitles
+      ? ` - ${getStudentStatus(totalCredits)}`
+      : '';
+
+    return `${title}${studentStatus}
+            ${gpaInfo}
+            (${credits} credits,
+            Total: ${totalCredits} / ${goalCreditsForGraduation})`;
+  };
+
   return (
     <>
       <div
@@ -165,17 +224,7 @@ export function ScheduleBoard({
                   <DroppableContainer
                     key={containerId}
                     id={containerId}
-                    label={
-                      minimal
-                        ? undefined
-                        : `${
-                            useScheduleStore.getState().semesterByID[
-                              containerId
-                            ]?.title || containerId
-                          }
-                            (${calculateSemesterCredits(coursesBySemesterID[containerId] || [], courses)} credits,
-                            Total: ${calculateRunningCredits(semesterOrder, coursesBySemesterID, courses, containerId)})`
-                    }
+                    label={getContainerTitle(containerId)}
                     columns={columns}
                     items={coursesBySemesterID[containerId]}
                     scrollable={scrollable}
@@ -199,7 +248,7 @@ export function ScheduleBoard({
                             wrapperStyle={wrapperStyle}
                             renderItem={renderItem}
                             containerId={containerId}
-                            showCores={false}
+                            showCores={showCoreLabels}
                             getIndex={(id) => {
                               return 0;
                             }}

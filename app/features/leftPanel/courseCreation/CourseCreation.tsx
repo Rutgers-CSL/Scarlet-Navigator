@@ -38,7 +38,6 @@ export default function CourseCreation() {
   return (
     <div className='p-4'>
       <h1 className='mb-4 text-xl font-bold'>Course Creation</h1>
-
       <form onSubmit={handleSubmit} className='mb-6 space-y-4'>
         <div>
           <label className='mb-1 block text-sm font-medium'>

@@ -45,3 +45,29 @@ export function calculateRunningCredits(
   }
   return total;
 }
+
+/**
+ * Determine student status (freshman, sophomore, junior, senior) based on total credits
+ */
+export function getStudentStatus(totalCredits: number): string {
+  if (totalCredits < 30) return 'Freshman';
+  if (totalCredits < 60) return 'Sophomore';
+  if (totalCredits < 90) return 'Junior';
+  return 'Senior';
+}
+
+export function getHeaderColorClass(credits: number): string {
+  if (credits >= 90) {
+    // Senior
+    return 'bg-red-800 text-white';
+  } else if (credits >= 60) {
+    // Junior
+    return 'bg-red-600 text-white';
+  } else if (credits >= 30) {
+    // Sophomore
+    return 'bg-red-400 text-gray-900';
+  } else {
+    // Freshman
+    return 'bg-red-200 text-gray-900';
+  }
+}

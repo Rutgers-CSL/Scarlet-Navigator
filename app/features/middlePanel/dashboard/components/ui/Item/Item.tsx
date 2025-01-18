@@ -89,6 +89,10 @@ export const Item = React.memo(
 
       const setCurrentInfo = useAuxiliaryStore((state) => state.setCurrentInfo);
       const course = useScheduleStore((state) => state.courses[id as string]);
+      const showGrades = useSettingsStore((state) => state.visuals.showGrades);
+      const showCreditCountOnCourseTitles = useSettingsStore(
+        (state) => state.visuals.showCreditCountOnCourseTitles
+      );
 
       return (
         <li
@@ -143,12 +147,14 @@ export const Item = React.memo(
             <div className='flex flex-col gap-2'>
               <div className='flex items-center gap-2'>
                 <div>{value}</div>
-                {course?.grade &&
-                  !useSettingsStore.getState().visuals.showGrades && (
-                    <div className='text-sm text-gray-600'>
-                      ({course.grade})
-                    </div>
-                  )}
+                {course?.grade && showGrades && (
+                  <div className='text-sm text-gray-600'>({course.grade})</div>
+                )}
+                {course?.credits && showCreditCountOnCourseTitles && (
+                  <div className='text-sm text-gray-600'>
+                    ({course.credits} cr)
+                  </div>
+                )}
               </div>
               {showCores && course && course.cores.length > 0 && (
                 <div>

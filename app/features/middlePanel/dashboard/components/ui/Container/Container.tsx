@@ -17,6 +17,7 @@ type BaseProps = {
   shadow?: boolean;
   placeholder?: boolean;
   unstyled?: boolean;
+  headerClassName?: string;
   onRemove?(): void;
 };
 
@@ -51,6 +52,7 @@ export const Container = forwardRef(
       scrollable,
       shadow,
       unstyled,
+      headerClassName,
       ...props
     }: Props,
     ref
@@ -77,7 +79,7 @@ export const Container = forwardRef(
         onClick={onClick}
       >
         {label ? (
-          <div className={styles.Header}>
+          <div className={classNames(styles.Header, headerClassName)}>
             {label}
 
             {handleProps ? <Handle {...handleProps} /> : null}

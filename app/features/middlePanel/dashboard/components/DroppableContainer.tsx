@@ -3,6 +3,9 @@ import { useSortable } from '@dnd-kit/sortable';
 import { animateLayoutChanges } from '../utils/dnd';
 import { ContainerProps, Container } from './ui';
 import { CSS } from '@dnd-kit/utilities';
+import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
+import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
+import { calculateRunningCredits, getHeaderColorClass } from '../utils/credits';
 
 export default function DroppableContainer({
   children,
@@ -35,10 +38,31 @@ export default function DroppableContainer({
     },
     animateLayoutChanges,
   });
+
   const isOverContainer = over
     ? (id === over.id && active?.data.current?.type !== 'container') ||
       items.includes(over.id)
     : false;
+
+  const progressivelyDarken = useSettingsStore(
+    (state) => state.visuals.progressivelyDarkenSemestersBasedOnCreditGoal
+  );
+  const semesterOrder = useScheduleStore((state) => state.semesterOrder);
+  const coursesBySemesterID = useScheduleStore(
+    (state) => state.coursesBySemesterID
+  );
+  const courses = useScheduleStore((state) => state.courses);
+
+  let headerColorClass = '';
+  if (progressivelyDarken && typeof id === 'string' && id !== 'placeholder') {
+    const totalCredits = calculateRunningCredits(
+      semesterOrder,
+      coursesBySemesterID,
+      courses,
+      id
+    );
+    headerColorClass = getHeaderColorClass(totalCredits);
+  }
 
   return (
     <Container
@@ -55,6 +79,7 @@ export default function DroppableContainer({
         ...listeners,
       }}
       columns={columns}
+      headerClassName={headerColorClass}
       {...props}
     >
       {children}
