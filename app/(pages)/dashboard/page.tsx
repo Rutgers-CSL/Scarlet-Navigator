@@ -137,9 +137,7 @@ const Page: React.FC = () => {
         <div
           className='group relative w-1 cursor-col-resize hover:bg-blue-400'
           onMouseDown={() => setIsDraggingLeft(true)}
-        >
-          <div className='absolute left-1/2 top-1/2 h-8 w-4 -translate-x-1/2 -translate-y-1/2 transform rounded bg-gray-300 opacity-0 transition-opacity group-hover:bg-blue-400 group-hover:opacity-100' />
-        </div>
+        />
 
         {/* Middle Panel */}
         <div className='h-full flex-grow overflow-y-scroll transition-[overflow] duration-300'>
@@ -150,9 +148,7 @@ const Page: React.FC = () => {
         <div
           className='group relative w-1 cursor-col-resize hover:bg-blue-400'
           onMouseDown={() => setIsDraggingRight(true)}
-        >
-          <div className='absolute left-1/2 top-1/2 h-8 w-4 -translate-x-1/2 -translate-y-1/2 transform rounded bg-gray-300 opacity-0 transition-opacity group-hover:bg-blue-400 group-hover:opacity-100' />
-        </div>
+        />
 
         {/* Right Panel */}
         <div
