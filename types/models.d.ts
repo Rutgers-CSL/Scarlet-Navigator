@@ -55,7 +55,7 @@ TODO:
 Certainly, I think the Schedule store API can be improved greatly.
 As I code to reach the MVP, I will set aside this task to a later point.
 
-I think the overall engine API can be improved as well. However, the featureset
+I think the overall engine API can be improved as well. However, the feature set
 of the MVP is not so crazy that it'd be near impossible to refactor. I will have
 some time at the end of the semester to clean this up, and make sure that the
 foundation of this project is insured for the future
@@ -70,7 +70,6 @@ export interface ScheduleActions {
   ) => void;
   setCourses: (courses: CourseByID) => void;
   addCourse: (name: string, credits: number, cores: string[]) => CourseID;
-  addGlobalCores: (cores: string[]) => void;
   handleDragOperation: (
     semesters: CoursesBySemesterID,
     isNewContainerMove?: boolean
@@ -78,6 +77,37 @@ export interface ScheduleActions {
   updateCourse: (id: CourseID, updates: Partial<Course>) => void;
   updateSemester: (id: SemesterID, updates: Partial<Semester>) => void;
   removeSemester: (id: SemesterID) => void;
+  undo: () => void;
+  redo: () => void;
+  ___TEMP___populate: () => void;
+  ______reset______(): void;
+}
+
+export interface _ScheduleActions {
+  // --- Semesters ---
+  reorderSemesters: (semOrder: SemesterOrder) => void;
+  updateSemester: (id: SemesterID, updates: Partial<Semester>) => void;
+  removeSemester: (id: SemesterID) => void;
+
+  // --- Courses ---
+  addCourseToSemester: (
+    name: string,
+    credits: number,
+    cores: string[]
+  ) => CourseID;
+
+  // setCoursesBySemesterID: (
+  //   semesters: CoursesBySemesterID,
+  //   skipHistory?: boolean
+  // ) => void;
+  setCourses: (courses: CourseByID) => void;
+
+  handleDragOperation: (
+    semesters: CoursesBySemesterID,
+    isNewContainerMove?: boolean
+  ) => void;
+  updateCourse: (id: CourseID, updates: Partial<Course>) => void;
+
   undo: () => void;
   redo: () => void;
   ___TEMP___populate: () => void;

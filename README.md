@@ -24,14 +24,14 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 - [Next.js](Next.js)
 - [React]()
+- [DnD Kit]() - Drag and Drop
 - [Auth.js]()
 - [Zustand](https://github.com/pmndrs/zustand) - State management
 - [Vercel]()
-- [MongoDB Atlas]() - Serverless instance
+- [Fuse.js]()
 
 ### UI
 
-- [NextUI]()
 - [Tailwind CSS]()
 - [DaisyUI]()
 

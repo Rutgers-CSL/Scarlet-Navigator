@@ -1,11 +1,11 @@
-import SortableItem from '@/app/features/middlePanel/dashboard/components/SortableItem';
+import SortableItem from '@/app/features/middlePanel/dashboard/components/dnd-core/SortableItem';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { COURSE_CREATION_CONTAINER_ID } from '../CourseCreation';
-import DroppableContainer from '@/app/features/middlePanel/dashboard/components/DroppableContainer';
+import { COURSE_POOL_CONTAINER_ID } from '../CourseCreation';
+import DroppableContainer from '@/app/features/middlePanel/dashboard/components/dnd-core/DroppableContainer';
 
 function CoursePool() {
   const coursesBySemesterID = useScheduleStore(
@@ -17,17 +17,17 @@ function CoursePool() {
     <div className='mt-4'>
       <h2 className='mb-4 text-lg font-semibold'>Course Pool</h2>
       <DroppableContainer
-        id={COURSE_CREATION_CONTAINER_ID}
-        items={coursesBySemesterID[COURSE_CREATION_CONTAINER_ID] || []}
+        id={COURSE_POOL_CONTAINER_ID}
+        items={coursesBySemesterID[COURSE_POOL_CONTAINER_ID] || []}
       >
         <SortableContext
-          items={coursesBySemesterID[COURSE_CREATION_CONTAINER_ID] || []}
+          items={coursesBySemesterID[COURSE_POOL_CONTAINER_ID] || []}
           strategy={verticalListSortingStrategy}
         >
-          {(coursesBySemesterID[COURSE_CREATION_CONTAINER_ID] || []).map(
+          {(coursesBySemesterID[COURSE_POOL_CONTAINER_ID] || []).map(
             (value) => (
               <SortableItem
-                containerId={COURSE_CREATION_CONTAINER_ID}
+                containerId={COURSE_POOL_CONTAINER_ID}
                 key={value}
                 id={value}
                 index={0}

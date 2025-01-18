@@ -3,7 +3,7 @@
 import RightPanel from '@/app/features/rightPanel/RightPanel';
 import LeftPanel from '@/app/features/leftPanel/LeftPanel';
 import { MiddlePanel } from '@/app/features/middlePanel/MiddlePanel';
-import { coordinateGetter } from '@/app/features/middlePanel/dashboard/components/multipleContainersKeyboardCoordinates';
+import { coordinateGetter } from '@/app/features/middlePanel/dashboard/components/dnd-core/multipleContainersKeyboardCoordinates';
 import { collisionDetectionStrategy as detectionStrategy } from '@/app/features/middlePanel/dashboard/utils/dnd';
 import useDragHandlers from '@/app/features/middlePanel/dashboard/helpers/hooks/useDragHandlers';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';

@@ -2,7 +2,7 @@ import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import { useState } from 'react';
 import CoreInput from '@/app/components/CoreInput';
 
-export const COURSE_CREATION_CONTAINER_ID = 'COURSE_CREATION_CONTAINER_ID';
+export const COURSE_POOL_CONTAINER_ID = 'COURSE_POOL_CONTAINER_ID';
 export const COURSE_CREATION_COURSE_ID = '!_new_c_!';
 
 export default function CourseCreation() {

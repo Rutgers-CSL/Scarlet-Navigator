@@ -15,17 +15,17 @@ import {
   SortingStrategy,
   rectSortingStrategy,
 } from '@dnd-kit/sortable';
-import { coordinateGetter as multipleContainersCoordinateGetter } from './components/multipleContainersKeyboardCoordinates';
-import SortableItem from './components/SortableItem';
+import { coordinateGetter as multipleContainersCoordinateGetter } from './components/dnd-core/multipleContainersKeyboardCoordinates';
+import SortableItem from './components/dnd-core/SortableItem';
 import useOverlayComponents from './helpers/hooks/useOverlayComponents';
-import DroppableContainer from './components/DroppableContainer';
+import DroppableContainer from './components/dnd-core/DroppableContainer';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 import useHistoryStore from '@/lib/hooks/stores/useHistoryStore';
 import useScheduleHandlers from './helpers/hooks/useScheduleHandlers';
 import { EMPTY, PLACEHOLDER_ID } from '@/lib/constants';
 import { CoursesBySemesterID } from '@/types/models';
-import { Button } from './components/ui';
+import { Button } from './components/dnd-core';
 import {
   calculateSemesterCredits,
   calculateRunningCredits,

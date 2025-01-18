@@ -1,9 +1,9 @@
 import useMountStatus from '@/lib/hooks/useMountStatus';
 import { UniqueIdentifier } from '@dnd-kit/core';
 import { useSortable } from '@dnd-kit/sortable';
-import { Item } from './ui';
-import { getColor } from '../utils/dnd';
-import useScheduleHandlers from '../helpers/hooks/useScheduleHandlers';
+import { Item } from './Item/Item';
+import { getColor } from '../../utils/dnd';
+import useScheduleHandlers from '../../helpers/hooks/useScheduleHandlers';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 
 interface SortableItemProps {

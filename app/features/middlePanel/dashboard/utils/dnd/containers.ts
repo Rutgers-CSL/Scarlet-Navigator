@@ -1,4 +1,4 @@
-import { COURSE_CREATION_CONTAINER_ID } from '@/app/features/leftPanel/courseCreation/CourseCreation';
+import { COURSE_POOL_CONTAINER_ID } from '@/app/features/leftPanel/courseCreation/CourseCreation';
 import { CoursesBySemesterID } from '@/types/models';
 import { UniqueIdentifier } from '@dnd-kit/core';
 
@@ -17,7 +17,7 @@ export const findContainer = (
 export const getIndex = (items: CoursesBySemesterID, id: UniqueIdentifier) => {
   const container = findContainer(items, id);
 
-  if (container === COURSE_CREATION_CONTAINER_ID) {
+  if (container === COURSE_POOL_CONTAINER_ID) {
     return 0;
   }
 

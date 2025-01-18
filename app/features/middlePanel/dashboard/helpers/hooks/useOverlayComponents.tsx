@@ -1,6 +1,6 @@
 import { UniqueIdentifier } from '@dnd-kit/core';
 import React from 'react';
-import { Container, Item } from '../../components/ui';
+import { Container, Item } from '../../components/dnd-core';
 import { findContainer, getIndex } from '../../utils/dnd';
 import { CoursesBySemesterID } from '@/types/models';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
@@ -9,7 +9,7 @@ import {
   calculateRunningCredits,
 } from '../../utils/credits';
 
-import { COURSE_CREATION_CONTAINER_ID } from '@/app/features/leftPanel/courseCreation/CourseCreation';
+import { COURSE_POOL_CONTAINER_ID } from '@/app/features/leftPanel/courseCreation/CourseCreation';
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
 
 export const COLUMNS_DEPRECATED_DO_NOT_USE = 5;
@@ -31,7 +31,7 @@ export default function useOverlayComponents(
   function renderSortableItemDragOverlay(id: UniqueIdentifier) {
     const courseName = courses[id]?.name ?? 'Loading...';
     const sourceContainer = findContainer(items, id) as string;
-    const isFromCoursePool = sourceContainer === COURSE_CREATION_CONTAINER_ID;
+    const isFromCoursePool = sourceContainer === COURSE_POOL_CONTAINER_ID;
 
     return (
       <Item
