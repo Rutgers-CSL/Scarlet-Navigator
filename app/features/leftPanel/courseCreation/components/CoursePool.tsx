@@ -1,11 +1,11 @@
-import SortableItem from '@/app/features/middlePanel/dashboard/components/dnd-core/SortableItem';
+import { SortableItem } from '@/app/components/dnd-core/dnd-core-components/SortableItem';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { COURSE_POOL_CONTAINER_ID } from '../CourseCreation';
-import DroppableContainer from '@/app/features/middlePanel/dashboard/components/dnd-core/DroppableContainer';
+import { DroppableContainer } from '@/app/components/dnd-core/dnd-core-components/DroppableContainer';
 
 function CoursePool() {
   const coursesBySemesterID = useScheduleStore(

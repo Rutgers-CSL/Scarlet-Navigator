@@ -1,5 +1,5 @@
 import { COURSE_POOL_CONTAINER_ID } from '@/app/features/leftPanel/courseCreation/CourseCreation';
-import { CoursesBySemesterID } from '@/types/models';
+import { CoursesBySemesterID } from '@/lib/types/models';
 import { UniqueIdentifier } from '@dnd-kit/core';
 
 export const findContainer = (

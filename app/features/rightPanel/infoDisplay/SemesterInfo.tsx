@@ -12,7 +12,7 @@ import {
 } from '@/app/features/middlePanel/dashboard/utils/gpa';
 import CoreList from '@/app/components/CoreList';
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
-import { CourseID } from '@/types/models';
+import { CourseID } from '@/lib/types/models';
 
 interface SemesterInfoProps {
   id: string;

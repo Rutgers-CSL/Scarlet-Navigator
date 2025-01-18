@@ -3,7 +3,7 @@ import {
   SemesterID,
   Course,
   CoursesBySemesterID,
-} from '@/types/models';
+} from '@/lib/types/models';
 
 /**
  * TODO:

@@ -8,7 +8,7 @@ import {
   ProgramOfStudy,
   SemesterID,
   Course,
-} from '@/types/models';
+} from '@/lib/types/models';
 import ConfirmationModal from '@/app/components/ConfirmationModal';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 

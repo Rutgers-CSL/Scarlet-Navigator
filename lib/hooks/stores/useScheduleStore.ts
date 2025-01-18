@@ -12,7 +12,7 @@ import {
   Semester,
   SemesterID,
   SemesterOrder,
-} from '@/types/models';
+} from '@/lib/types/models';
 import { COURSE_POOL_CONTAINER_ID } from '@/app/features/leftPanel/courseCreation/CourseCreation';
 import useHistoryStore from './useHistoryStore';
 import { createDummySchedule } from '@/lib/utils';

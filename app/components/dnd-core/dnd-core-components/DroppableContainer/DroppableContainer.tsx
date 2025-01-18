@@ -1,14 +1,14 @@
 import { UniqueIdentifier } from '@dnd-kit/core';
 import { useSortable } from '@dnd-kit/sortable';
-import { animateLayoutChanges } from '../../utils/dnd';
-import { ContainerProps, Container } from '.';
+import { animateLayoutChanges } from '../../dnd-utils';
+import { ContainerProps, Container } from '../..';
 import { CSS } from '@dnd-kit/utilities';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
 import {
   calculateRunningCredits,
   getHeaderColorClass,
-} from '../../utils/credits';
+} from '../../../../features/middlePanel/dashboard/utils/credits';
 
 export default function DroppableContainer({
   children,

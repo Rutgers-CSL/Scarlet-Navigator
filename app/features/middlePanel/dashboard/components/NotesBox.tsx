@@ -1,6 +1,6 @@
 import { useNotesStore } from '@/lib/hooks/stores/useNotesStore';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
-import { SemesterID } from '@/types/models';
+import { SemesterID } from '@/lib/types/models';
 import NotesEditor from '@/app/components/NotesEditor';
 
 function NotesBox({ semesterID }: { semesterID: SemesterID }) {

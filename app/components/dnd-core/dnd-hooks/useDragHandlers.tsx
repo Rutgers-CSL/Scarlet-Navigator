@@ -1,9 +1,9 @@
 import { DragOverEvent } from '@dnd-kit/core';
 import React, { useRef, useEffect } from 'react';
-import { findContainer, getNextContainerId } from '../../utils/dnd';
+import { findContainer, getNextContainerId } from '../dnd-utils';
 import { arrayMove } from '@dnd-kit/sortable';
 import { unstable_batchedUpdates } from 'react-dom';
-import { CoursesBySemesterID, SemesterOrder } from '@/types/models';
+import { CoursesBySemesterID, SemesterOrder } from '@/lib/types/models';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 import { PLACEHOLDER_ID, TRASH_ID } from '@/lib/constants';

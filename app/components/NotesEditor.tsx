@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Markdown from 'react-markdown';
 import { useNotesStore } from '@/lib/hooks/stores/useNotesStore';
-import { CourseID, SemesterID } from '@/types/models';
+import { CourseID, SemesterID } from '@/lib/types/models';
 
 interface NotesEditorProps {
   id: SemesterID | CourseID;

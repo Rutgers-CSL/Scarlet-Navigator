@@ -1,6 +1,6 @@
 'use client';
 
-import { SemesterID, CourseID } from '@/types/models';
+import { SemesterID, CourseID } from '@/lib/types/models';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 

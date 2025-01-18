@@ -90,7 +90,7 @@ export interface _ScheduleActions {
   removeSemester: (id: SemesterID) => void;
 
   // --- Courses ---
-  addCourseToSemester: (
+  addNewCourseToCoursePool: (
     name: string,
     credits: number,
     cores: string[]

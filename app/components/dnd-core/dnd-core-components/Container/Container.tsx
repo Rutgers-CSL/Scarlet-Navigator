@@ -3,7 +3,7 @@ import React, { forwardRef } from 'react';
 import classNames from 'classnames';
 
 import styles from './Container.module.scss';
-import { Handle } from '../Item/components/Handle/Handle';
+import { Handle } from '../Item/components/Handle';
 
 type BaseProps = {
   children: React.ReactNode;

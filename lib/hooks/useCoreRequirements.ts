@@ -2,7 +2,7 @@
 
 import { useScheduleStore } from './stores/useScheduleStore';
 import { useProgramFulfillment } from './stores/useProgramFulfillment';
-import { Course, CoreCategory, CoreRequirement } from '@/types/models';
+import { Course, CoreCategory, CoreRequirement } from '@/lib/types/models';
 
 /**
  * interface ProgramOfStudy {

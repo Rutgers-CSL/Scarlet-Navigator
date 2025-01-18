@@ -1,13 +1,13 @@
 import { UniqueIdentifier } from '@dnd-kit/core';
 import React from 'react';
-import { Container, Item } from '../../components/dnd-core';
-import { findContainer, getIndex } from '../../utils/dnd';
-import { CoursesBySemesterID } from '@/types/models';
+import { Container, Item } from '..';
+import { findContainer, getIndex } from '../dnd-utils';
+import { CoursesBySemesterID } from '@/lib/types/models';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import {
   calculateSemesterCredits,
   calculateRunningCredits,
-} from '../../utils/credits';
+} from '../../../features/middlePanel/dashboard/utils/credits';
 
 import { COURSE_POOL_CONTAINER_ID } from '@/app/features/leftPanel/courseCreation/CourseCreation';
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';

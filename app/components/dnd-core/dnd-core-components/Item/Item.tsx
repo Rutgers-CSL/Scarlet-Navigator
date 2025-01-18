@@ -8,7 +8,7 @@ import { Handle, Remove } from './components';
 import styles from './Item.module.scss';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
-import { CourseID } from '@/types/models';
+import { CourseID } from '@/lib/types/models';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import CoreList from '@/app/components/CoreList';
 

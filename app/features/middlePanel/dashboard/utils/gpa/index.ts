@@ -1,4 +1,4 @@
-import { Course, CourseID } from '@/types/models';
+import { Course, CourseID } from '@/lib/types/models';
 import { GradePointMap } from '@/lib/hooks/stores/useSettingsStore';
 
 /**

@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { ScheduleState } from '@/types/models';
+import { ScheduleState } from '@/lib/types/models';
 import { useScheduleStore } from './useScheduleStore';
 
 type HistoryState = {

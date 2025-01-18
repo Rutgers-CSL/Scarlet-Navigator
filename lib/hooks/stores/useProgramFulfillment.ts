@@ -8,7 +8,7 @@ import {
   CoreCategory,
   CoreRequirement,
   ProgramOfStudy,
-} from '@/types/models';
+} from '@/lib/types/models';
 
 type ProgramFulfillmentStore = ProgramFulfillmentState &
   ProgramFulfillmentActions;

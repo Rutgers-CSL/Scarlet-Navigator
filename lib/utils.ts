@@ -8,7 +8,7 @@ import {
   ScheduleState,
   CourseByID,
   CoursesBySemesterID,
-} from '@/types/models';
+} from '@/lib/types/models';
 
 export function formatLabel(key: string): string {
   return key
