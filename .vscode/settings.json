@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["kevinmonisit", "Prereq", "trashable"],
+  "cSpell.words": ["kevinmonisit", "Prereq", "trashable", "turbopack"],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "eslint.validate": [
@@ -9,5 +9,6 @@
     "typescriptreact"
   ],
   "prettier.requireConfig": true,
-  "prettier.configPath": ".prettierrc.json"
+  "prettier.configPath": ".prettierrc.json",
+  "cSpell.ignorePaths": ["README.md", ".vscode/settings.json"]
 }

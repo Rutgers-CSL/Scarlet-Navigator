@@ -19,7 +19,7 @@ Awarded [Best Fullstack Project](https://github.com/kevinmonisit/Scarlet-Navigat
 
 Originally created by [Kevin Monisit](https://kevinmonisit.me).
 
-## Features:
+## Features
 
 - **Drag and Drop**
 
