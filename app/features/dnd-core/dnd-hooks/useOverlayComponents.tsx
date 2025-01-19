@@ -7,7 +7,7 @@ import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import {
   calculateSemesterCredits,
   calculateRunningCredits,
-} from '../../../features/middlePanel/dashboard/utils/credits';
+} from '../../middlePanel/dashboard/utils/credits';
 
 import { COURSE_POOL_CONTAINER_ID } from '@/app/features/leftPanel/courseCreation/CourseCreation';
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';

@@ -8,7 +8,7 @@ import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
 import {
   calculateRunningCredits,
   getHeaderColorClass,
-} from '../../../../features/middlePanel/dashboard/utils/credits';
+} from '../../../middlePanel/dashboard/utils/credits';
 
 export default function DroppableContainer({
   children,

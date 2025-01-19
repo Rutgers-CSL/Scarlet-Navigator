@@ -15,26 +15,23 @@ import {
   SortingStrategy,
   rectSortingStrategy,
 } from '@dnd-kit/sortable';
-import { coordinateGetter as multipleContainersCoordinateGetter } from '../../../components/dnd-core/multipleContainersKeyboardCoordinates';
-import SortableItem from '../../../components/dnd-core/dnd-core-components/SortableItem/SortableItem';
-import useOverlayComponents from '../../../components/dnd-core/dnd-hooks/useOverlayComponents';
-import DroppableContainer from '../../../components/dnd-core/dnd-core-components/DroppableContainer/DroppableContainer';
+import { coordinateGetter as multipleContainersCoordinateGetter } from '../../dnd-core/multipleContainersKeyboardCoordinates';
+import SortableItem from '../../dnd-core/dnd-core-components/SortableItem/SortableItem';
+import useOverlayComponents from '../../dnd-core/dnd-hooks/useOverlayComponents';
+import DroppableContainer from '../../dnd-core/dnd-core-components/DroppableContainer/DroppableContainer';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 import useHistoryStore from '@/lib/hooks/stores/useHistoryStore';
-import useScheduleHandlers from '../../../components/dnd-core/dnd-hooks/useScheduleHandlers';
+import useScheduleHandlers from '../../dnd-core/dnd-hooks/useScheduleHandlers';
 import { EMPTY, PLACEHOLDER_ID } from '@/lib/constants';
 import { CoursesBySemesterID } from '@/lib/types/models';
-import { Button } from '../../../components/dnd-core';
+import { Button } from '../../dnd-core';
 import {
   calculateSemesterCredits,
   calculateRunningCredits,
   getStudentStatus,
 } from './utils/credits';
-import {
-  getColor,
-  dropAnimation,
-} from '../../../components/dnd-core/dnd-utils';
+import { getColor, dropAnimation } from '../../dnd-core/dnd-utils';
 import NotesBox from './components/NotesBox';
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
 import { calculateSemesterGPA } from './utils/gpa';

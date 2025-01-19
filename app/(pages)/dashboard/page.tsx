@@ -3,9 +3,9 @@
 import RightPanel from '@/app/features/rightPanel/RightPanel';
 import LeftPanel from '@/app/features/leftPanel/LeftPanel';
 import { MiddlePanel } from '@/app/features/middlePanel/MiddlePanel';
-import { coordinateGetter } from '@/app/components/dnd-core/multipleContainersKeyboardCoordinates';
-import { collisionDetectionStrategy as detectionStrategy } from '@/app/components/dnd-core/dnd-utils';
-import useDragHandlers from '@/app/components/dnd-core/dnd-hooks/useDragHandlers';
+import { coordinateGetter } from '@/app/features/dnd-core/multipleContainersKeyboardCoordinates';
+import { collisionDetectionStrategy as detectionStrategy } from '@/app/features/dnd-core/dnd-utils';
+import useDragHandlers from '@/app/features/dnd-core/dnd-hooks/useDragHandlers';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import { CoursesBySemesterID } from '@/lib/types/models';
