@@ -15,7 +15,7 @@ function CoursePool() {
 
   return (
     <div className='mt-4'>
-      <h2 className='mb-4 text-lg font-semibold'>Course Pool</h2>
+      <h2 className='mb-4 text-lg font-semibold'>Saved for Later</h2>
       <DroppableContainer
         id={COURSE_POOL_CONTAINER_ID}
         items={coursesBySemesterID[COURSE_POOL_CONTAINER_ID] || []}
