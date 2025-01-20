@@ -3,7 +3,7 @@
 <div align="center">
 
 <a href="">[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)</a>
-<a href="">[![GitHub issues](https://img.shields.io/github/issues/kevinmonisit/Scarlet-Navigator)](https://github.com/kevinmonisit/Scarlet-Navigator/issues)</a>
+<a href="">[![GitHub issues](https://img.shields.io/github/issues/Rutgers-CSL/Scarlet-Navigator)](https://github.com/Rutgers-CSL/Scarlet-Navigator/issues)</a>
 
 </div>
 
