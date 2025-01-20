@@ -1,0 +1,17 @@
+import { useNotesStore } from '@/lib/hooks/stores/useNotesStore';
+import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
+import { SemesterID } from '@/types/models';
+import NotesEditor from '@/app/components/NotesEditor';
+
+function NotesBox({ semesterID }: { semesterID: SemesterID }) {
+  const notes = useNotesStore((state) => state.notes);
+  const semester = useScheduleStore((state) => state.semesterByID[semesterID]);
+  const { title } = semester;
+
+  if (!notes[semesterID]) return null;
+  if (!notes[semesterID].displayNextToSemester) return null;
+
+  return <NotesEditor id={semesterID} title={title} />;
+}
+
+export default NotesBox;

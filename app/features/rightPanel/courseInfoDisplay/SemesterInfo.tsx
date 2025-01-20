@@ -1,6 +1,6 @@
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import { useState, useRef } from 'react';
-import NotesArea from './components/NotesArea';
+import NotesEditor from '@/app/components/NotesEditor';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 import {
   calculateSemesterCredits,
@@ -221,7 +221,7 @@ export default function SemesterInfo({ id }: SemesterInfoProps) {
           Remove Semester
         </button>
       </div>
-      <NotesArea id={id} />
+      <NotesEditor id={id} showDisplayOption={true} />
     </div>
   );
 }

@@ -18,12 +18,12 @@ export enum STORE_NAMES {
  * the semester ID and returns semesterMap[semesterID].courses.
  */
 
-type CourseID = string | UniqueIdentifier;
-type SemesterID = string | UniqueIdentifier;
-type CourseByID = Record<CourseID, Course>;
-type CoursesBySemesterID = Record<SemesterID, CourseID[]>;
-type SemestersByID = Record<SemesterID, Semester>;
-type SemesterOrder = SemesterID[];
+export type CourseID = string | UniqueIdentifier;
+export type SemesterID = string | UniqueIdentifier;
+export type CourseByID = Record<CourseID, Course>;
+export type CoursesBySemesterID = Record<SemesterID, CourseID[]>;
+export type SemestersByID = Record<SemesterID, Semester>;
+export type SemesterOrder = SemesterID[];
 
 export interface Semester {
   id: SemesterID;

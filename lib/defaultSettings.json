@@ -17,6 +17,10 @@
   },
   "visuals": {
     "showGrades": false,
-    "showGPAsInSemesterTitles": false
+    "showGPAsInSemesterTitles": false,
+    "goalCreditsForGraduation": 120,
+    "progressivelyDarkenSemestersBasedOnCreditGoal": true,
+    "showCreditCountOnCourseTitles": false,
+    "showQuarterlyStudentTitlesOnSemesterTitles": true
   }
 }

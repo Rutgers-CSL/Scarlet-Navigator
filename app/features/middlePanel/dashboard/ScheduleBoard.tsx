@@ -31,6 +31,7 @@ import {
   calculateRunningCredits,
 } from './utils/credits';
 import { getColor, dropAnimation } from './utils/dnd';
+import NotesBox from './components/NotesBox';
 
 function UndoRedoControls() {
   const { undo, redo, past, future } = useHistoryStore();
@@ -160,51 +161,58 @@ export function ScheduleBoard({
             <UndoRedoControls />
             <div className='grid w-full grid-cols-[repeat(auto-fit,minmax(330px,1fr))] gap-x-8 gap-y-4 px-4'>
               {semesterOrder.map((containerId) => (
-                <DroppableContainer
-                  key={containerId}
-                  id={containerId}
-                  label={
-                    minimal
-                      ? undefined
-                      : `${
-                          useScheduleStore.getState().semesterByID[containerId]
-                            ?.title || containerId
-                        }
-                          (${calculateSemesterCredits(coursesBySemesterID[containerId] || [], courses)} credits,
-                          Total: ${calculateRunningCredits(semesterOrder, coursesBySemesterID, courses, containerId)})`
-                  }
-                  columns={columns}
-                  items={coursesBySemesterID[containerId]}
-                  scrollable={scrollable}
-                  style={containerStyle}
-                  unstyled={minimal}
-                  onRemove={() => handleEditSemester(containerId)}
-                >
-                  <SortableContext
+                <React.Fragment key={containerId}>
+                  <DroppableContainer
+                    key={containerId}
+                    id={containerId}
+                    label={
+                      minimal
+                        ? undefined
+                        : `${
+                            useScheduleStore.getState().semesterByID[
+                              containerId
+                            ]?.title || containerId
+                          }
+                            (${calculateSemesterCredits(coursesBySemesterID[containerId] || [], courses)} credits,
+                            Total: ${calculateRunningCredits(semesterOrder, coursesBySemesterID, courses, containerId)})`
+                    }
+                    columns={columns}
                     items={coursesBySemesterID[containerId]}
-                    strategy={strategy}
+                    scrollable={scrollable}
+                    style={containerStyle}
+                    unstyled={minimal}
+                    onRemove={() => handleEditSemester(containerId)}
                   >
-                    {coursesBySemesterID[containerId].map((value, index) => {
-                      return (
-                        <SortableItem
-                          disabled={isSortingContainer}
-                          key={value}
-                          id={value}
-                          index={index}
-                          handle={handle}
-                          style={getItemStyles}
-                          wrapperStyle={wrapperStyle}
-                          renderItem={renderItem}
-                          containerId={containerId}
-                          showCores={false}
-                          getIndex={(id) => {
-                            return 0;
-                          }}
-                        />
-                      );
-                    })}
-                  </SortableContext>
-                </DroppableContainer>
+                    <SortableContext
+                      items={coursesBySemesterID[containerId]}
+                      strategy={strategy}
+                    >
+                      {coursesBySemesterID[containerId].map((value, index) => {
+                        return (
+                          <SortableItem
+                            disabled={isSortingContainer}
+                            key={value}
+                            id={value}
+                            index={index}
+                            handle={handle}
+                            style={getItemStyles}
+                            wrapperStyle={wrapperStyle}
+                            renderItem={renderItem}
+                            containerId={containerId}
+                            showCores={false}
+                            getIndex={(id) => {
+                              return 0;
+                            }}
+                          />
+                        );
+                      })}
+                    </SortableContext>
+                  </DroppableContainer>
+                  <NotesBox
+                    semesterID={containerId}
+                    key={containerId + '-notes'}
+                  />
+                </React.Fragment>
               ))}
               {minimal ? undefined : (
                 <>

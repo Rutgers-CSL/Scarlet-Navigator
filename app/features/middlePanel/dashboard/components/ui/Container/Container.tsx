@@ -3,6 +3,7 @@ import React, { forwardRef } from 'react';
 import classNames from 'classnames';
 
 import styles from './Container.module.scss';
+import { Handle } from '../Item/components/Handle/Handle';
 
 type BaseProps = {
   children: React.ReactNode;
@@ -78,6 +79,9 @@ export const Container = forwardRef(
         {label ? (
           <div className={styles.Header}>
             {label}
+
+            {handleProps ? <Handle {...handleProps} /> : null}
+
             {onRemove ? (
               <button
                 onClick={onRemove}
