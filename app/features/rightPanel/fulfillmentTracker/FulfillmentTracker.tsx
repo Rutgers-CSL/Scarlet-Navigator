@@ -304,7 +304,7 @@ function CategoryItem({
 
   return (
     <>
-      <div className='collapse collapse-arrow mb-4 bg-base-200'>
+      <div className='collapse-arrow bg-base-200 collapse mb-4'>
         <input type='checkbox' className='h-auto w-auto' defaultChecked />
         <div className='collapse-title relative flex items-center justify-between pr-12'>
           <div className='flex items-center'>
@@ -335,7 +335,7 @@ function CategoryItem({
             {category.cores.map((core) => (
               <div
                 key={core.id}
-                className='flex items-center justify-between rounded-lg bg-base-100 p-2'
+                className='bg-base-100 flex items-center justify-between rounded-lg p-2'
               >
                 <span className='flex-1'>
                   <EditableText
@@ -463,7 +463,7 @@ function ProgramItem({
 
   return (
     <>
-      <div className='collapse collapse-arrow mb-4 rounded-lg bg-base-100'>
+      <div className='collapse-arrow bg-base-100 collapse mb-4 rounded-lg'>
         <input type='checkbox' className='h-auto w-auto' />
         <div className='collapse-title relative flex items-center justify-between pr-12'>
           <div className='flex items-center gap-2'>
@@ -561,7 +561,7 @@ export default function FulfillmentTracker() {
 
   return (
     <div className='h-full overflow-y-auto'>
-      <div className='card mx-auto mt-4 w-96 bg-base-100 shadow-xl'>
+      <div className='card bg-base-100 mx-auto mt-4 w-96 shadow-xl'>
         <div className='card-body'>
           <h2 className='card-title'>Fulfillment Tracker</h2>
           <div className='card-actions justify-end'>
