@@ -128,7 +128,7 @@ const Page: React.FC = () => {
         {/* Left Panel */}
         <div
           style={{ width: leftWidth, minWidth: 200 }}
-          className='h-full flex-shrink-0 overflow-y-scroll transition-[overflow] duration-300'
+          className='h-full shrink-0 overflow-y-scroll transition-[overflow] duration-300'
         >
           <LeftPanel />
         </div>
@@ -140,7 +140,7 @@ const Page: React.FC = () => {
         />
 
         {/* Middle Panel */}
-        <div className='h-full flex-grow overflow-y-scroll transition-[overflow] duration-300'>
+        <div className='h-full grow overflow-y-scroll transition-[overflow] duration-300'>
           <MiddlePanel />
         </div>
 
@@ -153,7 +153,7 @@ const Page: React.FC = () => {
         {/* Right Panel */}
         <div
           style={{ width: rightWidth, minWidth: 250 }}
-          className='h-full flex-shrink-0 overflow-y-scroll transition-[overflow] duration-300'
+          className='h-full shrink-0 overflow-y-scroll transition-[overflow] duration-300'
         >
           <RightPanel />
         </div>

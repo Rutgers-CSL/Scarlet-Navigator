@@ -87,7 +87,7 @@ export const Container = forwardRef(
             {onRemove ? (
               <button
                 onClick={onRemove}
-                className='rounded p-1 hover:bg-gray-100'
+                className='rounded-sm p-1 hover:bg-gray-100'
                 title='Edit semester'
               >
                 <svg

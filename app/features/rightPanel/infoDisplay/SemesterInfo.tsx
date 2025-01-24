@@ -164,7 +164,7 @@ export default function SemesterInfo({ id }: SemesterInfoProps) {
             onChange={(e) =>
               setEditForm({ ...editForm, title: e.target.value })
             }
-            className='mb-3 w-40 rounded border px-2 py-1 text-2xl font-bold'
+            className='mb-3 w-40 rounded-sm border px-2 py-1 text-2xl font-bold'
             maxLength={20}
             placeholder='Enter semester title'
           />

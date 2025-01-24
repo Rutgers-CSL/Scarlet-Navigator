@@ -57,7 +57,7 @@ export default function CoreInput({
               value={currentCore}
               onChange={(e) => setCurrentCore(e.target.value.toUpperCase())}
               onKeyDown={handleCoreKeyDown}
-              className='mt-1 w-24 rounded-md border border-gray-300 bg-white px-3 py-2 text-center uppercase shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500'
+              className='mt-1 w-24 rounded-md border border-gray-300 bg-white px-3 py-2 text-center uppercase shadow-xs focus:border-indigo-500 focus:ring-indigo-500 focus:outline-hidden'
               placeholder='XXX'
             />
             <button
@@ -71,7 +71,7 @@ export default function CoreInput({
                   setCurrentCore('');
                 }
               }}
-              className='mt-1 rounded-md bg-gray-100 px-6 py-2 font-medium text-gray-700 transition-colors hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2'
+              className='mt-1 rounded-md bg-gray-100 px-6 py-2 font-medium text-gray-700 transition-colors hover:bg-gray-200 focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 focus:outline-hidden'
             >
               Add
             </button>

@@ -256,7 +256,7 @@ function EditableText({ value, onSave, className = '' }: EditableTextProps) {
         onKeyDown={handleKeyDown}
         onBlur={handleBlur}
         onClick={(e) => e.stopPropagation()}
-        className={`w-24 rounded border border-blue-500 bg-white px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
+        className={`w-24 rounded-sm border border-blue-500 bg-white px-2 py-1 focus:ring-2 focus:ring-blue-500 focus:outline-hidden ${className}`}
         autoFocus
         size={6}
       />
@@ -266,7 +266,7 @@ function EditableText({ value, onSave, className = '' }: EditableTextProps) {
   return (
     <span
       onClick={handleClick}
-      className={`inline-block w-14 cursor-pointer truncate rounded px-2 py-1 hover:bg-gray-100 ${className}`}
+      className={`inline-block w-14 cursor-pointer truncate rounded-sm px-2 py-1 hover:bg-gray-100 ${className}`}
     >
       {value}
     </span>

@@ -58,7 +58,7 @@ export default function CourseInfo({ id }: CourseInfoProps) {
             type='text'
             value={editForm.name}
             onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-            className='mb-3 w-40 rounded border px-2 py-1 text-2xl font-bold'
+            className='mb-3 w-40 rounded-sm border px-2 py-1 text-2xl font-bold'
             maxLength={10}
           />
         ) : (
@@ -74,7 +74,7 @@ export default function CourseInfo({ id }: CourseInfoProps) {
                 onChange={(e) =>
                   setEditForm({ ...editForm, credits: Number(e.target.value) })
                 }
-                className='w-20 rounded border px-2 py-1'
+                className='w-20 rounded-sm border px-2 py-1'
                 min={1}
                 max={6}
               />
