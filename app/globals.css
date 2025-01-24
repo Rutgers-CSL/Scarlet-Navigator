@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@plugin "daisyui";
 
 @theme {
   --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
