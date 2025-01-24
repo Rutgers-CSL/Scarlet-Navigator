@@ -13,7 +13,7 @@ jobs:
           node-version: '20'
 
       - name: Install Dependencies
-        run: npm install -g pnpm && pnpm install
+        run: npm install -g pnpm@9.15.2 && pnpm install
 
       - name: TypeScript Compilation
         run: pnpm run tsc
@@ -39,7 +39,7 @@ jobs:
           node-version: '20'
 
       - name: Install Dependencies
-        run: npm install -g pnpm && pnpm install
+        run: npm install -g pnpm@9.15.2 && pnpm install
 
       - name: Run npm audit
         run: pnpm audit || true # Don't fail the build, but report issues
