@@ -105,19 +105,14 @@ export function ScheduleBoard({
   const courses = useScheduleStore((state) => state.courses);
   const semesterByID = useScheduleStore((state) => state.semesterByID);
 
-  const showGPAsInSemesterTitles = useSettingsStore(
-    (state) => state.visuals.showGPAsInSemesterTitles
-  );
-  const goalCreditsForGraduation = useSettingsStore(
-    (state) => state.visuals.goalCreditsForGraduation
-  );
-  const showQuarterlyStudentTitlesOnSemesterTitles = useSettingsStore(
-    (state) => state.visuals.showQuarterlyStudentTitlesOnSemesterTitles
-  );
+  const {
+    showGPAsInSemesterTitles,
+    goalCreditsForGraduation,
+    showQuarterlyStudentTitlesOnSemesterTitles,
+    showCoreLabelsInCoursesInsideScheduleBoard: showCoreLabels,
+  } = useSettingsStore((state) => state.visuals);
+
   const gradePoints = useSettingsStore((state) => state.gradePoints);
-  const showCoreLabels = useSettingsStore(
-    (state) => state.visuals.showCoreLabelsInCoursesInsideScheduleBoard
-  );
 
   const { recentlyMovedToNewContainer, activeID } =
     useAuxiliaryStore.getState();
