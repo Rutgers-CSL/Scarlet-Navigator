@@ -1,5 +1,11 @@
 {
-  "cSpell.words": ["kevinmonisit", "Prereq", "trashable", "turbopack"],
+  "cSpell.words": [
+    "kevinmonisit",
+    "Prereq",
+    "trashable",
+    "turbopack",
+    "typesense"
+  ],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "eslint.validate": [

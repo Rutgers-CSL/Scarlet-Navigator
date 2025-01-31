@@ -13,7 +13,8 @@
     "tsc": "tsc -p tsconfig.json --noEmit",
     "prepare": "husky",
     "security:audit": "pnpm audit",
-    "security:outdated": "pnpm outdated"
+    "security:outdated": "pnpm outdated",
+    "start:typesense": "mkdir -p typesense-data && docker-compose up"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

@@ -87,7 +87,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [Auth.js]()
 - [Zustand](https://github.com/pmndrs/zustand) - State management
 - [Vercel]()
-- [Fuse.js]()
+- [Docker]()
+- [TypeSense]()
 
 ### UI
 
