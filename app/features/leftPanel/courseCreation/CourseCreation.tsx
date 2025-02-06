@@ -23,8 +23,8 @@ export default function CourseCreation() {
       return;
     }
 
-    if (credits < 1 || credits > 6) {
-      setError('Credits must be between 1 and 6');
+    if (credits < 0 || credits > 12) {
+      setError('Credits must be between 1 and 12');
       return;
     }
 
@@ -36,36 +36,36 @@ export default function CourseCreation() {
   };
 
   return (
-    <div className='p-4'>
+    <div className='bg-base-100 border-base-300 text-base-content rounded-box h-fit p-4'>
       <h1 className='mb-4 text-xl font-bold'>Course Creation</h1>
       <form onSubmit={handleSubmit} className='mb-6 space-y-4'>
         <div>
-          <label className='mb-1 block text-sm font-medium'>
+          <label className='input input-bordered flex items-center gap-2'>
             Course Name:
             <input
               type='text'
               value={courseName}
               onChange={(e) => setCourseName(e.target.value)}
-              className='mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-indigo-500 focus:ring-indigo-500 focus:outline-hidden'
+              // className='mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-indigo-500 focus:ring-indigo-500 focus:outline-hidden'
+              className='grow'
               placeholder='Enter course name'
             />
           </label>
         </div>
 
         <div>
-          <label className='mb-1 block text-sm font-medium'>
+          <label className='input input-bordered flex items-center gap-2'>
             Credits:
             <input
               type='number'
               value={credits}
               onChange={(e) => setCredits(Number(e.target.value))}
-              min={1}
-              max={6}
-              className='mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-xs focus:border-indigo-500 focus:ring-indigo-500 focus:outline-hidden'
+              min={0}
+              max={12}
+              className='grow'
             />
           </label>
         </div>
-
         <CoreInput
           currentCore={currentCore}
           setCurrentCore={setCurrentCore}

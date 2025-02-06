@@ -17,7 +17,7 @@ export default function CoreInput({
   selectedCores,
   setSelectedCores,
   globalCores,
-  placeholder = 'Type a core and press Enter',
+  placeholder = 'XXX',
   label = 'Cores:',
 }: CoreInputProps) {
   const handleCoreKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -49,39 +49,36 @@ export default function CoreInput({
   return (
     <div className='space-y-4'>
       <div>
-        <label className='mb-1 block text-sm font-medium'>
+        <label className='input input-bordered flex items-center gap-2 pr-0'>
           {label}
-          <div className='flex gap-2'>
-            <input
-              type='text'
-              value={currentCore}
-              onChange={(e) => setCurrentCore(e.target.value.toUpperCase())}
-              onKeyDown={handleCoreKeyDown}
-              className='mt-1 w-24 rounded-md border border-gray-300 bg-white px-3 py-2 text-center uppercase shadow-xs focus:border-indigo-500 focus:ring-indigo-500 focus:outline-hidden'
-              placeholder='XXX'
-            />
-            <button
-              type='button'
-              onClick={() => {
-                if (currentCore.trim()) {
-                  const newCore = currentCore.trim().toUpperCase();
-                  if (!selectedCores.includes(newCore)) {
-                    setSelectedCores([...selectedCores, newCore]);
-                  }
-                  setCurrentCore('');
+          <input
+            type='text'
+            value={currentCore}
+            onChange={(e) => setCurrentCore(e.target.value.toUpperCase())}
+            onKeyDown={handleCoreKeyDown}
+            className='grow'
+            placeholder={placeholder}
+          />
+          <button
+            onClick={() => {
+              if (currentCore.trim()) {
+                const newCore = currentCore.trim().toUpperCase();
+                if (!selectedCores.includes(newCore)) {
+                  setSelectedCores([...selectedCores, newCore]);
                 }
-              }}
-              className='mt-1 rounded-md bg-gray-100 px-6 py-2 font-medium text-gray-700 transition-colors hover:bg-gray-200 focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 focus:outline-hidden'
-            >
-              Add
-            </button>
-          </div>
+                setCurrentCore('');
+              }
+            }}
+            className='btn btn-secondary'
+          >
+            Add
+          </button>
         </label>
       </div>
 
       {selectedCores.length > 0 && (
         <div>
-          <p className='mb-2 text-sm text-gray-600'>Current Cores:</p>
+          <p className='base-content mb-2 text-sm'>Current Cores:</p>
           <div className='flex flex-wrap gap-2'>
             <CoreList
               color='blue'
