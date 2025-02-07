@@ -34,10 +34,22 @@ const Page: React.FC = () => {
   } = useAuxiliaryStore.getState();
 
   const recentlyMovedToNewContainerInstance = useRef(false);
-  const [leftWidth, setLeftWidth] = useState(250); // minimum width for left panel
-  const [rightWidth, setRightWidth] = useState(300); // minimum width for right panel
+  const [leftWidth, setLeftWidth] = useState(250);
+  const [rightWidth, setRightWidth] = useState(300);
   const [isDraggingLeft, setIsDraggingLeft] = useState(false);
   const [isDraggingRight, setIsDraggingRight] = useState(false);
+
+  useEffect(() => {
+    const savedLeftWidth = localStorage.getItem('leftPanelWidth');
+    const savedRightWidth = localStorage.getItem('rightPanelWidth');
+
+    if (savedLeftWidth) {
+      setLeftWidth(Number(savedLeftWidth));
+    }
+    if (savedRightWidth) {
+      setRightWidth(Number(savedRightWidth));
+    }
+  }, []);
 
   useEffect(() => {
     setRecentlyMovedToNewContainer(recentlyMovedToNewContainerInstance);
@@ -109,6 +121,15 @@ const Page: React.FC = () => {
       window.removeEventListener('mouseup', handleMouseUp);
     };
   }, [isDraggingLeft, isDraggingRight, handleMouseMove, handleMouseUp]);
+
+  // Save panel widths to localStorage when they change
+  useEffect(() => {
+    localStorage.setItem('leftPanelWidth', leftWidth.toString());
+  }, [leftWidth]);
+
+  useEffect(() => {
+    localStorage.setItem('rightPanelWidth', rightWidth.toString());
+  }, [rightWidth]);
 
   return (
     <DndContext

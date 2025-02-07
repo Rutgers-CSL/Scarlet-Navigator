@@ -15,34 +15,31 @@ function CoursePool() {
   const items = coursesBySemesterID[COURSE_POOL_CONTAINER_ID] || [];
 
   return (
-    <div className='mt-4'>
-      <h2 className='mb-4 text-lg font-semibold'>Saved for Later</h2>
-      <DroppableContainer id={COURSE_POOL_CONTAINER_ID} items={items}>
-        <SortableContext items={items} strategy={verticalListSortingStrategy}>
-          {items.map((value) => (
-            <SortableItem
-              containerId={COURSE_POOL_CONTAINER_ID}
-              key={value}
-              id={value}
-              index={0}
-              handle={false}
-              renderItem={() => (
-                <div className='p-2'>
-                  {courses[value]?.name || 'Loading...'}
-                </div>
-              )}
-              style={() => ({
-                margin: '8px 0',
-                background: 'white',
-                borderRadius: '4px',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-              })}
-              wrapperStyle={() => ({})}
-              getIndex={() => 0}
-            />
-          ))}
-        </SortableContext>
-      </DroppableContainer>
+    <div className='card bg-base-100 w-96'>
+      <div className='card-body bg-base-200'>
+        <h2 className='card-title'>Saved for Later</h2>
+        <DroppableContainer id={COURSE_POOL_CONTAINER_ID} items={items}>
+          <SortableContext items={items} strategy={verticalListSortingStrategy}>
+            {items.map((value) => (
+              <SortableItem
+                containerId={COURSE_POOL_CONTAINER_ID}
+                key={value}
+                id={value}
+                index={0}
+                handle={false}
+                renderItem={() => (
+                  <div className='p-2'>
+                    {courses[value]?.name || 'Loading...'}
+                  </div>
+                )}
+                style={() => ({})}
+                wrapperStyle={() => ({})}
+                getIndex={() => 0}
+              />
+            ))}
+          </SortableContext>
+        </DroppableContainer>
+      </div>
     </div>
   );
 }

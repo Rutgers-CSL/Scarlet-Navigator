@@ -1,4 +1,6 @@
-# What is this?
+# DND-Core Folder
+
+## What is this?
 
 This folder contains components that may look different from the rest of the components in this codebase. The reason for this is because the original drag and drop components come from a template showcasing DnD Kit, a wrapper for React DnD library that makes the drag and dropping of components more elegant. The codebase of that template had a lot of excess code that was not needed for this project, but I had to painstakingly refactor the code, organize the utility functions, and integrate it into this Next.js application.
 

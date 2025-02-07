@@ -79,15 +79,15 @@ export const useScheduleStore = create<ScheduleStore>()(
           cores.forEach((core) => updatedCores.add(core));
 
           const updatedCourses = {
-            ...state.courses,
             [newCourseId]: newCourse,
+            ...state.courses,
           };
 
           const updatedCoursesBySemesterID = {
             ...state.coursesBySemesterID,
             [COURSE_POOL_CONTAINER_ID]: [
-              ...(state.coursesBySemesterID[COURSE_POOL_CONTAINER_ID] || []),
               newCourseId,
+              ...(state.coursesBySemesterID[COURSE_POOL_CONTAINER_ID] || []),
             ],
           };
 

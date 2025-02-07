@@ -96,19 +96,6 @@ export default function CoreInput({
           </div>
         </div>
       )}
-
-      {selectedCores.some((core) => !globalCores.has(core)) && (
-        <div>
-          <p className='mb-2 text-sm'>New Cores:</p>
-          <div className='flex flex-wrap gap-2'>
-            <CoreList
-              color='primary'
-              cores={selectedCores.filter((core) => !globalCores.has(core))}
-              handleRemoveCore={removeCore}
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 }
