@@ -20,13 +20,13 @@ export default function CoreInput({
   placeholder = 'XXX',
   label = 'Cores:',
 }: CoreInputProps) {
-  const handleCoreKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && currentCore.trim()) {
-      e.preventDefault();
-      const newCore = currentCore.trim().toUpperCase();
-      if (!selectedCores.includes(newCore)) {
-        setSelectedCores([...selectedCores, newCore]);
-      }
+  const handleCoreSubmit = (
+    e: KeyboardEvent<HTMLInputElement> | React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    const newCore = currentCore.trim().toUpperCase();
+    if (newCore && !selectedCores.includes(newCore)) {
+      addCore(newCore);
       setCurrentCore('');
     }
   };
@@ -36,8 +36,10 @@ export default function CoreInput({
   };
 
   const addCore = (core: string) => {
-    if (!selectedCores.includes(core)) {
-      setSelectedCores([...selectedCores, core]);
+    const newCore = core.trim().toUpperCase();
+
+    if (!selectedCores.includes(newCore)) {
+      setSelectedCores([...selectedCores, newCore]);
     }
   };
 
@@ -55,22 +57,15 @@ export default function CoreInput({
             type='text'
             value={currentCore}
             onChange={(e) => setCurrentCore(e.target.value.toUpperCase())}
-            onKeyDown={handleCoreKeyDown}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleCoreSubmit(e);
+              }
+            }}
             className='grow'
             placeholder={placeholder}
           />
-          <button
-            onClick={() => {
-              if (currentCore.trim()) {
-                const newCore = currentCore.trim().toUpperCase();
-                if (!selectedCores.includes(newCore)) {
-                  setSelectedCores([...selectedCores, newCore]);
-                }
-                setCurrentCore('');
-              }
-            }}
-            className='btn btn-secondary'
-          >
+          <button onClick={handleCoreSubmit} className='btn'>
             Add
           </button>
         </label>
@@ -91,12 +86,10 @@ export default function CoreInput({
 
       {availableCores.length > 0 && (
         <div>
-          <p className='mb-2 text-sm text-gray-600'>
-            Other Cores You Could Add:
-          </p>
+          <p className='mb-2 text-sm'>Other Cores You Could Add:</p>
           <div className='flex flex-wrap gap-2'>
             <CoreList
-              color='gray'
+              color='neutral'
               cores={availableCores}
               handleOnClick={addCore}
             />
@@ -106,10 +99,10 @@ export default function CoreInput({
 
       {selectedCores.some((core) => !globalCores.has(core)) && (
         <div>
-          <p className='mb-2 text-sm text-gray-600'>New Cores:</p>
+          <p className='mb-2 text-sm'>New Cores:</p>
           <div className='flex flex-wrap gap-2'>
             <CoreList
-              color='green'
+              color='primary'
               cores={selectedCores.filter((core) => !globalCores.has(core))}
               handleRemoveCore={removeCore}
             />

@@ -23,9 +23,7 @@ function CoreList(props: CoreListProps) {
             }
           }}
           className={clsx(
-            'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
-            `bg-${color}-100`,
-            `text-${color}-800`,
+            'badge badge-neutral',
             handleOnClick ? 'cursor-pointer' : 'cursor-default'
           )}
         >
@@ -37,9 +35,16 @@ function CoreList(props: CoreListProps) {
             <button
               type='button'
               onClick={() => handleRemoveCore(core)}
-              className='ml-1 text-blue-400 hover:text-blue-600'
+              className='ml-1 hover:cursor-pointer'
             >
-              x
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 16 16'
+                fill='currentColor'
+                className='size-3'
+              >
+                <path d='M5.28 4.22a.75.75 0 0 0-1.06 1.06L6.94 8l-2.72 2.72a.75.75 0 1 0 1.06 1.06L8 9.06l2.72 2.72a.75.75 0 1 0 1.06-1.06L9.06 8l2.72-2.72a.75.75 0 0 0-1.06-1.06L8 6.94 5.28 4.22Z' />
+              </svg>
             </button>
           )}
         </div>
