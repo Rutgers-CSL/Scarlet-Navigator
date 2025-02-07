@@ -69,6 +69,7 @@ export const Container = forwardRef(
         }
         className={classNames(
           styles.Container,
+          'shadow-base-300 shadow-md',
           unstyled && styles.unstyled,
           horizontal && styles.horizontal,
           hover && styles.hover,

@@ -23,7 +23,7 @@ export default function CourseCreation() {
   };
 
   return (
-    <div className='card bg-base-100 text-base-content rounded-box w-96'>
+    <div className='card bg-base-100 text-base-content rounded-box'>
       <div className='card-body'>
         <h2 className='card-title'>Create Course</h2>
         <form onSubmit={handleSubmit} className='mb-6 space-y-4'>
