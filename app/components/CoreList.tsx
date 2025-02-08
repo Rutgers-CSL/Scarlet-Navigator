@@ -10,7 +10,7 @@ interface CoreListProps {
 }
 
 function CoreList(props: CoreListProps) {
-  const { color, cores, handleRemoveCore, handleOnClick } = props;
+  const { cores, handleRemoveCore, handleOnClick } = props;
 
   return (
     <div className='flex flex-wrap gap-2'>
@@ -23,7 +23,7 @@ function CoreList(props: CoreListProps) {
             }
           }}
           className={clsx(
-            'badge badge-neutral',
+            'badge badge-neutral text-sm font-normal',
             handleOnClick ? 'cursor-pointer' : 'cursor-default'
           )}
         >

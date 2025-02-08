@@ -133,7 +133,8 @@ export const Item = React.memo(
               handle && styles.withHandle,
               dragOverlay && styles.dragOverlay,
               disabled && styles.disabled,
-              color && styles.color
+              color && styles.color,
+              'bg-base-200 text-md mx-3 my-2 rounded-sm p-3 font-bold'
             )}
             style={style}
             data-cypress='draggable-item'
@@ -146,12 +147,16 @@ export const Item = React.memo(
           >
             <div className='flex flex-col gap-2'>
               <div className='flex items-center gap-2'>
-                <div>{value}</div>
+                <div>
+                  {typeof value === 'string' ? value.toUpperCase() : value}
+                </div>
                 {course?.grade && showGrades && (
-                  <div className='text-sm text-gray-600'>({course.grade})</div>
+                  <div className='text-base-content text-sm'>
+                    ({course.grade})
+                  </div>
                 )}
                 {course?.credits && showCreditCountOnCourseTitles && (
-                  <div className='text-sm text-gray-600'>
+                  <div className='text-base-content text-sm'>
                     ({course.credits} cr)
                   </div>
                 )}

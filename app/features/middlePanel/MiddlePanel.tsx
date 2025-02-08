@@ -1,8 +1,6 @@
 import dynamic from 'next/dynamic';
 
-const ScheduleBoard = dynamic<{
-  itemCount: number;
-}>(
+const ScheduleBoard = dynamic<{}>(
   () =>
     import('@/app/features/middlePanel/dashboard/ScheduleBoard').then(
       (mod) => mod.ScheduleBoard
@@ -15,7 +13,7 @@ const ScheduleBoard = dynamic<{
 export function MiddlePanel() {
   return (
     <div>
-      <ScheduleBoard itemCount={5} />
+      <ScheduleBoard />
     </div>
   );
 }

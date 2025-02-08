@@ -67,7 +67,6 @@ interface Props {
     isDragOverlay: boolean;
   }): React.CSSProperties;
   wrapperStyle?(args: { index: number }): React.CSSProperties;
-  itemCount?: number;
   items?: CoursesBySemesterID;
   handle?: boolean;
   renderItem?: any;
@@ -81,7 +80,6 @@ interface Props {
 
 export function ScheduleBoard({
   adjustScale = false,
-  itemCount = 3,
   cancelDrop,
   columns,
   handle = false,
@@ -213,7 +211,7 @@ export function ScheduleBoard({
         >
           <div className='flex h-full w-full flex-col'>
             <UndoRedoControls />
-            <div className='grid w-full grid-cols-[repeat(auto-fit,minmax(330px,1fr))] gap-x-8 gap-y-4 px-4'>
+            <div className='grid w-full grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-x-4 gap-y-4 px-4'>
               {semesterOrder.map((containerId) => (
                 <React.Fragment key={containerId}>
                   <DroppableContainer

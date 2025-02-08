@@ -6,11 +6,9 @@
   box-sizing: border-box;
   appearance: none;
   outline: none;
-  margin: 10px;
   border-radius: 5px;
   min-height: 200px;
   transition: background-color 350ms ease;
-  background-color: var(--color-base-100);
   font-size: 1em;
 
   ul {

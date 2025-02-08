@@ -9,6 +9,7 @@ import {
   calculateRunningCredits,
   getHeaderColorClass,
 } from '../../../middlePanel/dashboard/utils/credits';
+import { COURSE_POOL_CONTAINER_ID } from '../../../leftPanel/courseCreation/CourseCreation';
 
 export default function DroppableContainer({
   children,
@@ -50,6 +51,7 @@ export default function DroppableContainer({
   const progressivelyDarken = useSettingsStore(
     (state) => state.visuals.progressivelyDarkenSemestersBasedOnCreditGoal
   );
+
   const semesterOrder = useScheduleStore((state) => state.semesterOrder);
   const coursesBySemesterID = useScheduleStore(
     (state) => state.coursesBySemesterID
@@ -67,6 +69,8 @@ export default function DroppableContainer({
     headerColorClass = getHeaderColorClass(totalCredits);
   }
 
+  const isCoursePool = id === COURSE_POOL_CONTAINER_ID;
+
   return (
     <Container
       ref={disabled ? undefined : setNodeRef}
@@ -75,6 +79,11 @@ export default function DroppableContainer({
         transition,
         transform: CSS.Translate.toString(transform),
         opacity: isDragging ? 0.5 : undefined,
+        backgroundColor: isCoursePool
+          ? 'var(--color-base-200)'
+          : 'var(--color-base-100)',
+        boxShadow: !isCoursePool ? '0 0 10px 0 rgba(0, 0, 0, 0.1)' : 'none',
+        border: isCoursePool ? '1px solid var(--color-base-300)' : 'none',
       }}
       hover={isOverContainer}
       handleProps={{
