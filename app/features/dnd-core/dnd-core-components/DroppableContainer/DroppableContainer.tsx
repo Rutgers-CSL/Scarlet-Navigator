@@ -80,10 +80,10 @@ export default function DroppableContainer({
         transform: CSS.Translate.toString(transform),
         opacity: isDragging ? 0.5 : undefined,
         backgroundColor: isCoursePool
-          ? 'var(--color-base-200)'
+          ? 'var(--color-base-300)'
           : 'var(--color-base-100)',
         boxShadow: !isCoursePool ? '0 0 10px 0 rgba(0, 0, 0, 0.1)' : 'none',
-        border: isCoursePool ? '1px solid var(--color-base-300)' : 'none',
+        border: isCoursePool ? '1px solid var(--color-base-00)' : 'none',
       }}
       hover={isOverContainer}
       handleProps={{
