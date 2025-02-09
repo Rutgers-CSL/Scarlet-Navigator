@@ -1,4 +1,3 @@
-import useMountStatus from '@/lib/hooks/useMountStatus';
 import { UniqueIdentifier } from '@dnd-kit/core';
 import { useSortable } from '@dnd-kit/sortable';
 import { Item } from '../Item/Item';
@@ -44,8 +43,6 @@ export default function SortableItem({
   } = useSortable({
     id,
   });
-  const mounted = useMountStatus();
-  const mountedWhileDragging = isDragging && !mounted;
   const { handleRemoveCourse } = useScheduleHandlers();
 
   const courseName = useScheduleStore((state) => {
@@ -79,7 +76,6 @@ export default function SortableItem({
       color={getColor(id)}
       transition={transition}
       transform={transform}
-      fadeIn={mountedWhileDragging}
       listeners={listeners}
       renderItem={renderItem}
       showCores={showCores}

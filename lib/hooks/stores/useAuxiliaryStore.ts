@@ -1,5 +1,6 @@
 import { SemesterID } from '@/lib/types/models';
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { RefObject } from 'react';
 
 type AuxiliaryStore = {
@@ -8,36 +9,61 @@ type AuxiliaryStore = {
   currentInfoID: string;
   currentInfoType: 'course' | 'semester';
   activeTab: 'info' | 'tracker' | 'settings';
+  panelDimensions: Record<string, number>;
   setRecentlyMovedToNewContainer: (flag: RefObject<boolean>) => void;
   setActiveID: (id: SemesterID) => void;
   setCurrentInfo: (id: string, type: 'course' | 'semester') => void;
   setActiveTab: (tab: 'info' | 'tracker' | 'settings') => void;
+  setPanelDimension: (key: string, value: number) => void;
+  getPanelDimension: (key: string, defaultValue: number) => number;
 };
 
 /**
  * Stores auxiliary state for the drag and drop functionality.
  */
-const useAuxiliaryStore = create<AuxiliaryStore>()((set) => ({
-  recentlyMovedToNewContainer: null,
-  activeID: '',
-  currentInfoID: '',
-  currentInfoType: 'course',
-  activeTab: 'info',
-  setRecentlyMovedToNewContainer: (flag: RefObject<boolean>) =>
-    set({ recentlyMovedToNewContainer: flag }),
-  setActiveID: (id: SemesterID) => {
-    console.log('new active id', id);
-    set({ activeID: id });
-  },
-  setCurrentInfo: (id: string, type: 'course' | 'semester') => {
-    set({
-      currentInfoID: id,
-      currentInfoType: type,
-      activeTab: 'info', // Switch to info tab when selection changes
-    });
-  },
-  setActiveTab: (tab: 'info' | 'tracker' | 'settings') =>
-    set({ activeTab: tab }),
-}));
+const useAuxiliaryStore = create<AuxiliaryStore>()(
+  persist(
+    (set, get) => ({
+      recentlyMovedToNewContainer: null,
+      activeID: '',
+      currentInfoID: '',
+      currentInfoType: 'course',
+      activeTab: 'info',
+      panelDimensions: {},
+      setRecentlyMovedToNewContainer: (flag: RefObject<boolean>) =>
+        set({ recentlyMovedToNewContainer: flag }),
+      setActiveID: (id: SemesterID) => {
+        console.log('new active id', id);
+        set({ activeID: id });
+      },
+      setCurrentInfo: (id: string, type: 'course' | 'semester') => {
+        set({
+          currentInfoID: id,
+          currentInfoType: type,
+          activeTab: 'info', // Switch to info tab when selection changes
+        });
+      },
+      setActiveTab: (tab: 'info' | 'tracker' | 'settings') =>
+        set({ activeTab: tab }),
+      setPanelDimension: (key: string, value: number) =>
+        set((state) => ({
+          panelDimensions: {
+            ...state.panelDimensions,
+            [key]: value,
+          },
+        })),
+      getPanelDimension: (key: string, defaultValue: number) => {
+        return get().panelDimensions[key] ?? defaultValue;
+      },
+    }),
+    {
+      name: 'auxiliary-storage',
+      partialize: (state) => ({
+        panelDimensions: state.panelDimensions,
+        activeTab: state.activeTab,
+      }),
+    }
+  )
+);
 
 export default useAuxiliaryStore;

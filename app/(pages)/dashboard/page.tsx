@@ -22,6 +22,17 @@ import {
 } from '@dnd-kit/core';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useKeyboardShortcuts } from '@/lib/hooks/useKeyboardShortcuts';
+import { useDraggable } from '@/lib/hooks/useDraggable';
+import {
+  LEFT_PANEL_KEY,
+  LEFT_PANEL_MIN_WIDTH,
+  LEFT_PANEL_DEFAULT_WIDTH,
+  RIGHT_PANEL_KEY,
+  RIGHT_PANEL_MIN_WIDTH,
+  RIGHT_PANEL_DEFAULT_WIDTH,
+} from '@/lib/constants';
+import useMountStatus from '@/lib/hooks/useMountStatus';
+import DashboardSkeleton from '@/app/components/DashboardSkeleton';
 
 const Page: React.FC = () => {
   useKeyboardShortcuts();
@@ -34,27 +45,26 @@ const Page: React.FC = () => {
   } = useAuxiliaryStore.getState();
 
   const recentlyMovedToNewContainerInstance = useRef(false);
-  const [leftWidth, setLeftWidth] = useState(250);
-  const [rightWidth, setRightWidth] = useState(300);
-  const [isDraggingLeft, setIsDraggingLeft] = useState(false);
-  const [isDraggingRight, setIsDraggingRight] = useState(false);
 
-  useEffect(() => {
-    const savedLeftWidth = localStorage.getItem('leftPanelWidth');
-    const savedRightWidth = localStorage.getItem('rightPanelWidth');
+  const { DragHandle: LeftDragHandle, dimensionValue: leftPanelWidth } =
+    useDraggable({
+      dimensionValueModifier: (delta) =>
+        Math.max(LEFT_PANEL_MIN_WIDTH, leftPanelWidth + delta),
+      direction: 'horizontal',
+      key: LEFT_PANEL_KEY,
+      defaultValue: LEFT_PANEL_DEFAULT_WIDTH,
+    });
 
-    if (savedLeftWidth) {
-      setLeftWidth(Number(savedLeftWidth));
-    }
-    if (savedRightWidth) {
-      setRightWidth(Number(savedRightWidth));
-    }
-  }, []);
+  const { DragHandle: RightDragHandle, dimensionValue: rightPanelWidth } =
+    useDraggable({
+      dimensionValueModifier: (delta) =>
+        Math.max(RIGHT_PANEL_MIN_WIDTH, rightPanelWidth - delta),
+      direction: 'horizontal',
+      key: RIGHT_PANEL_KEY,
+      defaultValue: RIGHT_PANEL_DEFAULT_WIDTH,
+    });
 
-  useEffect(() => {
-    setRecentlyMovedToNewContainer(recentlyMovedToNewContainerInstance);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const isMounted = useMountStatus();
 
   const lastOverId = useRef<UniqueIdentifier | null>(null);
   const [clonedItems, setClonedItems] = useState<CoursesBySemesterID | null>(
@@ -92,44 +102,23 @@ const Page: React.FC = () => {
     [activeID, coursesBySemesterID, recentlyMovedToNewContainer]
   );
 
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
-      if (isDraggingLeft) {
-        const newWidth = Math.max(200, e.clientX);
-        setLeftWidth(newWidth);
-      }
-      if (isDraggingRight) {
-        const newWidth = Math.max(250, window.innerWidth - e.clientX);
-        setRightWidth(newWidth);
-      }
-    },
-    [isDraggingLeft, isDraggingRight]
-  );
-
-  const handleMouseUp = useCallback(() => {
-    setIsDraggingLeft(false);
-    setIsDraggingRight(false);
-  }, []);
-
   useEffect(() => {
-    if (isDraggingLeft || isDraggingRight) {
-      window.addEventListener('mousemove', handleMouseMove);
-      window.addEventListener('mouseup', handleMouseUp);
-    }
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isDraggingLeft, isDraggingRight, handleMouseMove, handleMouseUp]);
+    setRecentlyMovedToNewContainer(recentlyMovedToNewContainerInstance);
+  }, [setRecentlyMovedToNewContainer]);
 
-  // Save panel widths to localStorage when they change
-  useEffect(() => {
-    localStorage.setItem('leftPanelWidth', leftWidth.toString());
-  }, [leftWidth]);
+  const leftPanelStyle = {
+    width: leftPanelWidth,
+    minWidth: LEFT_PANEL_MIN_WIDTH,
+  };
 
-  useEffect(() => {
-    localStorage.setItem('rightPanelWidth', rightWidth.toString());
-  }, [rightWidth]);
+  const rightPanelStyle = {
+    width: rightPanelWidth,
+    minWidth: RIGHT_PANEL_MIN_WIDTH,
+  };
+
+  if (!isMounted) {
+    return <DashboardSkeleton />;
+  }
 
   return (
     <DndContext
@@ -148,17 +137,14 @@ const Page: React.FC = () => {
       <div className='relative flex h-screen w-full flex-row'>
         {/* Left Panel */}
         <div
-          style={{ width: leftWidth, minWidth: 200 }}
+          style={leftPanelStyle}
           className='h-full shrink-0 overflow-y-scroll transition-[overflow] duration-300'
         >
           <LeftPanel />
         </div>
 
         {/* Left Resize Handle */}
-        <div
-          className='group relative w-1 cursor-col-resize hover:bg-blue-400'
-          onMouseDown={() => setIsDraggingLeft(true)}
-        />
+        <LeftDragHandle />
 
         {/* Middle Panel */}
         <div className='h-full grow overflow-y-scroll transition-[overflow] duration-300'>
@@ -166,14 +152,11 @@ const Page: React.FC = () => {
         </div>
 
         {/* Right Resize Handle */}
-        <div
-          className='group relative w-1 cursor-col-resize hover:bg-blue-400'
-          onMouseDown={() => setIsDraggingRight(true)}
-        />
+        <RightDragHandle />
 
         {/* Right Panel */}
         <div
-          style={{ width: rightWidth, minWidth: 250 }}
+          style={rightPanelStyle}
           className='h-full shrink-0 overflow-y-scroll transition-[overflow] duration-300'
         >
           <RightPanel />
