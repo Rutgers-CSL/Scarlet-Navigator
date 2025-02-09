@@ -21,11 +21,9 @@ import useOverlayComponents from '../../dnd-core/dnd-hooks/useOverlayComponents'
 import DroppableContainer from '../../dnd-core/dnd-core-components/DroppableContainer/DroppableContainer';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
-import useHistoryStore from '@/lib/hooks/stores/useHistoryStore';
 import useScheduleHandlers from '../../dnd-core/dnd-hooks/useScheduleHandlers';
 import { EMPTY, PLACEHOLDER_ID } from '@/lib/constants';
 import { CoursesBySemesterID } from '@/lib/types/models';
-import { Button } from '../../dnd-core';
 import {
   calculateSemesterCredits,
   calculateRunningCredits,
@@ -35,22 +33,7 @@ import { getColor, dropAnimation } from '../../dnd-core/dnd-utils';
 import NotesBox from './components/NotesBox';
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
 import { calculateSemesterGPA } from './utils/gpa';
-
-function UndoRedoControls() {
-  const { undo, redo, past, future } = useHistoryStore();
-
-  return (
-    <div className='mb-4 flex justify-center gap-2'>
-      <Button onClick={undo} disabled={past.length === 0}>
-        ↩ Undo
-      </Button>
-      <Button onClick={redo} disabled={future.length === 0}>
-        ↪ Redo
-      </Button>
-    </div>
-  );
-}
-
+import MenuContainer from './components/MenuContainer';
 interface Props {
   adjustScale?: boolean;
   cancelDrop?: CancelDrop;
@@ -210,7 +193,7 @@ export function ScheduleBoard({
           strategy={rectSortingStrategy}
         >
           <div className='flex h-full w-full flex-col'>
-            <UndoRedoControls />
+            <MenuContainer />
             <div className='grid w-full grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-x-4 gap-y-4 px-4'>
               {semesterOrder.map((containerId) => (
                 <React.Fragment key={containerId}>
