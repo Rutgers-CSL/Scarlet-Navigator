@@ -95,7 +95,8 @@ pnpm run loadCourseData
 
 ### General Overview
 
-<img width="952" alt="image" src="https://github.com/user-attachments/assets/cd974db4-d169-4587-a34b-a3d8b126295d" />
+<img width="962" alt="image" src="https://github.com/user-attachments/assets/03c8cf0d-a562-48a8-b7e0-0c241907bf1a" />
+
 
 
 ## Tech Stack and Features
