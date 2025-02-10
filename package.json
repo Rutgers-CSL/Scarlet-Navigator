@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "sh ./scripts/devStart.sh",
     "build": "next build",
-    "start": "next start",
+    "start:frontend": "next start",
+    "start:typesense": "docker-compose up -d typesense",
+    "start": "pnpm run start:frontend & pnpm run start:typesense",
     "lint": "next lint",
     "format": "prettier --check . --config .prettierrc.json",
     "format:fix": "prettier --write . --max-warnings=0 --config .prettierrc.json",
@@ -13,8 +15,7 @@
     "tsc": "tsc -p tsconfig.json --noEmit",
     "prepare": "husky",
     "security:audit": "pnpm audit",
-    "security:outdated": "pnpm outdated",
-    "start:typesense": "mkdir -p typesense-data && docker-compose up"
+    "security:outdated": "pnpm outdated"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

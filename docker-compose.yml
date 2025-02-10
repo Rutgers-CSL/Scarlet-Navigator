@@ -5,5 +5,5 @@ services:
     ports:
       - '8108:8108'
     volumes:
-      - ./typesense-data:${TYPESENSE_DATA_DIR}
+      - ./typesense:${TYPESENSE_DATA_DIR}
     command: '--data-dir ${TYPESENSE_DATA_DIR} --api-key=${TYPESENSE_API_KEY} --enable-cors'

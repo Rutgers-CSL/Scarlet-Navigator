@@ -40,7 +40,9 @@ export default function LeftPanel() {
             href='https://spec.cs.rutgers.edu/spaces/the-csl/'
             target='_blank'
             className='font-medium italic hover:underline'
-          ></Link>
+          >
+            Scarlet Labs
+          </Link>
         </div>
       </div>
       <div

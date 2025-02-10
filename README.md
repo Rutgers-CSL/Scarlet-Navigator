@@ -68,14 +68,26 @@ Currently in VERY active development.
 
 ## Getting Started
 
-First, run the development server:
+To start a development environment, install the following:
+
+- [Docker](https://docs.docker.com/desktop/setup/install/mac-install/)
+- [pnpm](https://pnpm.io/installation)
+
+Then run the following commands:
 
 ```bash
 pnpm run i
 pnpm run dev
 ```
 
+This will run two services:
+
+- Next.js (port 3000)
+- TypeSense (port 8108, dockerized)
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+### Populating TypeSense with Example Course Data
 
 ## Tech Stack and Features
 
