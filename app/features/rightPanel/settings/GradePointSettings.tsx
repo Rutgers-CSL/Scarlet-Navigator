@@ -28,6 +28,7 @@ export default function GradePointSettings() {
               step='0.1'
               min='0'
               max='4'
+              disabled={grade === 'P' || grade === 'NP'}
             />
           </div>
         ))}

@@ -1,4 +1,5 @@
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
+import ConfirmationModal from '@/app/components/ConfirmationModal';
 
 export default function MiscSettings() {
   const resetAllSettings = useSettingsStore((state) => state.resetAllSettings);
@@ -7,12 +8,25 @@ export default function MiscSettings() {
     <div className='space-y-4'>
       <div className='flex items-center justify-between'>
         <button
-          onClick={resetAllSettings}
-          className='rounded-lg bg-red-50 px-3 py-1 text-sm text-red-600 hover:bg-red-100'
+          onClick={() =>
+            (
+              document.getElementById(
+                'reset_settings_modal'
+              ) as HTMLDialogElement
+            )?.showModal()
+          }
+          className='btn btn-neutral'
         >
           Reset All Settings
         </button>
       </div>
+      <ConfirmationModal
+        id='reset_settings_modal'
+        title='Reset All Settings'
+        message='Are you sure you want to reset all settings to their default values? This action cannot be undone.'
+        onConfirm={() => resetAllSettings()}
+        visible={false}
+      />
     </div>
   );
 }

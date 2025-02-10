@@ -7,18 +7,19 @@ export default function VisualsSettings() {
   return (
     <div className='space-y-4'>
       <div className='space-y-3'>
+        <SettingsNumberInput
+          settingKey='goalCreditsForGraduation'
+          label='Goal Credits for Graduation'
+          min={0}
+          max={200}
+        />
+        <SettingsToggle settingKey='progressivelyDarkenSemestersBasedOnCreditGoal' />
         <SettingsToggle settingKey='showGrades' />
         <SettingsToggle settingKey='showCoreLabelsInCoursesInsideScheduleBoard' />
         <SettingsToggle
           settingKey='showGPAsInSemesterTitles'
           label='Show GPAs in Semester Titles'
         />
-        <SettingsNumberInput
-          settingKey='goalCreditsForGraduation'
-          min={0}
-          max={200}
-        />
-        <SettingsToggle settingKey='progressivelyDarkenSemestersBasedOnCreditGoal' />
         <SettingsToggle settingKey='showCreditCountOnCourseTitles' />
         <SettingsToggle settingKey='showQuarterlyStudentTitlesOnSemesterTitles' />
       </div>

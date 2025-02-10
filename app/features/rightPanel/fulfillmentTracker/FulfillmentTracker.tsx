@@ -387,6 +387,7 @@ function CategoryItem({
       </div>
 
       <ConfirmationModal
+        id='remove_category_modal'
         title='Remove Category'
         message={`Are you sure you want to remove the category "${category.name}"? This action cannot be undone.`}
         visible={showRemoveCategoryModal}
@@ -398,6 +399,7 @@ function CategoryItem({
       />
 
       <ConfirmationModal
+        id='remove_core_modal'
         title='Remove Core'
         message={`Are you sure you want to remove the core "${coreToRemove?.name}"? This action cannot be undone.`}
         visible={!!coreToRemove}
@@ -527,6 +529,7 @@ function ProgramItem({
       </div>
 
       <ConfirmationModal
+        id='remove_program_modal'
         title='Remove Program'
         message={`Are you sure you want to remove the program "${program.name}"? This action cannot be undone.`}
         visible={showRemoveProgramModal}
