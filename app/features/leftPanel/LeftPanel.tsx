@@ -57,20 +57,19 @@ export default function LeftPanel() {
             type='radio'
             name='my_tabs_2'
             className='tab'
-            aria-label='Create'
+            aria-label='Search'
             defaultChecked
           />
-          <div className='tab-content'>
-            <CourseCreation />
-          </div>
-
+          <div className='tab-content bg-base-100 p-10'>Search</div>
           <input
             type='radio'
             name='my_tabs_2'
             className='tab'
-            aria-label='Search'
+            aria-label='Create'
           />
-          <div className='tab-content bg-base-100 p-10'>Search</div>
+          <div className='tab-content'>
+            <CourseCreation />
+          </div>
         </div>
       </div>
       <DragHandle />

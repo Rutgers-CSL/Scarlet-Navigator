@@ -52,7 +52,7 @@ export default function NotesEditor({
         {!title && <h3 className='text-sm font-medium'>Notes:</h3>}
         <button
           onClick={isEditing ? handleSave : () => setIsEditing(true)}
-          className='text-sm text-blue-600 hover:text-blue-800'
+          className='btn btn-ghost btn-sm'
         >
           {isEditing ? 'Save' : 'Edit'}
         </button>
@@ -79,15 +79,16 @@ export default function NotesEditor({
       )}
 
       {isEditing ? (
-        <div className='space-y-2'>
+        <fieldset className='fieldset'>
+          <legend className='fieldset-label'>Notes</legend>
           <textarea
             ref={textAreaRef}
             value={editValue}
             onChange={(e) => setEditValue(e.target.value)}
-            className='h-32 w-full rounded-md border px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-hidden'
+            className='textarea textarea-bordered'
             placeholder='Add your notes here...'
           />
-          <div className='text-xs text-gray-500'>
+          <div className='fieldset-label text-sm whitespace-normal'>
             Markdown supported: **bold**, *italic*, # heading, - list,
             [link](url)
             <br />
@@ -95,12 +96,12 @@ export default function NotesEditor({
               href='https://www.markdownguide.org/basic-syntax/'
               target='_blank'
               rel='noopener noreferrer'
-              className='text-blue-600 hover:text-blue-800'
+              className='text-info link'
             >
               Learn more about Markdown
             </a>
           </div>
-        </div>
+        </fieldset>
       ) : (
         <NotesDisplay notes={notes[id]?.note} showNotes={showNotes} />
       )}
