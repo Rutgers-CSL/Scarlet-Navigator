@@ -87,22 +87,10 @@ This will run two services:
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-### Populating TypeSense with Course Data
-
-For search to work, TypeSense needs to have course data. There are two things you can do:
-
-1. Use example data (simple random data)
-
-Run the following command:
+To populate TypeSense with course data,
 
 ```
 pnpm run loadCourseData
-```
-
-2. Load a real set of data (from Rutgers API)
-
-```
-pnpm run loadRealCourseData
 ```
 
 ## Tech Stack and Features
@@ -117,6 +105,7 @@ pnpm run loadRealCourseData
 - [Vercel]()
 - [Docker]()
 - [TypeSense]()
+- [Firebase Auth]()
 
 ### UI
 
