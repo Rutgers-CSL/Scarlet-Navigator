@@ -30,7 +30,7 @@ export default function LeftPanel() {
   return (
     <div
       id='leftPanelContainer'
-      className='text-base-content h-full w-full overflow-hidden border-r'
+      className='text-base-content relative h-full w-full overflow-hidden border-r'
     >
       <div className='mt-4 ml-6 flex flex-col whitespace-nowrap'>
         <div className='text-2xl font-bold'>Scarlet Navigator</div>
@@ -40,13 +40,11 @@ export default function LeftPanel() {
             href='https://spec.cs.rutgers.edu/spaces/the-csl/'
             target='_blank'
             className='font-medium italic hover:underline'
-          >
-            Scarlet Labs
-          </Link>
+          ></Link>
         </div>
       </div>
       <div
-        className='overflow-y-scroll transition-[overflow] duration-300'
+        className='relative overflow-y-scroll transition-[overflow] duration-300'
         style={upperPanelStyle}
       >
         <div
@@ -72,8 +70,9 @@ export default function LeftPanel() {
           </div>
         </div>
       </div>
-      <DragHandle />
-      <div className='border-neutral h-full overflow-y-scroll border-t-1 transition-[overflow] duration-300'>
+
+      <div className='border-neutral relative h-full border-t-1 transition-[overflow] duration-300'>
+        <DragHandle className='absolute -top-1 z-10 w-full' />
         <CoursePool />
       </div>
     </div>

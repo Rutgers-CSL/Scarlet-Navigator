@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import useAuxiliaryStore from './stores/useAuxiliaryStore';
 
 interface UseDraggableProps {
@@ -69,32 +69,33 @@ export function useDraggable({
     };
   }, [isDragging, handleMouseMove, handleMouseUp]);
 
-  const DragHandle = React.memo<DragHandleProps>(
-    ({ className = '', style = {} }) => {
-      const dragHandleClassName = isDragging
-        ? 'bg-blue-400'
-        : 'hover:bg-blue-400/50 bg-transparent transition-colors duration-200';
+  const DragHandle = memo<DragHandleProps>(({ className = '', style = {} }) => {
+    const dragHandleClassName = isDragging
+      ? 'bg-blue-400'
+      : 'hover:bg-blue-400/50 bg-transparent transition-colors duration-200';
 
-      const cursorClassName =
-        direction === 'vertical' ? 'cursor-row-resize' : 'cursor-col-resize';
+    const cursorClassName =
+      direction === 'vertical' ? 'cursor-row-resize' : 'cursor-col-resize';
 
-      const defaultClassName = `${cursorClassName} ${dragHandleClassName}`;
-      const combinedClassName = className
-        ? `${defaultClassName} ${className}`
-        : defaultClassName;
+    const defaultClassName = `${cursorClassName} ${dragHandleClassName}`;
+    const combinedClassName = className
+      ? `${defaultClassName} ${className}`
+      : defaultClassName;
 
-      const defaultStyle =
-        direction === 'vertical'
-          ? { width: '100%', height: '0.5rem' }
-          : { width: '0.5rem', height: '100%' };
+    const defaultStyle =
+      direction === 'vertical'
+        ? { width: '100%', height: '0.5rem' }
+        : { width: '0.5rem', height: '100%' };
 
-      return React.createElement('div', {
-        className: combinedClassName,
-        style: { ...defaultStyle, ...style },
-        onMouseDown: handleMouseDown,
-      });
-    }
-  );
+    return React.createElement('div', {
+      className: combinedClassName,
+      style: {
+        ...defaultStyle,
+        ...style,
+      },
+      onMouseDown: handleMouseDown,
+    });
+  });
 
   DragHandle.displayName = 'DragHandle';
 

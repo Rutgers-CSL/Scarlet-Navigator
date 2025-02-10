@@ -138,27 +138,26 @@ const Page: React.FC = () => {
         {/* Left Panel */}
         <div
           style={leftPanelStyle}
-          className='h-full shrink-0 overflow-y-scroll transition-[overflow] duration-300'
+          className='relative h-full shrink-0 transition-[overflow] duration-300'
         >
           <LeftPanel />
+          <LeftDragHandle className='absolute top-0 -right-1' />
         </div>
 
         {/* Left Resize Handle */}
-        <LeftDragHandle />
 
         {/* Middle Panel */}
         <div className='h-full grow overflow-y-scroll transition-[overflow] duration-300'>
           <MiddlePanel />
         </div>
 
-        {/* Right Resize Handle */}
-        <RightDragHandle />
-
         {/* Right Panel */}
         <div
           style={rightPanelStyle}
-          className='h-full shrink-0 overflow-y-scroll transition-[overflow] duration-300'
+          className='relative h-full shrink-0 transition-[overflow] duration-300'
         >
+          {/* Right Resize Handle */}
+          <RightDragHandle className='absolute -left-1' />
           <RightPanel />
         </div>
       </div>
