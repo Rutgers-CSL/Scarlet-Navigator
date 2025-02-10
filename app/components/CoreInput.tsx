@@ -75,11 +75,7 @@ export default function CoreInput({
         <div>
           <p className='base-content mb-2 text-sm'>Current Cores:</p>
           <div className='flex flex-wrap gap-2'>
-            <CoreList
-              color='blue'
-              cores={selectedCores}
-              handleRemoveCore={removeCore}
-            />
+            <CoreList cores={selectedCores} handleRemoveCore={removeCore} />
           </div>
         </div>
       )}
@@ -88,11 +84,7 @@ export default function CoreInput({
         <div>
           <p className='mb-2 text-sm'>Other Cores You Could Add:</p>
           <div className='flex flex-wrap gap-2'>
-            <CoreList
-              color='neutral'
-              cores={availableCores}
-              handleOnClick={addCore}
-            />
+            <CoreList cores={availableCores} handleOnClick={addCore} />
           </div>
         </div>
       )}

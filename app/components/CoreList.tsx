@@ -3,7 +3,6 @@
 import clsx from 'clsx';
 
 interface CoreListProps {
-  color: string;
   cores: string[];
   handleRemoveCore?: (core: string) => void;
   handleOnClick?: (core: string) => void;
@@ -11,6 +10,14 @@ interface CoreListProps {
 
 function CoreList(props: CoreListProps) {
   const { cores, handleRemoveCore, handleOnClick } = props;
+
+  if (!cores || cores.length === 0) {
+    return (
+      <div className='text-base-content text-sm'>
+        No cores assigned to this course
+      </div>
+    );
+  }
 
   return (
     <div className='flex flex-wrap gap-2'>

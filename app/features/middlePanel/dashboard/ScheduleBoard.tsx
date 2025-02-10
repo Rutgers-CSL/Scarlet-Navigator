@@ -183,6 +183,7 @@ export function ScheduleBoard({
           flexDirection: 'column',
           boxSizing: 'border-box',
           padding: 20,
+          paddingTop: 10,
           width: '100%',
           height: '100%',
           overflow: 'auto',

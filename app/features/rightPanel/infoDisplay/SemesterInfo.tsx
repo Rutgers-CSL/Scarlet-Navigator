@@ -202,7 +202,7 @@ export default function SemesterInfo({ id }: SemesterInfoProps) {
         {semesterCores.size > 0 && (
           <div>
             <span className='mb-1 block font-medium'>Cores Fulfilled:</span>
-            <CoreList color='blue' cores={Array.from(semesterCores)} />
+            <CoreList cores={Array.from(semesterCores)} />
           </div>
         )}
       </div>

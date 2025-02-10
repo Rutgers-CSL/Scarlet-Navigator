@@ -6,19 +6,13 @@ export default function VisualsSettings() {
 
   return (
     <div className='space-y-4'>
-      <div className='flex items-center justify-between'>
-        <h2 className='text-lg font-semibold'>Visual Settings</h2>
-        <button
-          onClick={resetVisuals}
-          className='rounded-lg bg-gray-100 px-3 py-1 text-sm text-gray-600 hover:bg-gray-200'
-        >
-          Reset to Defaults
-        </button>
-      </div>
       <div className='space-y-3'>
         <SettingsToggle settingKey='showGrades' />
         <SettingsToggle settingKey='showCoreLabelsInCoursesInsideScheduleBoard' />
-        <SettingsToggle settingKey='showGPAsInSemesterTitles' />
+        <SettingsToggle
+          settingKey='showGPAsInSemesterTitles'
+          label='Show GPAs in Semester Titles'
+        />
         <SettingsNumberInput
           settingKey='goalCreditsForGraduation'
           min={0}
@@ -27,6 +21,11 @@ export default function VisualsSettings() {
         <SettingsToggle settingKey='progressivelyDarkenSemestersBasedOnCreditGoal' />
         <SettingsToggle settingKey='showCreditCountOnCourseTitles' />
         <SettingsToggle settingKey='showQuarterlyStudentTitlesOnSemesterTitles' />
+      </div>
+      <div className='flex items-center justify-between'>
+        <button onClick={resetVisuals} className='btn btn-sm btn-neutral'>
+          Reset to Defaults
+        </button>
       </div>
     </div>
   );

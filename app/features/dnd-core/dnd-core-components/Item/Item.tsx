@@ -134,7 +134,7 @@ export const Item = React.memo(
               dragOverlay && styles.dragOverlay,
               disabled && styles.disabled,
               color && styles.color,
-              'bg-base-200 text-md mx-3 my-2 rounded-sm p-3 font-bold'
+              'bg-base-200 text-md mx-3 my-2 rounded-md p-3 font-bold'
             )}
             style={style}
             data-cypress='draggable-item'
@@ -163,7 +163,7 @@ export const Item = React.memo(
               </div>
               {showCores && course && course.cores.length > 0 && (
                 <div>
-                  <CoreList color='blue' cores={course.cores} />
+                  <CoreList cores={course.cores} />
                 </div>
               )}
             </div>

@@ -15,15 +15,6 @@ export default function GradePointSettings() {
 
   return (
     <div className='space-y-4'>
-      <div className='flex items-center justify-between'>
-        <h2 className='text-lg font-semibold'>Grade Point Settings</h2>
-        <button
-          onClick={resetGradePoints}
-          className='rounded-lg bg-gray-100 px-3 py-1 text-sm text-gray-600 hover:bg-gray-200'
-        >
-          Reset to Defaults
-        </button>
-      </div>
       <div className='grid grid-cols-2 gap-4'>
         {Object.entries(gradePoints).map(([grade, points]) => (
           <div key={grade} className='flex items-center justify-between'>
@@ -40,6 +31,11 @@ export default function GradePointSettings() {
             />
           </div>
         ))}
+      </div>
+      <div className='flex items-center justify-between'>
+        <button onClick={resetGradePoints} className='btn btn-sm btn-neutral'>
+          Reset to Defaults
+        </button>
       </div>
     </div>
   );
