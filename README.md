@@ -93,6 +93,11 @@ To populate TypeSense with course data,
 pnpm run loadCourseData
 ```
 
+### General Overview
+
+<img width="952" alt="image" src="https://github.com/user-attachments/assets/cd974db4-d169-4587-a34b-a3d8b126295d" />
+
+
 ## Tech Stack and Features
 
 ### Tech
