@@ -95,10 +95,10 @@ pnpm run loadCourseData
 
 ### General Overview
 
-<img width="962" alt="image" src="https://github.com/user-attachments/assets/03c8cf0d-a562-48a8-b7e0-0c241907bf1a" />
+<img width="926" alt="Screenshot 2025-02-11 at 4 41 13 PM" src="https://github.com/user-attachments/assets/5a38e03c-eae2-4e65-b3d6-ca4a77d38230" />
 
 
-
+Authentication isn't meant to be robust on Scarlet Navigator's end since user data will be saved as JSON files on their own Google Drive.
 ## Tech Stack and Features
 
 ### Tech
