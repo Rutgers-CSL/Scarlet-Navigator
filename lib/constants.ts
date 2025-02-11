@@ -13,3 +13,6 @@ export const RIGHT_PANEL_KEY = 'rightPanelWidth';
 export const LEFT_PANEL_SECONDARY_DEFAULT_HEIGHT = 300;
 export const LEFT_PANEL_SECONDARY_MIN_HEIGHT = 200;
 export const LEFT_PANEL_SECONDARY_KEY = 'leftPanelSecondaryHeight';
+
+export const SEARCH_ITEM_DELIMITER = '-search';
+export const SEARCH_CONTAINER_ID = 'search-results-container';

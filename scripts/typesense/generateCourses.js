@@ -5,9 +5,11 @@
  * Generates a JSONL file with random course data.
  */
 
-require('dotenv').config();
-const fs = require('fs');
 const path = require('path');
+const envFile =
+  process.env.NODE_ENV === 'production' ? '.env.prod' : '.env.dev';
+require('dotenv').config({ path: path.resolve(__dirname, '../../' + envFile) });
+const fs = require('fs');
 
 /** Helper to pick a random element from an array */
 function pickRandom(arr) {

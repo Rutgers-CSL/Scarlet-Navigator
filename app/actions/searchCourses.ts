@@ -1,20 +1,7 @@
 'use server';
 
+import { Course } from '@/lib/types/models';
 import Typesense from 'typesense';
-
-function returnHostAndPort() {
-  if (process.env.NODE_ENV === 'production') {
-    return {
-      host: process.env.TYPESENSE_HOST_PROD as string,
-      port: parseInt(process.env.TYPESENSE_PORT_PROD as string),
-    };
-  }
-
-  return {
-    host: process.env.TYPESENSE_HOST_DEV as string,
-    port: parseInt(process.env.TYPESENSE_PORT_DEV as string),
-  };
-}
 
 interface SearchFormInput {
   q: string;
@@ -22,16 +9,15 @@ interface SearchFormInput {
   sort_by?: string;
 }
 
-// Example "Server Action" that can be invoked via a <form> or programmatically.
-export async function searchCoursesAction(formData: SearchFormInput) {
+export async function searchCoursesAction(
+  formData: SearchFormInput
+): Promise<Course[]> {
   if (
     !process.env.TYPESENSE_API_KEY ||
-    !process.env.TYPESENSE_HOST_DEV ||
-    !process.env.TYPESENSE_PORT_DEV
+    !process.env.TYPESENSE_HOST ||
+    !process.env.TYPESENSE_PORT
   ) {
-    throw new Error(
-      'TYPESENSE_API_KEY is not set in the environment variables'
-    );
+    throw new Error('Required Typesense environment variables are not set');
   }
 
   const q = formData.q || '*';
@@ -41,12 +27,12 @@ export async function searchCoursesAction(formData: SearchFormInput) {
   const client = new Typesense.Client({
     nodes: [
       {
-        host: returnHostAndPort().host,
-        port: returnHostAndPort().port,
+        host: process.env.TYPESENSE_HOST,
+        port: parseInt(process.env.TYPESENSE_PORT),
         protocol: 'http',
       },
     ],
-    apiKey: process.env.TYPESENSE_API_KEY as string,
+    apiKey: process.env.TYPESENSE_API_KEY,
     connectionTimeoutSeconds: 2,
   });
 
@@ -63,7 +49,11 @@ export async function searchCoursesAction(formData: SearchFormInput) {
       .documents()
       .search(searchParams);
 
-    return searchResults;
+    if (!searchResults.hits) {
+      return [];
+    }
+
+    return searchResults.hits.map((hit) => hit.document as Course);
   } catch (error) {
     console.error('searchCoursesAction error:', error);
     throw error;

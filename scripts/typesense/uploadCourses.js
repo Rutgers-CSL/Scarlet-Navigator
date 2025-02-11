@@ -12,65 +12,45 @@
  *
  * Environment variables used:
  *  - NODE_ENV (set to 'production' or anything else for dev)
- *  - TYPESENSE_API_KEY_PROD - API key for production environment
- *  - TYPESENSE_API_KEY_DEV - API key for development environment
+ *  - TYPESENSE_API_KEY - API key for TypeSense
  *  - TYPESENSE_PORT - Port number for TypeSense server
- *  - TYPESENSE_HOST_PROD - Host address for production
- *  - TYPESENSE_HOST_DEV - Host address for development
+ *  - TYPESENSE_HOST - Host address for TypeSense
  */
 
 // Import required dependencies
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
+const envFile =
+  process.env.NODE_ENV === 'production' ? '.env.prod' : '.env.dev';
+require('dotenv').config({ path: path.resolve(__dirname, '../../' + envFile) });
 const fs = require('fs');
 const Typesense = require('typesense');
-
-// Determine if we're running in production mode
-const isProduction = process.env.NODE_ENV === 'production';
-
-/**
- * Returns the appropriate TypeSense configuration based on environment
- * @returns {Object} Configuration object with apiKey, port, and host
- */
-function getConfig() {
-  if (isProduction) {
-    return {
-      apiKey: process.env.TYPESENSE_API_KEY_PROD,
-      port: process.env.TYPESENSE_PORT,
-      host: process.env.TYPESENSE_HOST_PROD,
-    };
-  }
-  return {
-    apiKey: process.env.TYPESENSE_API_KEY_DEV,
-    port: process.env.TYPESENSE_PORT,
-    host: process.env.TYPESENSE_HOST_DEV,
-  };
-}
-
-const config = getConfig();
-const { apiKey, port, host } = config;
-
-// Validate that all required environment variables are present
-Object.entries(config).forEach(([key, value]) => {
-  if (!value) {
-    console.error(
-      `❌ Missing required environment variable: ${key} (current env: ${process.env.NODE_ENV || 'development'})`
-    );
-    process.exit(1);
-  }
-});
 
 // Initialize TypeSense client with configuration
 const client = new Typesense.Client({
   nodes: [
     {
-      host,
-      port: Number(port),
+      host: process.env.TYPESENSE_HOST,
+      port: Number(process.env.TYPESENSE_PORT),
       protocol: 'http',
     },
   ],
-  apiKey,
+  apiKey: process.env.TYPESENSE_API_KEY,
   connectionTimeoutSeconds: 2,
+});
+
+// Validate that all required environment variables are present
+const requiredEnvVars = [
+  'TYPESENSE_API_KEY',
+  'TYPESENSE_PORT',
+  'TYPESENSE_HOST',
+];
+requiredEnvVars.forEach((envVar) => {
+  if (!process.env[envVar]) {
+    console.error(
+      `❌ Missing required environment variable: ${envVar} (current env: ${process.env.NODE_ENV || 'development'})`
+    );
+    process.exit(1);
+  }
 });
 
 (async function main() {
