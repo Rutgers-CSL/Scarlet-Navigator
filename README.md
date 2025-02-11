@@ -95,10 +95,10 @@ pnpm run loadCourseData
 
 ### General Overview
 
-<img width="926" alt="Screenshot 2025-02-11 at 4 41 13 PM" src="https://github.com/user-attachments/assets/5a38e03c-eae2-4e65-b3d6-ca4a77d38230" />
+<img width="944" alt="image" src="https://github.com/user-attachments/assets/fec042df-ede6-455c-b2d7-4c28a2800aca" />
 
+Authentication isn't meant to be robust on Scarlet Navigator's end since user data will be saved as JSON files on their own Google Drive. I think it's fine to let Firebase handle the backend and user session since their free tier is 50k MAU. 
 
-Authentication isn't meant to be robust on Scarlet Navigator's end since user data will be saved as JSON files on their own Google Drive.
 ## Tech Stack and Features
 
 ### Tech
