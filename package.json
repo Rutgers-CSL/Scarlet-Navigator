@@ -24,6 +24,7 @@
     "classnames": "^2.5.1",
     "dexie": "^4.0.11",
     "dexie-react-hooks": "^1.1.7",
+    "dotenv": "^16.4.7",
     "firebase": "^11.3.0",
     "idb": "^8.0.2",
     "idb-keyval": "^6.2.1",
@@ -33,6 +34,7 @@
     "react-dom": "^19.0.0",
     "react-markdown": "^9.0.3",
     "sass": "^1.84.0",
+    "typesense": "^1.8.2",
     "use-sync-external-store": "^1.4.0",
     "zustand": "^5.0.3"
   },

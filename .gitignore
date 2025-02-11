@@ -37,3 +37,4 @@ yarn-error.log*
 next-env.d.ts
 
 /typesense
+scripts/typesense/courses.jsonl
