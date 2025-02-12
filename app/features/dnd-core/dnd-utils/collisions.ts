@@ -33,6 +33,17 @@ export const collisionDetectionStrategy = (
     return [];
   }
 
+  // Handle search results differently - they can be dropped in any container
+  const isSearchResult = activeId?.toString().includes('-search');
+  if (isSearchResult) {
+    return closestCenter({
+      ...args,
+      droppableContainers: args.droppableContainers.filter(
+        (container) => container.id in items
+      ),
+    });
+  }
+
   if (activeId && activeId in items) {
     return closestCenter({
       ...args,

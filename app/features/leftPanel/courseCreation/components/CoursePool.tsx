@@ -27,11 +27,6 @@ function CoursePool() {
                 id={value}
                 index={0}
                 handle={false}
-                renderItem={() => (
-                  <div className='p-2'>
-                    {courses[value]?.name || 'Loading...'}
-                  </div>
-                )}
                 style={() => ({})}
                 wrapperStyle={() => ({})}
                 getIndex={() => 0}

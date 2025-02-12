@@ -1,5 +1,6 @@
 import CourseCreation from './courseCreation/CourseCreation';
 import CoursePool from './courseCreation/components/CoursePool';
+import CourseSearch from './courseCreation/components/CourseSearch';
 import Link from 'next/link';
 import { useDraggable } from '@/lib/hooks/useDraggable';
 import {
@@ -60,7 +61,9 @@ export default function LeftPanel() {
             aria-label='Search'
             defaultChecked
           />
-          <div className='tab-content bg-base-100 p-10'>Search</div>
+          <div className='tab-content bg-base-100 p-10'>
+            <CourseSearch />
+          </div>
           <input
             type='radio'
             name='my_tabs_2'

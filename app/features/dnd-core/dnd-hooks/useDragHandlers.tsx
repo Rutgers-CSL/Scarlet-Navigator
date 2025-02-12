@@ -3,7 +3,7 @@ import React, { useRef, useEffect } from 'react';
 import { findContainer, getNextContainerId } from '../dnd-utils';
 import { arrayMove } from '@dnd-kit/sortable';
 import { unstable_batchedUpdates } from 'react-dom';
-import { CoursesBySemesterID, SemesterOrder } from '@/lib/types/models';
+import { CoursesBySemesterID, SemesterOrder, Course } from '@/lib/types/models';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 import { PLACEHOLDER_ID, TRASH_ID } from '@/lib/constants';
@@ -24,6 +24,8 @@ export default function useDragHandlers(
     coursesBySemesterID,
     setCoursesBySemesterID,
     handleDragOperation,
+    courses,
+    setCourses,
   } = state;
 
   const setRecentlyMovedToNewContainer = useAuxiliaryStore(
@@ -123,6 +125,34 @@ export default function useDragHandlers(
     const activeContainer = findContainer(items, active.id);
 
     if (!activeContainer) {
+      // Handle search result drop
+      if (active.data.current?.type === 'search-course' && over?.id) {
+        const searchCourse = active.data.current.course as Course;
+        const courseId = searchCourse.id.toString().replace('-search', '');
+
+        // Add the course to the store
+        const newCourse: Course = {
+          id: courseId,
+          name: searchCourse.name,
+          credits: searchCourse.credits,
+          cores: searchCourse.cores,
+          grade: null,
+        };
+
+        const overContainer = findContainer(items, over.id);
+        if (overContainer) {
+          unstable_batchedUpdates(() => {
+            // Add the course to the courses map
+            setCourses({ ...courses, [courseId]: newCourse });
+
+            // Add the course to the container
+            setItemsWrapper({
+              ...items,
+              [overContainer]: [...items[overContainer], courseId],
+            });
+          });
+        }
+      }
       setActiveId('');
       return;
     }

@@ -223,7 +223,6 @@ export function ScheduleBoard({
                             handle={handle}
                             style={getItemStyles}
                             wrapperStyle={wrapperStyle}
-                            renderItem={renderItem}
                             containerId={containerId}
                             showCores={showCoreLabels}
                             getIndex={(id) => {

@@ -18,6 +18,13 @@ type UseDraggableReturn = {
   dimensionValue: number;
 };
 
+/**
+ * This hook is used to create a draggable tab or panel. This is not related
+ * to the dnd-kit library.
+ *
+ * @param {UseDraggableProps}
+ * @returns {UseDraggableReturn}
+ */
 export function useDraggable({
   dimensionValueModifier,
   direction = 'vertical',
