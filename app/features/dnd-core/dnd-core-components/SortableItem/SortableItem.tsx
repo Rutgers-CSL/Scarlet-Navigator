@@ -4,9 +4,6 @@ import { Item } from '../Item/Item';
 import { getColor } from '../../dnd-utils';
 import useScheduleHandlers from '../../dnd-hooks/useScheduleHandlers';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
-import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
-import { SEARCH_ITEM_DELIMITER } from '@/lib/constants';
-import { useMemo } from 'react';
 
 interface SortableItemProps {
   containerId: UniqueIdentifier;
@@ -46,23 +43,15 @@ export default function SortableItem({
   });
   const { handleRemoveCourse } = useScheduleHandlers();
 
-  const courseName = useMemo(() => {
-    if (id.toString().endsWith(SEARCH_ITEM_DELIMITER)) {
-      const searchResults = useAuxiliaryStore.getState().searchResultMap;
-      if (searchResults[id]) {
-        return searchResults[id].name;
-      }
-    }
-
-    const courses = useScheduleStore.getState().courses;
-    if (!courses[id]) return 'Loading...';
-    return courses[id].name;
-  }, [id]);
+  const courses = useScheduleStore.getState().courses;
+  if (!courses[id]) return null;
+  const courseName = courses[id].name;
 
   return (
     <Item
       id={id}
       ref={disabled ? undefined : setNodeRef}
+      disabled={disabled}
       value={courseName}
       onRemove={() => {
         handleRemoveCourse(id, containerId);

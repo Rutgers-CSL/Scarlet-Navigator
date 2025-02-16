@@ -27,7 +27,7 @@ export default function CourseInfo({ id }: CourseInfoProps) {
     return <div className='p-4 text-gray-500'>Loading course... {id}</div>;
   }
 
-  const { name, credits, cores, grade } = currentCourse;
+  const { name, credits, cores, grade, id: courseID } = currentCourse;
 
   const handleEditToggle = () => {
     if (!isEditing) {
@@ -42,7 +42,7 @@ export default function CourseInfo({ id }: CourseInfoProps) {
   };
 
   const handleSubmit = () => {
-    updateCourse(id, {
+    updateCourse(courseID, {
       name: editForm.name,
       credits: editForm.credits,
       cores: editForm.cores,
@@ -66,6 +66,9 @@ export default function CourseInfo({ id }: CourseInfoProps) {
           <h1 className='mb-3 text-2xl font-bold'>{name}</h1>
         )}
         <div className='space-y-2'>
+          <p>
+            <span className='font-medium'>Course ID:</span> {courseID}
+          </p>
           <p>
             <span className='font-medium'>Credits:</span>{' '}
             {isEditing ? (

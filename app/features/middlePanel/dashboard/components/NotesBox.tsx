@@ -6,6 +6,8 @@ import NotesEditor from '@/app/components/NotesEditor';
 function NotesBox({ semesterID }: { semesterID: SemesterID }) {
   const notes = useNotesStore((state) => state.notes);
   const semester = useScheduleStore((state) => state.semesterByID[semesterID]);
+  if (!semester) return null;
+
   const { title } = semester;
 
   if (!notes[semesterID]) return null;

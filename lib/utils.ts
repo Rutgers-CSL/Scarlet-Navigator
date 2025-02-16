@@ -45,9 +45,7 @@ export const createDummySchedule = (): Omit<
     { length: NUM_SEMESTERS },
     (_, i) => ({
       id: `semester${i}`,
-      courses: allCourses[i].map((course) => course.id),
       title: `Semester ${i + 1}`,
-      grade: null,
     })
   );
 
@@ -63,8 +61,10 @@ export const createDummySchedule = (): Omit<
   const coursesBySemesterID: CoursesBySemesterID = {};
   const semesterByID: Record<string, Semester> = {};
 
-  semesterArray.forEach((semester) => {
-    coursesBySemesterID[semester.id] = semester.courses;
+  semesterArray.forEach((semester, index) => {
+    coursesBySemesterID[semester.id] = allCourses[index].map(
+      (course) => course.id
+    );
     semesterByID[semester.id] = semester;
   });
 

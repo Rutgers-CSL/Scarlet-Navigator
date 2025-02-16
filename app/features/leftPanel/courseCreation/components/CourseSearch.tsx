@@ -1,24 +1,22 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { Course } from '@/lib/types/models';
+import { useState } from 'react';
 import { searchCoursesAction } from '@/app/actions/searchCourses';
-import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 import { SEARCH_ITEM_DELIMITER, SEARCH_CONTAINER_ID } from '@/lib/constants';
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { SortableItem } from '@/app/features/dnd-core/dnd-core-components/SortableItem';
+import { DroppableContainer } from '@/app/features/dnd-core/dnd-core-components/DroppableContainer';
+import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 
 export default function CourseSearch() {
   const [searchQuery, setSearchQuery] = useState('');
-  const { searchResultMap, setSearchResultMap } = useAuxiliaryStore();
   const [isLoading, setIsLoading] = useState(false);
-
-  const searchResultOrder = useMemo(() => {
-    return Object.keys(searchResultMap);
-  }, [searchResultMap]);
+  const { coursesBySemesterID, courses, setSearchResults } =
+    useScheduleStore.getState();
+  const searchItems = coursesBySemesterID[SEARCH_CONTAINER_ID] || [];
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,14 +27,7 @@ export default function CourseSearch() {
       const results = await searchCoursesAction({ q: searchQuery });
       const limitedResults = results.slice(0, 10);
 
-      const resultMap: Record<string, Course> = {};
-
-      for (const course of limitedResults) {
-        const courseID = `${course.id}${SEARCH_ITEM_DELIMITER}`;
-        resultMap[courseID] = course;
-      }
-
-      setSearchResultMap(resultMap); // in the auxiliary store
+      setSearchResults(limitedResults);
     } catch (error) {
       console.error('Search failed:', error);
     } finally {
@@ -66,26 +57,36 @@ export default function CourseSearch() {
       </form>
 
       <div className='space-y-2'>
-        {searchResultOrder.length === 0 && searchQuery && !isLoading && (
+        {searchItems.length === 0 && searchQuery && !isLoading && (
           <div className='text-base-content text-center'>No courses found</div>
         )}
-        <SortableContext
-          items={searchResultOrder}
-          strategy={verticalListSortingStrategy}
-        >
-          {searchResultOrder.map((courseID) => (
-            <SortableItem
-              key={courseID}
-              containerId={SEARCH_CONTAINER_ID}
-              id={courseID}
-              index={0}
-              handle={false}
-              style={() => ({})}
-              getIndex={() => 0}
-              wrapperStyle={() => ({})}
-            />
-          ))}
-        </SortableContext>
+        <DroppableContainer id={SEARCH_CONTAINER_ID} items={searchItems}>
+          <SortableContext
+            items={searchItems}
+            strategy={verticalListSortingStrategy}
+          >
+            {searchItems.map((courseId) => {
+              const potentialCourseId = courseId
+                .toString()
+                .replace(SEARCH_ITEM_DELIMITER, '');
+              const disabled = courses.hasOwnProperty(potentialCourseId);
+
+              return (
+                <SortableItem
+                  key={courseId}
+                  containerId={SEARCH_CONTAINER_ID}
+                  id={courseId}
+                  index={0}
+                  handle={false}
+                  style={() => ({})}
+                  getIndex={() => 0}
+                  wrapperStyle={() => ({})}
+                  disabled={disabled}
+                />
+              );
+            })}
+          </SortableContext>
+        </DroppableContainer>
       </div>
     </div>
   );

@@ -11,7 +11,6 @@ function CoursePool() {
   const coursesBySemesterID = useScheduleStore(
     (state) => state.coursesBySemesterID
   );
-  const courses = useScheduleStore((state) => state.courses);
   const items = coursesBySemesterID[COURSE_POOL_CONTAINER_ID] || [];
 
   return (

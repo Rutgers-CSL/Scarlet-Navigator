@@ -1,4 +1,4 @@
-import { SemesterID, Course } from '@/lib/types/models';
+import { SemesterID } from '@/lib/types/models';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { RefObject } from 'react';
@@ -16,10 +16,6 @@ type AuxiliaryStore = {
   setActiveTab: (tab: 'info' | 'tracker' | 'settings') => void;
   setPanelDimension: (key: string, value: number) => void;
   getPanelDimension: (key: string, defaultValue: number) => number;
-
-  searchResultMap: Record<string, Course>;
-  setSearchResultMap: (results: Record<string, Course>) => void;
-  clearSearchResultMap: () => void;
 };
 
 /**
@@ -60,10 +56,6 @@ const useAuxiliaryStore = create<AuxiliaryStore>()(
       getPanelDimension: (key: string, defaultValue: number) => {
         return get().panelDimensions[key] ?? defaultValue;
       },
-      setSearchResultMap: (results: Record<string, Course>) => {
-        set({ searchResultMap: results });
-      },
-      clearSearchResultMap: () => set({ searchResultMap: {} }),
     }),
     {
       name: 'auxiliary-storage',

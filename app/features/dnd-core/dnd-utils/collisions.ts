@@ -6,10 +6,20 @@ import {
   CollisionDetection,
   UniqueIdentifier,
 } from '@dnd-kit/core';
-import { TRASH_ID } from '@/lib/constants';
+import { SEARCH_ITEM_DELIMITER, TRASH_ID } from '@/lib/constants';
 import { RefObject } from 'react';
 
 type Items = Record<UniqueIdentifier, UniqueIdentifier[]>;
+
+/**
+ *
+ * PERSONAL NOTES:
+ *
+ * This collision strategy is meant to do the clean animation where the course
+ * goes to its designated spot smoothly. If you remove this,
+ * you will find that courses snap instantly to their designated spot.
+ *
+ */
 
 /**
  * Custom collision detection strategy optimized for multiple containers
@@ -33,25 +43,35 @@ export const collisionDetectionStrategy = (
     return [];
   }
 
-  // Handle search results differently - they can be dropped in any container
-  const isSearchResult = activeId?.toString().includes('-search');
-  if (isSearchResult) {
-    return closestCenter({
-      ...args,
-      droppableContainers: args.droppableContainers.filter(
-        (container) => container.id in items
-      ),
-    });
-  }
+  //if activeID ends with '-search', return closestCenter
+  // if (activeId?.toString().endsWith(SEARCH_ITEM_DELIMITER)) {
+  //   return closestCenter({
+  //     ...args,
+  //     droppableContainers: args.droppableContainers.filter(
+  //       (container) => container.id in items
+  //     ),
+  //   });
+  // }
 
-  if (activeId && activeId in items) {
-    return closestCenter({
-      ...args,
-      droppableContainers: args.droppableContainers.filter(
-        (container) => container.id in items
-      ),
-    });
-  }
+  // // Handle search results differently - they can be dropped in any container
+  // const isSearchResult = activeId?.toString().includes('-search');
+  // if (isSearchResult) {
+  //   return closestCenter({
+  //     ...args,
+  //     droppableContainers: args.droppableContainers.filter(
+  //       (container) => container.id in items
+  //     ),
+  //   });
+  // }
+
+  // if (activeId && activeId in items) {
+  //   return closestCenter({
+  //     ...args,
+  //     droppableContainers: args.droppableContainers.filter(
+  //       (container) => container.id in items
+  //     ),
+  //   });
+  // }
 
   // Start by finding any intersecting droppable
   const pointerIntersections = pointerWithin(args);
@@ -66,6 +86,35 @@ export const collisionDetectionStrategy = (
     if (overId === TRASH_ID) {
       // If the intersecting droppable is the trash, return early
       return intersections;
+    }
+
+    const draggingCourseIsSearchItem = activeId
+      ?.toString()
+      .endsWith(SEARCH_ITEM_DELIMITER);
+    const overContainerIsSearchContainer = overId
+      .toString()
+      .endsWith(SEARCH_ITEM_DELIMITER);
+
+    const userIsDraggingSearchItemWithinSearchContainer =
+      draggingCourseIsSearchItem && overContainerIsSearchContainer;
+    //print activeId and overId
+    console.log('activeId', activeId);
+    console.log('overId', overId);
+    /**
+     * Important Note:
+     * If the user is dragging a search result within the search container,
+     * we want to prevent the search container items from re-arranging.
+     *
+     * If the user is moving the search item OUT OF the search container, then we
+     * want to allow the re-arrangement animations to occur.
+     */
+    if (userIsDraggingSearchItemWithinSearchContainer) {
+      return closestCenter({
+        ...args,
+        droppableContainers: args.droppableContainers.filter(
+          (container) => container.id in items
+        ),
+      });
     }
 
     if (overId in items) {

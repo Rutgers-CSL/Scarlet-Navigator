@@ -73,8 +73,13 @@ const Page: React.FC = () => {
 
   const { coursesBySemesterID } = scheduleState;
 
-  const { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel } =
-    useDragHandlers(clonedItems, setClonedItems);
+  const {
+    handleDragStart,
+    handleDragOver,
+    handleDragEnd,
+    handleDragCancel,
+    handleDragMove,
+  } = useDragHandlers(clonedItems, setClonedItems);
 
   const sensorOptions = {
     activationConstraint: {
@@ -133,6 +138,7 @@ const Page: React.FC = () => {
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
       onDragCancel={handleDragCancel}
+      onDragMove={handleDragMove}
     >
       <div className='relative flex h-screen w-full flex-row'>
         {/* Left Panel */}

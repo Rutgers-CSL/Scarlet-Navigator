@@ -177,18 +177,7 @@ export function ScheduleBoard({
 
   return (
     <>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          boxSizing: 'border-box',
-          padding: 20,
-          paddingTop: 10,
-          width: '100%',
-          height: '100%',
-          overflow: 'auto',
-        }}
-      >
+      <div className='box-border flex h-full w-full flex-col overflow-auto p-5 pt-[10px]'>
         <SortableContext
           items={[...semesterOrder, PLACEHOLDER_ID]}
           strategy={rectSortingStrategy}

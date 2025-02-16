@@ -3,10 +3,15 @@ import React, { useRef, useEffect } from 'react';
 import { findContainer, getNextContainerId } from '../dnd-utils';
 import { arrayMove } from '@dnd-kit/sortable';
 import { unstable_batchedUpdates } from 'react-dom';
-import { CoursesBySemesterID, SemesterOrder, Course } from '@/lib/types/models';
+import { CoursesBySemesterID, SemesterOrder } from '@/lib/types/models';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
-import { PLACEHOLDER_ID, TRASH_ID } from '@/lib/constants';
+import {
+  PLACEHOLDER_ID,
+  SEARCH_CONTAINER_ID,
+  SEARCH_ITEM_DELIMITER,
+  TRASH_ID,
+} from '@/lib/constants';
 
 export default function useDragHandlers(
   clonedItems: CoursesBySemesterID | null,
@@ -57,6 +62,7 @@ export default function useDragHandlers(
   };
 
   const handleDragOver = (event: DragOverEvent) => {
+    console.log('I AM HANDLING DRAGGING OVER !!!!', event);
     const { active, over } = event;
     const overId = over?.id;
 
@@ -68,6 +74,25 @@ export default function useDragHandlers(
     const activeContainer = findContainer(items, active.id);
 
     if (!overContainer || !activeContainer) {
+      return;
+    }
+
+    const draggingCourseIsSearchItem = active.id
+      .toString()
+      .endsWith(SEARCH_ITEM_DELIMITER);
+    if (overContainer === SEARCH_CONTAINER_ID && draggingCourseIsSearchItem) {
+      return;
+    }
+
+    //print the active and over containers and overids and activeids
+    console.log('--------------------------------');
+    console.log('activeContainer', activeContainer);
+    console.log('overContainer', overContainer);
+    console.log('overId', overId);
+    console.log('activeId', active.id);
+    console.log('--------------------------------');
+
+    if (overContainer === SEARCH_CONTAINER_ID) {
       return;
     }
 
@@ -113,49 +138,65 @@ export default function useDragHandlers(
   };
 
   const handleDragEnd = (event: DragOverEvent) => {
+    // console.log('handleDragEnd', event);
     const { active, over } = event;
+    const activeId = active.id;
 
-    if (active.id in items && over?.id) {
-      const activeIndex = containers.indexOf(active.id);
+    if (activeId in items && over?.id) {
+      const activeIndex = containers.indexOf(activeId);
       const overIndex = containers.indexOf(over.id);
 
       setSemesterOrderWrapper(arrayMove(containers, activeIndex, overIndex));
     }
 
-    const activeContainer = findContainer(items, active.id);
+    const activeContainer = findContainer(items, activeId);
+    const overContainer = findContainer(items, over?.id ?? '');
 
-    if (!activeContainer) {
-      // Handle search result drop
-      if (active.data.current?.type === 'search-course' && over?.id) {
-        const searchCourse = active.data.current.course as Course;
-        const courseId = searchCourse.id.toString().replace('-search', '');
-
-        // Add the course to the store
-        const newCourse: Course = {
-          id: courseId,
-          name: searchCourse.name,
-          credits: searchCourse.credits,
-          cores: searchCourse.cores,
-          grade: null,
-        };
-
-        const overContainer = findContainer(items, over.id);
-        if (overContainer) {
-          unstable_batchedUpdates(() => {
-            // Add the course to the courses map
-            setCourses({ ...courses, [courseId]: newCourse });
-
-            // Add the course to the container
-            setItemsWrapper({
-              ...items,
-              [overContainer]: [...items[overContainer], courseId],
-            });
-          });
-        }
-      }
-      setActiveId('');
+    if (!overContainer || !activeContainer) {
       return;
     }
+
+    const draggingCourseIsSearchItem = active.id
+      .toString()
+      .endsWith(SEARCH_ITEM_DELIMITER);
+    if (overContainer === SEARCH_CONTAINER_ID && draggingCourseIsSearchItem) {
+      return;
+    }
+
+    // if (!activeContainer) {
+    //   // Handle search result drop
+    //   //todo - this line is not right
+    //   if (active.data.current?.type === 'search-course' && over?.id) {
+    //     const searchCourse = active.data.current.course as Course;
+    //     const courseId = searchCourse.id.toString().replace('-search', '');
+
+    //     // Add the course to the store
+    //     const newCourse: Course = {
+    //       id: courseId,
+    //       name: searchCourse.name,
+    //       credits: searchCourse.credits,
+    //       cores: searchCourse.cores,
+    //       grade: null,
+    //     };
+
+    //     // const overContainer = findContainer(items, over?.id);
+
+    //     if (overContainer) {
+    //       unstable_batchedUpdates(() => {
+    //         // Add the course to the courses map
+    //         setCourses({ ...courses, [courseId]: newCourse });
+
+    //         // Add the course to the container
+    //         setItemsWrapper({
+    //           ...items,
+    //           [overContainer]: [...items[overContainer], courseId],
+    //         });
+    //       });
+    //     }
+    //   }
+    //   setActiveId('');
+    //   return;
+    // }
 
     const overId = over?.id;
 
@@ -163,17 +204,6 @@ export default function useDragHandlers(
       setActiveId('');
       return;
     }
-
-    // if (overId === TRASH_ID) {
-    //   setItemsWrapper({
-    //     ...items,
-    //     [activeContainer]: items[activeContainer].filter(
-    //       (id) => id !== activeId
-    //     ),
-    //   });
-    //   setActiveId("");
-    //   return;
-    // }
 
     if (overId === PLACEHOLDER_ID) {
       const newContainerId = getNextContainerId(items);
@@ -192,37 +222,55 @@ export default function useDragHandlers(
       return;
     }
 
-    const overContainer = findContainer(items, overId);
+    const movingFromSearchContainerToScheduleBoard = active.id
+      .toString()
+      .endsWith(SEARCH_ITEM_DELIMITER);
 
-    if (overContainer) {
-      console.log('overContainer', overContainer);
-      const activeIndex = items[activeContainer].indexOf(active.id);
-      const overIndex = items[overContainer].indexOf(overId);
-      const newItemState = {
-        ...items,
-        [overContainer]: arrayMove(
-          items[overContainer],
-          activeIndex,
-          overIndex
-        ),
-      };
+    const activeIndex = items[activeContainer].indexOf(active.id);
+    const overIndex = items[overContainer].indexOf(overId);
+    const newItemState = {
+      ...items,
+      [overContainer]: arrayMove(items[overContainer], activeIndex, overIndex),
+    };
 
-      if (activeContainer === overContainer && moveRef.current) {
-        moveRef.current = true;
-      }
-      setItemsWrapper(newItemState);
+    if (movingFromSearchContainerToScheduleBoard) {
+      const newCourseId = activeId
+        .toString()
+        .replace(SEARCH_ITEM_DELIMITER, '');
+      setCourses({
+        ...courses,
+        [newCourseId]: {
+          ...courses[activeId],
+          id: newCourseId,
+        },
+      });
+      newItemState[overContainer][overIndex] = newCourseId;
     }
+
+    if (activeContainer === overContainer && moveRef.current) {
+      moveRef.current = true;
+    }
+    setItemsWrapper(newItemState);
+
     setActiveId('');
   };
 
   const handleDragStart = (event: DragOverEvent) => {
-    console.log('test');
+    // console.log('handleDragStart', event);
     const { active } = event;
+
     setActiveId(active.id);
-    setClonedItems(items);
+
+    // setClonedItems(items);
+  };
+
+  const handleDragMove = (event: DragOverEvent) => {
+    // console/.log('handleDragMove', event);
+    return;
   };
 
   const handleDragCancel = () => {
+    // console.log('handleDragCancel');
     if (clonedItems) {
       // Reset items to their original state in case items have been
       // Dragged across containers
@@ -237,5 +285,6 @@ export default function useDragHandlers(
     handleDragEnd,
     handleDragCancel,
     handleDragStart,
+    handleDragMove,
   };
 }

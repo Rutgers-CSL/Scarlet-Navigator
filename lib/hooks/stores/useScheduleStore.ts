@@ -14,6 +14,7 @@ import {
   SemesterOrder,
 } from '@/lib/types/models';
 import { COURSE_POOL_CONTAINER_ID } from '@/app/features/leftPanel/courseCreation/CourseCreation';
+import { SEARCH_CONTAINER_ID, SEARCH_ITEM_DELIMITER } from '@/lib/constants';
 import useHistoryStore from './useHistoryStore';
 import { createDummySchedule } from '@/lib/utils';
 
@@ -35,7 +36,10 @@ export const useScheduleStore = create<ScheduleStore>()(
 
       return {
         semesterOrder: [],
-        coursesBySemesterID: {},
+        coursesBySemesterID: {
+          [SEARCH_CONTAINER_ID]: [],
+          [COURSE_POOL_CONTAINER_ID]: [],
+        },
         semesterByID: {},
         courses: {},
         globalCores: new Set<string>(),
@@ -199,6 +203,46 @@ export const useScheduleStore = create<ScheduleStore>()(
             semesterByID: updatedSemesterByID,
             coursesBySemesterID: updatedCoursesBySemesterID,
             courses: updatedCourses,
+          });
+        },
+
+        setSearchResults: (courses: Course[]) => {
+          const state = get();
+          const updatedCourses = { ...state.courses };
+          const updatedCoursesBySemesterID: CoursesBySemesterID = {
+            ...state.coursesBySemesterID,
+            // on new searches always start with a blank slate
+            [SEARCH_CONTAINER_ID]: [],
+          };
+
+          // Delete existing search results from course id mapping
+          Object.keys(updatedCourses).forEach((courseId) => {
+            if (courseId.endsWith(SEARCH_ITEM_DELIMITER)) {
+              delete updatedCourses[courseId];
+            }
+          });
+
+          //TODO REMOVE: for debugging. checking if course search items have actually been deleted
+          Object.keys(updatedCourses).forEach((courseId) => {
+            if (courseId.endsWith(SEARCH_ITEM_DELIMITER)) {
+              console.log(
+                'WRONGGGGGGG!!!! Course from search STILL EXISTS: ',
+                courseId
+              );
+            }
+          });
+
+          // Add new search results to new search container
+          courses.forEach((course) => {
+            const courseId = `${course.id}${SEARCH_ITEM_DELIMITER}`;
+            course.id = courseId;
+            updatedCourses[courseId] = course;
+            updatedCoursesBySemesterID[SEARCH_CONTAINER_ID].push(courseId);
+          });
+
+          set({
+            courses: updatedCourses,
+            coursesBySemesterID: updatedCoursesBySemesterID,
           });
         },
       };

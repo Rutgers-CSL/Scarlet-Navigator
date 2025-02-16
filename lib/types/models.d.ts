@@ -27,7 +27,6 @@ export type SemesterOrder = SemesterID[];
 
 export interface Semester {
   id: SemesterID;
-  courses: CourseID[]; //ordered
   title: string;
 }
 
@@ -81,6 +80,7 @@ export interface ScheduleActions {
   redo: () => void;
   ___TEMP___populate: () => void;
   ______reset______(): void;
+  setSearchResults: (courses: Course[]) => void;
 }
 
 export interface _ScheduleActions {
