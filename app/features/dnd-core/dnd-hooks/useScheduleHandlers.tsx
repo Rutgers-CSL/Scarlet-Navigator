@@ -59,12 +59,7 @@ export default function useScheduleHandlers() {
     containerID: UniqueIdentifier
   ) => {
     console.log('handleRemoveCourse');
-    const newItems = {
-      ...items,
-      [containerID]: items[containerID].filter((id) => id !== courseID),
-    };
-
-    setCoursesBySemesterID(newItems);
+    useScheduleStore.getState().removeCourse(courseID as string, containerID);
   };
 
   return {

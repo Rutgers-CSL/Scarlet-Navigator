@@ -17,6 +17,7 @@ import { COURSE_POOL_CONTAINER_ID } from '@/app/features/leftPanel/courseCreatio
 import { SEARCH_CONTAINER_ID, SEARCH_ITEM_DELIMITER } from '@/lib/constants';
 import useHistoryStore from './useHistoryStore';
 import { createDummySchedule } from '@/lib/utils';
+import { UniqueIdentifier } from '@dnd-kit/core';
 
 type ScheduleStore = ScheduleActions & Omit<ScheduleState, 'past' | 'future'>;
 type SchedulePersist = (
@@ -201,6 +202,27 @@ export const useScheduleStore = create<ScheduleStore>()(
           set({
             semesterOrder: updatedSemesterOrder,
             semesterByID: updatedSemesterByID,
+            coursesBySemesterID: updatedCoursesBySemesterID,
+            courses: updatedCourses,
+          });
+        },
+
+        removeCourse: (courseId: CourseID, containerId: UniqueIdentifier) => {
+          const state = get();
+          saveToHistory(state);
+
+          // Remove course from coursesBySemesterID
+          const updatedCoursesBySemesterID = {
+            ...state.coursesBySemesterID,
+            [containerId]: state.coursesBySemesterID[containerId].filter(
+              (id) => id !== courseId
+            ),
+          };
+
+          // Remove course from courses object
+          const { [courseId]: _, ...updatedCourses } = state.courses;
+
+          set({
             coursesBySemesterID: updatedCoursesBySemesterID,
             courses: updatedCourses,
           });
