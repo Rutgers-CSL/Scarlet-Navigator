@@ -1,7 +1,7 @@
 import {
   COURSE_POOL_CONTAINER_ID,
   COURSE_CREATION_COURSE_ID,
-} from '@/app/features/leftPanel/courseCreation/CourseCreation';
+} from '@/app/features/leftPanel/components/CourseCreation';
 import {
   Course,
   Semester,

@@ -1,6 +1,6 @@
-import CourseCreation from './courseCreation/CourseCreation';
-import CoursePool from './courseCreation/components/CoursePool';
-import CourseSearch from './courseCreation/components/CourseSearch';
+import CourseCreation from './components/CourseCreation';
+import CoursePool from './components/CoursePool';
+import CourseSearch from './components/CourseSearch';
 import Link from 'next/link';
 import { useDraggable } from '@/lib/hooks/useDraggable';
 import {

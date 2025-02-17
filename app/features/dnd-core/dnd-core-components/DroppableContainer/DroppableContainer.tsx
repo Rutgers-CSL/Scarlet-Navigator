@@ -9,7 +9,7 @@ import {
   calculateRunningCredits,
   getHeaderColorClass,
 } from '../../../middlePanel/dashboard/utils/credits';
-import { COURSE_POOL_CONTAINER_ID } from '../../../leftPanel/courseCreation/CourseCreation';
+import { COURSE_POOL_CONTAINER_ID } from '../../../leftPanel/components/CourseCreation';
 
 export default function DroppableContainer({
   children,

@@ -4,7 +4,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { COURSE_POOL_CONTAINER_ID } from '../CourseCreation';
+import { COURSE_POOL_CONTAINER_ID } from './CourseCreation';
 import { DroppableContainer } from '@/app/features/dnd-core/dnd-core-components/DroppableContainer';
 
 function CoursePool() {

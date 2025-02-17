@@ -13,7 +13,7 @@ import {
   SemesterID,
   SemesterOrder,
 } from '@/lib/types/models';
-import { COURSE_POOL_CONTAINER_ID } from '@/app/features/leftPanel/courseCreation/CourseCreation';
+import { COURSE_POOL_CONTAINER_ID } from '@/app/features/leftPanel/components/CourseCreation';
 import { SEARCH_CONTAINER_ID, SEARCH_ITEM_DELIMITER } from '@/lib/constants';
 import useHistoryStore from './useHistoryStore';
 import { createDummySchedule } from '@/lib/utils';

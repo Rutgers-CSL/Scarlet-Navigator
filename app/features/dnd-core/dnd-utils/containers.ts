@@ -1,4 +1,4 @@
-import { COURSE_POOL_CONTAINER_ID } from '@/app/features/leftPanel/courseCreation/CourseCreation';
+import { COURSE_POOL_CONTAINER_ID } from '@/app/features/leftPanel/components/CourseCreation';
 import { CoursesBySemesterID } from '@/lib/types/models';
 import { UniqueIdentifier } from '@dnd-kit/core';
 

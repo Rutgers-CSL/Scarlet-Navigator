@@ -9,7 +9,7 @@ import {
   calculateRunningCredits,
 } from '../../middlePanel/dashboard/utils/credits';
 
-import { COURSE_POOL_CONTAINER_ID } from '@/app/features/leftPanel/courseCreation/CourseCreation';
+import { COURSE_POOL_CONTAINER_ID } from '@/app/features/leftPanel/components/CourseCreation';
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
 
 export const COLUMNS_DEPRECATED_DO_NOT_USE = 5;
