@@ -20,7 +20,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useKeyboardShortcuts } from '@/lib/hooks/useKeyboardShortcuts';
 import { useDraggable } from '@/lib/hooks/useDraggable';
 import {
@@ -37,7 +37,9 @@ import DashboardSkeleton from '@/app/components/DashboardSkeleton';
 const Page: React.FC = () => {
   useKeyboardShortcuts();
 
-  const scheduleState = useScheduleStore();
+  const coursesBySemesterID = useScheduleStore((state) => {
+    return state.coursesBySemesterID;
+  });
   const {
     setRecentlyMovedToNewContainer,
     recentlyMovedToNewContainer,
@@ -71,8 +73,6 @@ const Page: React.FC = () => {
     null
   );
 
-  const { coursesBySemesterID } = scheduleState;
-
   const {
     handleDragStart,
     handleDragOver,
@@ -97,19 +97,9 @@ const Page: React.FC = () => {
 
   const collisionDetectionStrategy: CollisionDetection = useCallback(
     (args) =>
-      detectionStrategy(
-        args,
-        activeID,
-        lastOverId,
-        coursesBySemesterID,
-        recentlyMovedToNewContainer
-      ),
-    [activeID, coursesBySemesterID, recentlyMovedToNewContainer]
+      detectionStrategy(args, activeID, lastOverId, coursesBySemesterID),
+    [activeID, coursesBySemesterID]
   );
-
-  useEffect(() => {
-    setRecentlyMovedToNewContainer(recentlyMovedToNewContainerInstance);
-  }, [setRecentlyMovedToNewContainer]);
 
   const leftPanelStyle = {
     width: leftPanelWidth,
@@ -128,7 +118,7 @@ const Page: React.FC = () => {
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={collisionDetectionStrategy}
+      // collisionDetection={collisionDetectionStrategy}
       measuring={{
         droppable: {
           strategy: MeasuringStrategy.Always,

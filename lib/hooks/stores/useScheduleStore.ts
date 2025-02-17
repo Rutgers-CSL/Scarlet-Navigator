@@ -148,9 +148,9 @@ export const useScheduleStore = create<ScheduleStore>()(
           isNewContainerMove: boolean = false
         ) => {
           const currentState = get();
-          if (isNewContainerMove) {
-            saveToHistory(currentState);
-          }
+          // if (isNewContainerMove) {
+          //   saveToHistory(currentState);
+          // }
           set({ coursesBySemesterID: semesters });
         },
 

@@ -1,17 +1,16 @@
 import { DragOverEvent } from '@dnd-kit/core';
-import React, { useRef, useEffect } from 'react';
-import { findContainer, getNextContainerId } from '../dnd-utils';
+import React, { useRef } from 'react';
+import { findContainer } from '../dnd-utils';
 import { arrayMove } from '@dnd-kit/sortable';
-import { unstable_batchedUpdates } from 'react-dom';
 import { CoursesBySemesterID, SemesterOrder } from '@/lib/types/models';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 import {
-  PLACEHOLDER_ID,
   SEARCH_CONTAINER_ID,
   SEARCH_ITEM_DELIMITER,
   TRASH_ID,
 } from '@/lib/constants';
+import { useShallow } from 'zustand/react/shallow';
 
 export default function useDragHandlers(
   clonedItems: CoursesBySemesterID | null,
@@ -22,7 +21,6 @@ export default function useDragHandlers(
   // whether or not a drag operation was recently performed
   // and the list of items needs to be updated
   const moveRef = useRef(false);
-  const state = useScheduleStore();
   const {
     semesterOrder,
     setSemesterOrder,
@@ -31,30 +29,59 @@ export default function useDragHandlers(
     handleDragOperation,
     courses,
     setCourses,
-  } = state;
-
-  const setRecentlyMovedToNewContainer = useAuxiliaryStore(
-    (state) => state.setRecentlyMovedToNewContainer
+  } = useScheduleStore(
+    useShallow((state) => {
+      return {
+        semesterOrder: state.semesterOrder,
+        setSemesterOrder: state.setSemesterOrder,
+        coursesBySemesterID: state.coursesBySemesterID,
+        setCoursesBySemesterID: state.setCoursesBySemesterID,
+        handleDragOperation: state.handleDragOperation,
+        courses: state.courses,
+        setCourses: state.setCourses,
+      };
+    })
   );
+
+  // const setRecentlyMovedToNewContainer = useAuxiliaryStore(
+  //   (state) => state.setRecentlyMovedToNewContainer
+  // );
   const activeId = useAuxiliaryStore((state) => state.activeID);
   const setActiveId = useAuxiliaryStore((state) => state.setActiveID);
-
-  useEffect(() => {
-    if (moveRef.current) {
-      setRecentlyMovedToNewContainer(moveRef);
-    }
-  }, [setRecentlyMovedToNewContainer]);
 
   const items = coursesBySemesterID;
   const containers = semesterOrder;
 
-  const setItemsWrapper = (items: CoursesBySemesterID) => {
-    if (moveRef.current) {
-      handleDragOperation(items, true);
-      moveRef.current = false;
-    } else {
-      handleDragOperation(items, false);
+  const setItemsWrapper = (
+    items: CoursesBySemesterID,
+    isDragEnd: boolean = false
+  ) => {
+    console.log('hello world', moveRef);
+
+    if (isDragEnd) {
+      // Check if any non-search container has a search item and fix it
+
+      Object.keys(items).forEach((containerId) => {
+        if (containerId === SEARCH_CONTAINER_ID) return;
+
+        const courseIds = items[containerId];
+        const fixedCourseIds = courseIds.map((id) =>
+          id.toString().endsWith(SEARCH_ITEM_DELIMITER)
+            ? id.toString().replace(SEARCH_ITEM_DELIMITER, '')
+            : id
+        );
+
+        items[containerId] = fixedCourseIds;
+      });
     }
+
+    handleDragOperation(items);
+    // if (moveRef.current) {
+    //   handleDragOperation(items, true);
+    //   moveRef.current = false;
+    // } else {
+    //   handleDragOperation(items, false);
+    // }
   };
 
   const setSemesterOrderWrapper = (containers: SemesterOrder) => {
@@ -73,7 +100,9 @@ export default function useDragHandlers(
     const overContainer = findContainer(items, overId);
     const activeContainer = findContainer(items, active.id);
 
-    if (!overContainer || !activeContainer) {
+    const invalidContainers = !overContainer || !activeContainer;
+
+    if (invalidContainers) {
       return;
     }
 
@@ -83,6 +112,14 @@ export default function useDragHandlers(
     if (overContainer === SEARCH_CONTAINER_ID && draggingCourseIsSearchItem) {
       return;
     }
+
+    // If we're dragging a search item between regular containers, don't update state
+    // This prevents the infinite update loop
+    // if (draggingCourseIsSearchItem &&
+    //   activeContainer !== SEARCH_CONTAINER_ID &&
+    //   overContainer !== SEARCH_CONTAINER_ID) {
+    //   return;
+    // }
 
     //print the active and over containers and overids and activeids
     console.log('--------------------------------');
@@ -96,49 +133,56 @@ export default function useDragHandlers(
       return;
     }
 
-    if (activeContainer !== overContainer) {
-      const activeItems = items[activeContainer];
-      const overItems = items[overContainer];
-      const overIndex = overItems.indexOf(overId);
-      const activeIndex = activeItems.indexOf(active.id);
-
-      let newIndex: number;
-
-      if (overId in items) {
-        newIndex = overItems.length + 1;
-      } else {
-        const isBelowOverItem =
-          over &&
-          active.rect.current.translated &&
-          active.rect.current.translated.top > over.rect.top + over.rect.height;
-
-        const modifier = isBelowOverItem ? 1 : 0;
-
-        newIndex = overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
-      }
-
-      if (moveRef.current === null) {
-        console.error('moveRef is null! Was it set correctly with useRef?');
-        return;
-      }
-
-      moveRef.current = true;
-      setItemsWrapper({
-        ...items,
-        [activeContainer]: items[activeContainer].filter(
-          (item) => item !== active.id
-        ),
-        [overContainer]: [
-          ...items[overContainer].slice(0, newIndex),
-          items[activeContainer][activeIndex],
-          ...items[overContainer].slice(newIndex, items[overContainer].length),
-        ],
-      });
+    /**
+     * HandleDragOver is meant to deal with moving one course
+     * from one container to another.
+     */
+    if (activeContainer === overContainer) {
+      return;
     }
+
+    const activeItems = items[activeContainer];
+    const overItems = items[overContainer];
+    const overIndex = overItems.indexOf(overId);
+    const activeIndex = activeItems.indexOf(active.id);
+
+    let newIndex: number;
+
+    if (overId in items) {
+      newIndex = overItems.length + 1;
+    } else {
+      const isBelowOverItem =
+        over &&
+        active.rect.current.translated &&
+        active.rect.current.translated.top > over.rect.top + over.rect.height;
+
+      const modifier = isBelowOverItem ? 1 : 0;
+
+      newIndex = overIndex >= 0 ? overIndex + modifier : overItems.length + 1;
+    }
+
+    if (moveRef.current === null) {
+      console.error('moveRef is null! Was it set correctly with useRef?');
+      return;
+    }
+
+    moveRef.current = true;
+
+    setItemsWrapper({
+      ...items,
+      [activeContainer]: items[activeContainer].filter(
+        (item) => item !== active.id
+      ),
+      [overContainer]: [
+        ...items[overContainer].slice(0, newIndex),
+        items[activeContainer][activeIndex],
+        ...items[overContainer].slice(newIndex, items[overContainer].length),
+      ],
+    });
   };
 
   const handleDragEnd = (event: DragOverEvent) => {
-    // console.log('handleDragEnd', event);
+    console.log('handleDragEnd', event);
     const { active, over } = event;
     const activeId = active.id;
 
@@ -159,72 +203,18 @@ export default function useDragHandlers(
     const draggingCourseIsSearchItem = active.id
       .toString()
       .endsWith(SEARCH_ITEM_DELIMITER);
+
+    // If the user is dragging a search item within the search container,
+    // we want to prevent the search container items from re-arranging.
     if (overContainer === SEARCH_CONTAINER_ID && draggingCourseIsSearchItem) {
       return;
     }
-
-    // if (!activeContainer) {
-    //   // Handle search result drop
-    //   //todo - this line is not right
-    //   if (active.data.current?.type === 'search-course' && over?.id) {
-    //     const searchCourse = active.data.current.course as Course;
-    //     const courseId = searchCourse.id.toString().replace('-search', '');
-
-    //     // Add the course to the store
-    //     const newCourse: Course = {
-    //       id: courseId,
-    //       name: searchCourse.name,
-    //       credits: searchCourse.credits,
-    //       cores: searchCourse.cores,
-    //       grade: null,
-    //     };
-
-    //     // const overContainer = findContainer(items, over?.id);
-
-    //     if (overContainer) {
-    //       unstable_batchedUpdates(() => {
-    //         // Add the course to the courses map
-    //         setCourses({ ...courses, [courseId]: newCourse });
-
-    //         // Add the course to the container
-    //         setItemsWrapper({
-    //           ...items,
-    //           [overContainer]: [...items[overContainer], courseId],
-    //         });
-    //       });
-    //     }
-    //   }
-    //   setActiveId('');
-    //   return;
-    // }
-
     const overId = over?.id;
 
     if (overId == null) {
       setActiveId('');
       return;
     }
-
-    if (overId === PLACEHOLDER_ID) {
-      const newContainerId = getNextContainerId(items);
-
-      unstable_batchedUpdates(() => {
-        setSemesterOrderWrapper([...containers, newContainerId]);
-        setItemsWrapper({
-          ...items,
-          [activeContainer]: items[activeContainer].filter(
-            (id) => id !== activeId
-          ),
-          [newContainerId]: [active.id],
-        });
-        setActiveId('');
-      });
-      return;
-    }
-
-    const movingFromSearchContainerToScheduleBoard = active.id
-      .toString()
-      .endsWith(SEARCH_ITEM_DELIMITER);
 
     const activeIndex = items[activeContainer].indexOf(active.id);
     const overIndex = items[overContainer].indexOf(overId);
@@ -233,7 +223,7 @@ export default function useDragHandlers(
       [overContainer]: arrayMove(items[overContainer], activeIndex, overIndex),
     };
 
-    if (movingFromSearchContainerToScheduleBoard) {
+    if (draggingCourseIsSearchItem) {
       const newCourseId = activeId
         .toString()
         .replace(SEARCH_ITEM_DELIMITER, '');
@@ -244,13 +234,25 @@ export default function useDragHandlers(
           id: newCourseId,
         },
       });
+
       newItemState[overContainer][overIndex] = newCourseId;
+    }
+
+    if (
+      newItemState[overContainer][overIndex]
+        .toString()
+        .endsWith(SEARCH_ITEM_DELIMITER)
+    ) {
+      console.error(
+        'Search item did not properly dispose of search id delimiter'
+      );
+      return;
     }
 
     if (activeContainer === overContainer && moveRef.current) {
       moveRef.current = true;
     }
-    setItemsWrapper(newItemState);
+    setItemsWrapper(newItemState, true);
 
     setActiveId('');
   };
