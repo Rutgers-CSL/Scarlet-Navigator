@@ -25,7 +25,6 @@ export default function useDragHandlers(
     semesterOrder,
     setSemesterOrder,
     coursesBySemesterID,
-    setCoursesBySemesterID,
     handleDragOperation,
     courses,
     setCourses,
@@ -43,9 +42,6 @@ export default function useDragHandlers(
     })
   );
 
-  // const setRecentlyMovedToNewContainer = useAuxiliaryStore(
-  //   (state) => state.setRecentlyMovedToNewContainer
-  // );
   const activeId = useAuxiliaryStore((state) => state.activeID);
   const setActiveId = useAuxiliaryStore((state) => state.setActiveID);
 
@@ -56,25 +52,6 @@ export default function useDragHandlers(
     items: CoursesBySemesterID,
     isDragEnd: boolean = false
   ) => {
-    console.log('hello world', moveRef);
-
-    if (isDragEnd) {
-      // Check if any non-search container has a search item and fix it
-
-      Object.keys(items).forEach((containerId) => {
-        if (containerId === SEARCH_CONTAINER_ID) return;
-
-        const courseIds = items[containerId];
-        const fixedCourseIds = courseIds.map((id) =>
-          id.toString().endsWith(SEARCH_ITEM_DELIMITER)
-            ? id.toString().replace(SEARCH_ITEM_DELIMITER, '')
-            : id
-        );
-
-        items[containerId] = fixedCourseIds;
-      });
-    }
-
     handleDragOperation(items);
     // if (moveRef.current) {
     //   handleDragOperation(items, true);
@@ -89,7 +66,6 @@ export default function useDragHandlers(
   };
 
   const handleDragOver = (event: DragOverEvent) => {
-    console.log('I AM HANDLING DRAGGING OVER !!!!', event);
     const { active, over } = event;
     const overId = over?.id;
 
@@ -120,14 +96,6 @@ export default function useDragHandlers(
     //   overContainer !== SEARCH_CONTAINER_ID) {
     //   return;
     // }
-
-    //print the active and over containers and overids and activeids
-    console.log('--------------------------------');
-    console.log('activeContainer', activeContainer);
-    console.log('overContainer', overContainer);
-    console.log('overId', overId);
-    console.log('activeId', active.id);
-    console.log('--------------------------------');
 
     if (overContainer === SEARCH_CONTAINER_ID) {
       return;
@@ -182,7 +150,6 @@ export default function useDragHandlers(
   };
 
   const handleDragEnd = (event: DragOverEvent) => {
-    console.log('handleDragEnd', event);
     const { active, over } = event;
     const activeId = active.id;
 
@@ -222,6 +189,10 @@ export default function useDragHandlers(
       ...items,
       [overContainer]: arrayMove(items[overContainer], activeIndex, overIndex),
     };
+
+    if (!newItemState[overContainer][overIndex]) {
+      return;
+    }
 
     if (draggingCourseIsSearchItem) {
       const newCourseId = activeId

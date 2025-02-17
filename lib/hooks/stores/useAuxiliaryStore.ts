@@ -34,7 +34,6 @@ const useAuxiliaryStore = create<AuxiliaryStore>()(
       setRecentlyMovedToNewContainer: (flag: RefObject<boolean>) =>
         set({ recentlyMovedToNewContainer: flag }),
       setActiveID: (id: SemesterID) => {
-        console.log('new active id', id);
         set({ activeID: id });
       },
       setCurrentInfo: (id: string, type: 'course' | 'semester') => {

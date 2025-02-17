@@ -10,6 +10,7 @@ import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import { CoursesBySemesterID } from '@/lib/types/models';
 import {
+  closestCenter,
   CollisionDetection,
   DndContext,
   KeyboardSensor,
@@ -118,7 +119,7 @@ const Page: React.FC = () => {
   return (
     <DndContext
       sensors={sensors}
-      // collisionDetection={collisionDetectionStrategy}
+      collisionDetection={closestCenter}
       measuring={{
         droppable: {
           strategy: MeasuringStrategy.Always,
