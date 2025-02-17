@@ -55,10 +55,10 @@ pnpm run i
 pnpm run dev
 ```
 
-`npm run dev` will run two services:
+`pnpm run dev` will run two services:
 
 - Next.js (port 3000)
-- TypeSense (port 8108, dockerized)
+- TypeSense (port 8108, Docker container)
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
