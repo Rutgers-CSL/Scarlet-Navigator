@@ -41,11 +41,8 @@ const Page: React.FC = () => {
   const coursesBySemesterID = useScheduleStore((state) => {
     return state.coursesBySemesterID;
   });
-  const {
-    setRecentlyMovedToNewContainer,
-    recentlyMovedToNewContainer,
-    activeID,
-  } = useAuxiliaryStore.getState();
+
+  const activeID = useAuxiliaryStore((state) => state.activeID);
 
   const recentlyMovedToNewContainerInstance = useRef(false);
 
