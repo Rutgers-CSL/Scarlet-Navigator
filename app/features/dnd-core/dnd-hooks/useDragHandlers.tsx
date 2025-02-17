@@ -52,7 +52,20 @@ export default function useDragHandlers(
     items: CoursesBySemesterID,
     isDragEnd: boolean = false
   ) => {
-    handleDragOperation(items);
+    // Remove search items from all containers except search container
+
+    const cleanedItems = { ...items };
+    if (isDragEnd) {
+      for (const containerId in cleanedItems) {
+        if (containerId !== SEARCH_CONTAINER_ID) {
+          cleanedItems[containerId] = cleanedItems[containerId].filter(
+            (courseId) => !courseId.toString().endsWith(SEARCH_ITEM_DELIMITER)
+          );
+        }
+      }
+    }
+
+    handleDragOperation(cleanedItems);
     // if (moveRef.current) {
     //   handleDragOperation(items, true);
     //   moveRef.current = false;
@@ -85,17 +98,10 @@ export default function useDragHandlers(
     const draggingCourseIsSearchItem = active.id
       .toString()
       .endsWith(SEARCH_ITEM_DELIMITER);
+
     if (overContainer === SEARCH_CONTAINER_ID && draggingCourseIsSearchItem) {
       return;
     }
-
-    // If we're dragging a search item between regular containers, don't update state
-    // This prevents the infinite update loop
-    // if (draggingCourseIsSearchItem &&
-    //   activeContainer !== SEARCH_CONTAINER_ID &&
-    //   overContainer !== SEARCH_CONTAINER_ID) {
-    //   return;
-    // }
 
     if (overContainer === SEARCH_CONTAINER_ID) {
       return;
@@ -136,9 +142,20 @@ export default function useDragHandlers(
 
     moveRef.current = true;
 
-    setItemsWrapper({
+    let modifiedActiveContainer = items[activeContainer];
+    /**
+     * When we are dragging from the search container, we don't
+     * want the course to disappear from the list of courses.
+     */
+    // if (!draggingCourseIsSearchItem) {
+    //   modifiedActiveContainer = modifiedActiveContainer.filter(
+    //     (item) => item !== active.id
+    //   );
+    // }
+
+    const newItems = {
       ...items,
-      [activeContainer]: items[activeContainer].filter(
+      [activeContainer]: modifiedActiveContainer.filter(
         (item) => item !== active.id
       ),
       [overContainer]: [
@@ -146,7 +163,21 @@ export default function useDragHandlers(
         items[activeContainer][activeIndex],
         ...items[overContainer].slice(newIndex, items[overContainer].length),
       ],
-    });
+    };
+
+    // If this is a search item being moved between containers, clean up the previous container
+    // if (draggingCourseIsSearchItem) {
+    //   // Remove the search item from all other containers except the current one
+    //   Object.keys(newItems).forEach(containerId => {
+    //     if (containerId !== overContainer && containerId !== SEARCH_CONTAINER_ID) {
+    //       newItems[containerId] = newItems[containerId].filter(
+    //         item => !item.toString().endsWith(SEARCH_ITEM_DELIMITER)
+    //       );
+    //     }
+    //   });
+    // }
+
+    setItemsWrapper(newItems);
   };
 
   const handleDragEnd = (event: DragOverEvent) => {
@@ -209,17 +240,6 @@ export default function useDragHandlers(
       newItemState[overContainer][overIndex] = newCourseId;
     }
 
-    if (
-      newItemState[overContainer][overIndex]
-        .toString()
-        .endsWith(SEARCH_ITEM_DELIMITER)
-    ) {
-      console.error(
-        'Search item did not properly dispose of search id delimiter'
-      );
-      return;
-    }
-
     if (activeContainer === overContainer && moveRef.current) {
       moveRef.current = true;
     }
@@ -229,21 +249,16 @@ export default function useDragHandlers(
   };
 
   const handleDragStart = (event: DragOverEvent) => {
-    // console.log('handleDragStart', event);
     const { active } = event;
 
     setActiveId(active.id);
-
-    // setClonedItems(items);
   };
 
   const handleDragMove = (event: DragOverEvent) => {
-    // console/.log('handleDragMove', event);
     return;
   };
 
   const handleDragCancel = () => {
-    // console.log('handleDragCancel');
     if (clonedItems) {
       // Reset items to their original state in case items have been
       // Dragged across containers

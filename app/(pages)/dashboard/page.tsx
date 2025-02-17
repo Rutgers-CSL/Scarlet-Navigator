@@ -4,14 +4,12 @@ import RightPanel from '@/app/features/rightPanel/RightPanel';
 import LeftPanel from '@/app/features/leftPanel/LeftPanel';
 import { MiddlePanel } from '@/app/features/middlePanel/MiddlePanel';
 import { coordinateGetter } from '@/app/features/dnd-core/multipleContainersKeyboardCoordinates';
-import { collisionDetectionStrategy as detectionStrategy } from '@/app/features/dnd-core/dnd-utils';
+import { customCollisionDetectionStrategy } from '@/app/features/dnd-core/dnd-utils';
 import useDragHandlers from '@/app/features/dnd-core/dnd-hooks/useDragHandlers';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import { CoursesBySemesterID } from '@/lib/types/models';
 import {
-  closestCenter,
-  CollisionDetection,
   DndContext,
   KeyboardSensor,
   MeasuringStrategy,
@@ -21,7 +19,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { useCallback, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useKeyboardShortcuts } from '@/lib/hooks/useKeyboardShortcuts';
 import { useDraggable } from '@/lib/hooks/useDraggable';
 import {
@@ -93,12 +91,6 @@ const Page: React.FC = () => {
     })
   );
 
-  const collisionDetectionStrategy: CollisionDetection = useCallback(
-    (args) =>
-      detectionStrategy(args, activeID, lastOverId, coursesBySemesterID),
-    [activeID, coursesBySemesterID]
-  );
-
   const leftPanelStyle = {
     width: leftPanelWidth,
     minWidth: LEFT_PANEL_MIN_WIDTH,
@@ -116,7 +108,7 @@ const Page: React.FC = () => {
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCenter}
+      collisionDetection={customCollisionDetectionStrategy}
       measuring={{
         droppable: {
           strategy: MeasuringStrategy.Always,
