@@ -19,9 +19,10 @@
 
 // Import required dependencies
 const path = require('path');
-const envFile =
-  process.env.NODE_ENV === 'production' ? '.env.prod' : '.env.dev';
-require('dotenv').config({ path: path.resolve(__dirname, '../../' + envFile) });
+// const envFile =
+//   process.env.NODE_ENV === 'production' ? '.env.prod' : '.env.dev';
+// require('dotenv').config({ path: path.resolve(__dirname, '../../' + envFile) });
+require('dotenv').config();
 const fs = require('fs');
 const Typesense = require('typesense');
 

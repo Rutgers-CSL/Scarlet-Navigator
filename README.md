@@ -21,19 +21,11 @@ Awarded [Best Fullstack Project](https://github.com/kevinmonisit/Scarlet-Navigat
 
 - **Drag and Drop**
 
-  - Intuitively move your courses and semesters around like it's no big deal.
-
-- **Create or Drag-In Courses**
-
-  - From a list of over 4,500+ Rutgers University courses, drag them into your schedule. Don’t see a course? No problem! You have the option to create courses yourself.
+  - Intuitively move your courses around like it's no big deal. From a list of over thousands of Rutgers University courses, drag them into your schedule. Don’t see a course? No problem! You have the option to create courses yourself.
 
 - **Customizable Degree/Program Tracker**
 
   - So many cores and requirements to track. Pre-med. Pre-pt. Pre-dental. Computer Science. How about you create them yourself? Or… you can choose from a small list of already-made tracks.
-
-- **Super Flexibility**
-
-  - Summer/Winter/AP/College credits? Hypothetical semesters? Enable/disable/rename your semesters to match your unique college experience.
 
 - **GPA Calculator & Credit Calculator**
 
@@ -43,25 +35,6 @@ Awarded [Best Fullstack Project](https://github.com/kevinmonisit/Scarlet-Navigat
 
   - Want to create a checklist or write down notes on particular courses or semesters? No problem. [Markdown](https://www.markdownguide.org/cheat-sheet/) is supported.
 
-- **Exporter and Importer**
-
-  - Export your schedule, program, courses (and more), for your friends or your community (make an `Issue` to share with the rest of us!).
-
-- **Customizable Experience**
-
-  - In the settings tab, feel free to choose and customize the information and colors you wish to see.
-
-- **Save Your Data to the Cloud Easily**
-  - You own your data. Login with Google and feel free to automatically sync your custom schedules, settings, courses, and programs to your Google Drive.
-
-## Sharing Track Requirements
-
-Thank you for sharing your work with the rest of the community. If you wish to share your custom track requirements that you've made, simply create a pull request.
-
-1. Click on `Issues` and then at the top-right corner click `New Issue`
-2. Paste in the exported requirement tracking code
-3. We'll handle the rest.
-
 ## Attention
 
 Currently in VERY active development.
@@ -70,17 +43,19 @@ Currently in VERY active development.
 
 To start a development environment, install the following:
 
-- [Docker](https://docs.docker.com/desktop/setup/install/mac-install/)
-- [pnpm](https://pnpm.io/installation)
+- [Docker](https://docs.docker.com/desktop/setup/install/mac-install/) - Software container manager
+- [pnpm](https://pnpm.io/installation) - A Node.js package manager
 
 Then run the following commands:
 
 ```bash
+git clone https://github.com/Rutgers-CSL/Scarlet-Navigator.git
+cd Scarlet-Navigator
 pnpm run i
 pnpm run dev
 ```
 
-This will run two services:
+`npm run dev` will run two services:
 
 - Next.js (port 3000)
 - TypeSense (port 8108, dockerized)
@@ -90,8 +65,10 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 To populate TypeSense with course data,
 
 ```
-pnpm run loadCourseData
+pnpm run generateAndUploadFakeCourseData
 ```
+
+This will spin up a TypeSense container, generate a set of random courses, upload it to the TypeSense container instance, and then take down the container. For more details, check out `scripts/generateAndUploadFakeCourses.sh`.
 
 ### General Overview
 
