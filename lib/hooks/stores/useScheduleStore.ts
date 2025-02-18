@@ -151,6 +151,18 @@ export const useScheduleStore = create<ScheduleStore>()(
           // if (isNewContainerMove) {
           //   saveToHistory(currentState);
           // }
+
+          //go through every container and remove duplicate courses
+          //that appear in any other container
+
+          // const updatedCoursesBySemesterID = { ...semesters };
+
+          // Object.keys(updatedCoursesBySemesterID).forEach((containerId) => {
+          //   const courses = updatedCoursesBySemesterID[containerId];
+          //   const uniqueCourses = Array.from(new Set(courses));
+          //   updatedCoursesBySemesterID[containerId] = uniqueCourses;
+          // });
+
           set({ coursesBySemesterID: semesters });
         },
 

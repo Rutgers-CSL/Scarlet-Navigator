@@ -61,7 +61,7 @@ export default function LeftPanel() {
             aria-label='Search'
             defaultChecked
           />
-          <div className='tab-content bg-base-100 p-10'>
+          <div className='tab-content bg-base-100 p-4'>
             <CourseSearch />
           </div>
           <input

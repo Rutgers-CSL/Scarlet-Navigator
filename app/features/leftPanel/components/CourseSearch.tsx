@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { searchCoursesAction } from '@/app/actions/searchCourses';
 import { SEARCH_ITEM_DELIMITER, SEARCH_CONTAINER_ID } from '@/lib/constants';
 import {
@@ -11,6 +11,7 @@ import { SortableItem } from '@/app/features/dnd-core/dnd-core-components/Sortab
 import { DroppableContainer } from '@/app/features/dnd-core/dnd-core-components/DroppableContainer';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import { useShallow } from 'zustand/react/shallow';
+
 export default function CourseSearch() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -26,69 +27,73 @@ export default function CourseSearch() {
   );
   const searchItems = coursesBySemesterID[SEARCH_CONTAINER_ID] || [];
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
-
-    setIsLoading(true);
-    setError(null);
-    try {
-      const results = await searchCoursesAction({ q: searchQuery });
-      const limitedResults = results.slice(0, 10);
-
-      setSearchResults(limitedResults);
-    } catch (error) {
-      console.error('Search failed:', error);
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError('Failed to search courses. Please try again.');
-      }
-    } finally {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    if (value.trim()) {
+      setIsLoading(true);
+    } else {
       setIsLoading(false);
+      setSearchResults([]);
     }
   };
 
+  useEffect(() => {
+    const handleSearch = async () => {
+      if (!searchQuery.trim()) {
+        setSearchResults([]);
+        setIsLoading(false);
+        return;
+      }
+
+      setError(null);
+      try {
+        const results = await searchCoursesAction({ q: searchQuery });
+        const limitedResults = results.slice(0, 10);
+        setSearchResults(limitedResults);
+      } catch (error) {
+        console.error('Search failed:', error);
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError('Failed to search courses. Please try again.');
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    const debounceTimeout = setTimeout(handleSearch, 800);
+    return () => clearTimeout(debounceTimeout);
+  }, [searchQuery, setSearchResults]);
+
   return (
-    <div className='p-4' id='search-results-container'>
-      <form onSubmit={handleSearch} className='mb-4'>
-        <div className='space-y-4'>
-          <label className='input input-bordered flex items-center gap-2'>
-            Search:
-            <input
-              type='text'
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder='Enter course name'
-              className='validator grow'
-              required
-            />
-          </label>
-          <button
-            type='submit'
-            className={`btn max-w-xs ${isLoading ? 'btn-disabled' : ''}`}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <span className='loading loading-spinner loading-sm'></span>
-            ) : (
-              'Search'
-            )}
-          </button>
-        </div>
-      </form>
-
-      {error && (
-        <div className='alert alert-error mb-4'>
-          <span>{error}</span>
-        </div>
-      )}
-
-      <div className='space-y-2'>
-        {searchItems.length === 0 && searchQuery && !isLoading && !error && (
-          <div className='text-base-content text-center'>No courses found</div>
+    <div className='flex flex-col gap-2'>
+      <label className='input input-bordered flex w-full items-center'>
+        Search:
+        <input
+          type='text'
+          value={searchQuery}
+          onChange={handleInputChange}
+          placeholder='Enter course name'
+          className='validator grow'
+        />
+        {isLoading && (
+          <span className='loading loading-spinner loading-sm'></span>
         )}
-        <DroppableContainer id={SEARCH_CONTAINER_ID} items={searchItems}>
+      </label>
+      <DroppableContainer id={SEARCH_CONTAINER_ID} items={searchItems}>
+        {error ? (
+          <div className='flex min-h-[100px] items-center justify-center'>
+            <div className='alert alert-error w-full max-w-xs'>
+              <span>{error}</span>
+            </div>
+          </div>
+        ) : searchItems.length === 0 && searchQuery && !isLoading ? (
+          <div className='flex min-h-[100px] items-center justify-center'>
+            <div className='text-base-content'>No courses found</div>
+          </div>
+        ) : (
           <SortableContext
             items={searchItems}
             strategy={verticalListSortingStrategy}
@@ -114,8 +119,8 @@ export default function CourseSearch() {
               );
             })}
           </SortableContext>
-        </DroppableContainer>
-      </div>
+        )}
+      </DroppableContainer>
     </div>
   );
 }

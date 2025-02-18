@@ -4,6 +4,7 @@ import { Item } from '../Item/Item';
 import { getColor } from '../../dnd-utils';
 import useScheduleHandlers from '../../dnd-hooks/useScheduleHandlers';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
+import { SEARCH_ITEM_DELIMITER } from '@/lib/constants';
 
 interface SortableItemProps {
   containerId: UniqueIdentifier;
@@ -47,15 +48,21 @@ export default function SortableItem({
   if (!courses[id]) return null;
   const courseName = courses[id].name;
 
+  const isSearchItem = id.toString().endsWith(SEARCH_ITEM_DELIMITER);
+
   return (
     <Item
       id={id}
       ref={disabled ? undefined : setNodeRef}
       disabled={disabled}
       value={courseName}
-      onRemove={() => {
-        handleRemoveCourse(id, containerId);
-      }}
+      onRemove={
+        isSearchItem
+          ? undefined
+          : () => {
+              handleRemoveCourse(id, containerId);
+            }
+      }
       dragging={isDragging}
       sorting={isSorting}
       handle={handle}
