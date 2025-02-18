@@ -1,11 +1,36 @@
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import { useState } from 'react';
 import CoreInput from '@/app/components/CoreInput';
+import CoursePool from './CoursePool';
+import {
+  LEFT_PANEL_SECONDARY_MIN_HEIGHT,
+  LEFT_PANEL_SECONDARY_KEY,
+  LEFT_PANEL_SECONDARY_DEFAULT_HEIGHT,
+} from '@/lib/constants';
+import { useDraggable } from '@/lib/hooks/useDraggable';
 
 export const COURSE_POOL_CONTAINER_ID = 'COURSE_POOL_CONTAINER_ID';
 export const COURSE_CREATION_COURSE_ID = '!_new_c_!';
 
 export default function CourseCreation() {
+  const { DragHandle, dimensionValue: panelHeight } = useDraggable({
+    dimensionValueModifier: (delta: number) => {
+      const desiredHeight = Math.min(
+        window.innerHeight - LEFT_PANEL_SECONDARY_MIN_HEIGHT,
+        panelHeight + delta
+      );
+
+      return Math.max(LEFT_PANEL_SECONDARY_MIN_HEIGHT, desiredHeight);
+    },
+    direction: 'vertical',
+    key: LEFT_PANEL_SECONDARY_KEY,
+    defaultValue: LEFT_PANEL_SECONDARY_DEFAULT_HEIGHT,
+  });
+
+  const upperPanelStyle = {
+    height: panelHeight,
+  };
+
   const [courseName, setCourseName] = useState('');
   const [credits, setCredits] = useState<number>(3);
   const [currentCore, setCurrentCore] = useState('');
@@ -69,6 +94,10 @@ export default function CourseCreation() {
             Create Course
           </button>
         </form>
+      </div>
+      <div className='border-neutral relative h-full border-t-1 transition-[overflow] duration-300'>
+        <DragHandle className='absolute -top-1 z-10 w-full' />
+        <CoursePool />
       </div>
     </div>
   );

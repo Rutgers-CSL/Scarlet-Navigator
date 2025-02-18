@@ -1,33 +1,8 @@
 import CourseCreation from './components/CourseCreation';
-import CoursePool from './components/CoursePool';
 import CourseSearch from './components/CourseSearch';
 import Link from 'next/link';
-import { useDraggable } from '@/lib/hooks/useDraggable';
-import {
-  LEFT_PANEL_SECONDARY_DEFAULT_HEIGHT,
-  LEFT_PANEL_SECONDARY_KEY,
-  LEFT_PANEL_SECONDARY_MIN_HEIGHT,
-} from '@/lib/constants';
 
 export default function LeftPanel() {
-  const { DragHandle, dimensionValue: panelHeight } = useDraggable({
-    dimensionValueModifier: (delta: number) => {
-      const desiredHeight = Math.min(
-        window.innerHeight - LEFT_PANEL_SECONDARY_MIN_HEIGHT,
-        panelHeight + delta
-      );
-
-      return Math.max(LEFT_PANEL_SECONDARY_MIN_HEIGHT, desiredHeight);
-    },
-    direction: 'vertical',
-    key: LEFT_PANEL_SECONDARY_KEY,
-    defaultValue: LEFT_PANEL_SECONDARY_DEFAULT_HEIGHT,
-  });
-
-  const upperPanelStyle = {
-    height: panelHeight,
-  };
-
   return (
     <div
       id='leftPanelContainer'
@@ -46,10 +21,7 @@ export default function LeftPanel() {
           </Link>
         </div>
       </div>
-      <div
-        className='relative overflow-y-scroll transition-[overflow] duration-300'
-        style={upperPanelStyle}
-      >
+      <div className='relative overflow-y-scroll transition-[overflow] duration-300'>
         <div
           className='tabs tabs-border mt-3 flex justify-center'
           role='tablist'
@@ -76,10 +48,10 @@ export default function LeftPanel() {
         </div>
       </div>
 
-      <div className='border-neutral relative h-full border-t-1 transition-[overflow] duration-300'>
+      {/* <div className='border-neutral relative h-full border-t-1 transition-[overflow] duration-300'>
         <DragHandle className='absolute -top-1 z-10 w-full' />
         <CoursePool />
-      </div>
+      </div> */}
     </div>
   );
 }

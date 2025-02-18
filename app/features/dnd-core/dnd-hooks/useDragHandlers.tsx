@@ -10,6 +10,7 @@ import {
   SEARCH_ITEM_DELIMITER,
   TRASH_ID,
 } from '@/lib/constants';
+import { COURSE_POOL_CONTAINER_ID } from '@/app/features/leftPanel/components/CourseCreation';
 import { useShallow } from 'zustand/react/shallow';
 
 export default function useDragHandlers(
@@ -104,6 +105,16 @@ export default function useDragHandlers(
     }
 
     if (overContainer === SEARCH_CONTAINER_ID) {
+      return;
+    }
+
+    /**
+     * Disable dragging search items into the course pool. It is buggy.
+     */
+    if (
+      draggingCourseIsSearchItem &&
+      overContainer === COURSE_POOL_CONTAINER_ID
+    ) {
       return;
     }
 
@@ -243,8 +254,8 @@ export default function useDragHandlers(
     if (activeContainer === overContainer && moveRef.current) {
       moveRef.current = true;
     }
-    setItemsWrapper(newItemState, true);
 
+    setItemsWrapper(newItemState, true);
     setActiveId('');
   };
 

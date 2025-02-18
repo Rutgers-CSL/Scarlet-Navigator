@@ -17,7 +17,11 @@ function CoursePool() {
     <div className='card bg-base-100'>
       <div className='card-body bg-base-100'>
         <h2 className='card-title'>Saved for Later</h2>
-        <DroppableContainer id={COURSE_POOL_CONTAINER_ID} items={items}>
+        <DroppableContainer
+          key={COURSE_POOL_CONTAINER_ID}
+          id={COURSE_POOL_CONTAINER_ID}
+          items={items}
+        >
           <SortableContext items={items} strategy={verticalListSortingStrategy}>
             {items.map((value) => (
               <SortableItem

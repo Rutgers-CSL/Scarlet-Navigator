@@ -151,7 +151,7 @@ export const Item = React.memo(
                   {typeof value === 'string' ? value.toUpperCase() : value}
                 </div>
                 {disabled && (
-                  <div className='text-base-content text-sm'>(disabled)</div>
+                  <div className='text-info text-sm'>(Already on board)</div>
                 )}
                 {course?.grade && showGrades && (
                   <div className='text-base-content text-sm'>
