@@ -80,6 +80,7 @@ export default function useDragHandlers(
   };
 
   const handleDragOver = (event: DragOverEvent) => {
+    console.log('handleDragOver');
     const { active, over } = event;
     const overId = over?.id;
 
@@ -192,6 +193,8 @@ export default function useDragHandlers(
   };
 
   const handleDragEnd = (event: DragOverEvent) => {
+    console.log('handleDragEnd');
+
     const { active, over } = event;
     const activeId = active.id;
 
@@ -205,6 +208,11 @@ export default function useDragHandlers(
     const activeContainer = findContainer(items, activeId);
     const overContainer = findContainer(items, over?.id ?? '');
 
+    console.log('overContainer', overContainer);
+    console.log('activeContainer', activeContainer);
+    console.log('overID', over?.id);
+    console.log('activeID', active.id);
+
     if (!overContainer || !activeContainer) {
       return;
     }
@@ -212,6 +220,11 @@ export default function useDragHandlers(
     const draggingCourseIsSearchItem = active.id
       .toString()
       .endsWith(SEARCH_ITEM_DELIMITER);
+
+    console.log('draggingCourseIsSearchItem', draggingCourseIsSearchItem);
+    console.log(
+      'handleDragEndhandleDragEndhandleDragEndhandleDragEndhandleDragEnd'
+    );
 
     // If the user is dragging a search item within the search container,
     // we want to prevent the search container items from re-arranging.
@@ -237,6 +250,7 @@ export default function useDragHandlers(
     }
 
     if (draggingCourseIsSearchItem) {
+      console.log('removing SEARCH DELIMITER IN HANDLE DRAG END', activeId);
       const newCourseId = activeId
         .toString()
         .replace(SEARCH_ITEM_DELIMITER, '');

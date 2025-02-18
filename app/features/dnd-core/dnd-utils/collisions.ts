@@ -6,7 +6,7 @@ import {
   CollisionDetection,
   Collision,
 } from '@dnd-kit/core';
-import { SEARCH_ITEM_DELIMITER } from '@/lib/constants';
+import { SEARCH_CONTAINER_ID, SEARCH_ITEM_DELIMITER } from '@/lib/constants';
 
 /**
  * This is meant to prevent any re-arrangement animations from occurring in the
@@ -27,15 +27,20 @@ export const customCollisionDetectionStrategy = (
   let overId = getFirstCollision(intersections, 'id');
 
   const isSearchItem = active.id.toString().endsWith(SEARCH_ITEM_DELIMITER);
-  const isOverSearchContainer = overId
+  const isOverItemWithSearchDelimiter = overId
     ?.toString()
     .endsWith(SEARCH_ITEM_DELIMITER);
+
+  console.log('from the collisions', active.id, overId);
 
   // Here, we are saying that if we are dragging a search item
   // within the search container, return 0 collisions detected
   // to prevent automatic re-arrangement.
-  if (isSearchItem && isOverSearchContainer) {
-    return [];
+  if (
+    isSearchItem &&
+    (isOverItemWithSearchDelimiter || overId === SEARCH_CONTAINER_ID)
+  ) {
+    return [{ id: active.id }];
   }
 
   return closestCenter({

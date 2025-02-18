@@ -17,18 +17,78 @@ function pickRandom(arr) {
 }
 
 // Fake data helpers
-const courseNames = [
-  'Introduction to Programming',
-  'Calculus I',
-  'English Literature',
-  'Art History',
-  'Data Structures',
-  'Web Development',
-  'Chemistry 101',
-  'Biology Basics',
-  'Microeconomics',
-  'Macroeconomics',
+const coursePrefixes = [
+  'Advanced',
+  'Introduction to',
+  'Fundamentals of',
+  'Applied',
+  'Topics in',
+  'Principles of',
+  'Modern',
+  'Contemporary',
+  'Theoretical',
+  'Experimental',
 ];
+
+const courseSubjects = [
+  'Programming',
+  'Computer Science',
+  'Mathematics',
+  'Physics',
+  'Chemistry',
+  'Biology',
+  'Literature',
+  'History',
+  'Economics',
+  'Psychology',
+  'Philosophy',
+  'Engineering',
+  'Data Science',
+  'Artificial Intelligence',
+  'Business',
+  'Statistics',
+];
+
+const courseSpecializations = [
+  'Analysis',
+  'Theory',
+  'Applications',
+  'Methods',
+  'Systems',
+  'Design',
+  'Research',
+  'Studies',
+  'Development',
+  'Architecture',
+  'Algorithms',
+];
+
+const courseNumbers = ['101', '201', '301', '401', '501'];
+
+/** Generate a random course name */
+function generateCourseName() {
+  const usePrefix = Math.random() > 0.3; // 70% chance to use prefix
+  const useSpecialization = Math.random() > 0.5; // 50% chance to use specialization
+  const useNumber = Math.random() > 0.3; // 70% chance to use number
+
+  let name = '';
+
+  if (usePrefix) {
+    name += pickRandom(coursePrefixes) + ' ';
+  }
+
+  name += pickRandom(courseSubjects);
+
+  if (useSpecialization) {
+    name += ' ' + pickRandom(courseSpecializations);
+  }
+
+  if (useNumber) {
+    name += ' ' + pickRandom(courseNumbers);
+  }
+
+  return name;
+}
 
 const gradeOptions = [null, 'A', 'B', 'C', 'D', 'F'];
 const coresOptions = [
@@ -41,15 +101,14 @@ const coresOptions = [
 
 /** Generate a random Course object */
 function getRandomCourse(id) {
-  // Generate 1-2 random cores (ensure uniqueness by using a Set)
   const selectedCores = Array.from(
     new Set([pickRandom(coresOptions), pickRandom(coresOptions)])
   );
 
   return {
     id: `course-${id}`,
-    name: pickRandom(courseNames),
-    credits: Math.floor(Math.random() * 5) + 1, // 1 through 5
+    name: generateCourseName(),
+    credits: Math.floor(Math.random() * 5) + 1,
     cores: selectedCores,
     grade: pickRandom(gradeOptions),
   };
