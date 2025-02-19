@@ -109,7 +109,9 @@ export default function useDragHandlers(
     }
 
     /**
-     * Disable dragging search items into the course pool. It is buggy.
+     * DISABLE DRAGGING SEARCH ITEMS INTO THE COURSE POOL. IT IS VERY VERY BUGGY!!!!
+     *
+     * Fix later. It's blocking progress for now.
      */
     if (
       draggingCourseIsSearchItem &&
@@ -154,15 +156,6 @@ export default function useDragHandlers(
     moveRef.current = true;
 
     let modifiedActiveContainer = items[activeContainer];
-    /**
-     * When we are dragging from the search container, we don't
-     * want the course to disappear from the list of courses.
-     */
-    // if (!draggingCourseIsSearchItem) {
-    //   modifiedActiveContainer = modifiedActiveContainer.filter(
-    //     (item) => item !== active.id
-    //   );
-    // }
 
     const newItems = {
       ...items,
@@ -175,18 +168,6 @@ export default function useDragHandlers(
         ...items[overContainer].slice(newIndex, items[overContainer].length),
       ],
     };
-
-    // If this is a search item being moved between containers, clean up the previous container
-    // if (draggingCourseIsSearchItem) {
-    //   // Remove the search item from all other containers except the current one
-    //   Object.keys(newItems).forEach(containerId => {
-    //     if (containerId !== overContainer && containerId !== SEARCH_CONTAINER_ID) {
-    //       newItems[containerId] = newItems[containerId].filter(
-    //         item => !item.toString().endsWith(SEARCH_ITEM_DELIMITER)
-    //       );
-    //     }
-    //   });
-    // }
 
     setItemsWrapper(newItems);
   };

@@ -24,7 +24,11 @@ export default function CourseInfo({ id }: CourseInfoProps) {
   const [currentCore, setCurrentCore] = useState('');
 
   if (!currentCourse) {
-    return <div className='p-4 text-gray-500'>Loading course... {id}</div>;
+    return (
+      <div className='p-4 text-gray-500'>
+        Please select a course to view its details
+      </div>
+    );
   }
 
   const { name, credits, cores, grade, id: courseID } = currentCourse;
@@ -116,7 +120,7 @@ export default function CourseInfo({ id }: CourseInfoProps) {
       <div className='flex'>
         <button
           onClick={isEditing ? handleSubmit : handleEditToggle}
-          className='btn btn-primary'
+          className='btn'
         >
           {isEditing ? 'Save Changes' : 'Edit Course'}
         </button>

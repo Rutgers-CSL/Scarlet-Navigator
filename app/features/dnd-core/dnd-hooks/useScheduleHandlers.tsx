@@ -59,6 +59,7 @@ export default function useScheduleHandlers() {
     containerID: UniqueIdentifier
   ) => {
     useScheduleStore.getState().removeCourse(courseID as string, containerID);
+    setCurrentInfo('', 'course');
   };
 
   return {
