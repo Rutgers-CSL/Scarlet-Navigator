@@ -31,8 +31,6 @@ export const customCollisionDetectionStrategy = (
     ?.toString()
     .endsWith(SEARCH_ITEM_DELIMITER);
 
-  console.log('from the collisions', active.id, overId);
-
   // Here, we are saying that if we are dragging a search item
   // within the search container, return 0 collisions detected
   // to prevent automatic re-arrangement.

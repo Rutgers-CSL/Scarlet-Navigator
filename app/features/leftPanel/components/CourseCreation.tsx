@@ -49,7 +49,7 @@ export default function CourseCreation() {
 
   return (
     <div className='card bg-base-100 text-base-content rounded-box'>
-      <div className='card-body'>
+      <div className='card-body' style={{ height: panelHeight }}>
         <h2 className='card-title'>Create Course</h2>
         <form onSubmit={handleSubmit} className='mb-6 space-y-4'>
           <div>
@@ -95,7 +95,7 @@ export default function CourseCreation() {
           </button>
         </form>
       </div>
-      <div className='border-neutral relative h-full border-t-1 transition-[overflow] duration-300'>
+      <div className='border-neutral relative h-20 border-t-1 bg-red-500 transition-[overflow] duration-300'>
         <DragHandle className='absolute -top-1 z-10 w-full' />
         <CoursePool />
       </div>

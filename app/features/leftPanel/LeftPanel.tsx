@@ -6,9 +6,9 @@ export default function LeftPanel() {
   return (
     <div
       id='leftPanelContainer'
-      className='text-base-content relative h-full w-full overflow-hidden border-r'
+      className='text-base-content relative flex h-full w-full flex-col overflow-hidden border-r'
     >
-      <div className='mt-4 ml-6 flex flex-col whitespace-nowrap'>
+      <div className='mt-4 ml-6 flex shrink-0 flex-col whitespace-nowrap'>
         <div className='text-2xl font-bold'>Scarlet Navigator</div>
         <div className='text-sm'>
           Developed by{' '}
@@ -21,7 +21,7 @@ export default function LeftPanel() {
           </Link>
         </div>
       </div>
-      <div className='relative overflow-y-scroll transition-[overflow] duration-300'>
+      <div className='flex-grow overflow-y-auto'>
         <div
           className='tabs tabs-border mt-3 flex justify-center'
           role='tablist'
@@ -33,7 +33,7 @@ export default function LeftPanel() {
             aria-label='Search'
             defaultChecked
           />
-          <div className='tab-content bg-base-100 p-4'>
+          <div className='tab-content bg-base-100 h-full p-10'>
             <CourseSearch />
           </div>
           <input
