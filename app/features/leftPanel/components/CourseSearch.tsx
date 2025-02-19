@@ -12,6 +12,30 @@ import { DroppableContainer } from '@/app/features/dnd-core/dnd-core-components/
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import { useShallow } from 'zustand/react/shallow';
 
+interface LoadingSkeletonProps {
+  itemCount?: number;
+  opacityStep?: number;
+}
+
+function LoadingSkeleton({
+  itemCount = 4,
+  opacityStep = 0.15,
+}: LoadingSkeletonProps) {
+  return (
+    <div className='flex flex-col gap-2 p-4'>
+      {[...Array(itemCount)].map((_, index) => (
+        <div
+          key={index}
+          className='animate-pulse'
+          style={{ opacity: 1 - index * opacityStep }}
+        >
+          <div className='bg-base-300 h-16 rounded-lg'></div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function CourseSearch() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -30,12 +54,10 @@ export default function CourseSearch() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchQuery(value);
-    if (value.trim()) {
-      setIsLoading(true);
-    } else {
-      setIsLoading(false);
-      setSearchResults([]);
-    }
+    setSearchResults([]);
+
+    const shouldLoad = !!value.trim();
+    setIsLoading(shouldLoad);
   };
 
   useEffect(() => {
@@ -50,9 +72,9 @@ export default function CourseSearch() {
       try {
         const results = await searchCoursesAction({ q: searchQuery });
         const limitedResults = results.slice(0, 10);
+
         setSearchResults(limitedResults);
       } catch (error) {
-        console.error('Search failed:', error);
         if (error instanceof Error) {
           setError(error.message);
         } else {
@@ -65,7 +87,7 @@ export default function CourseSearch() {
 
     const debounceTimeout = setTimeout(handleSearch, 800);
     return () => clearTimeout(debounceTimeout);
-  }, [searchQuery, setSearchResults]);
+  }, [searchQuery, setSearchResults, searchItems.length, isLoading]);
 
   return (
     <div className='flex h-full flex-col gap-2'>
@@ -92,7 +114,9 @@ export default function CourseSearch() {
                   <span>{error}</span>
                 </div>
               </div>
-            ) : searchItems.length === 0 && searchQuery && !isLoading ? (
+            ) : isLoading && searchItems.length === 0 ? (
+              <LoadingSkeleton />
+            ) : searchItems.length === 0 && searchQuery ? (
               <div className='flex min-h-[100px] items-center justify-center'>
                 <div className='text-base-content'>No courses found</div>
               </div>
