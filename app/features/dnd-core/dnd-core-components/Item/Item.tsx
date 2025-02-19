@@ -146,13 +146,14 @@ export const Item = React.memo(
             }}
           >
             <div className='flex flex-col gap-2'>
-              <div className='flex items-center gap-2'>
+              <div className='flex items-center gap-2 text-wrap'>
                 <div>
                   {typeof value === 'string' ? value.toUpperCase() : value}
+                  {disabled && (
+                    <div className='text-info text-sm'>(Already on board)</div>
+                  )}
                 </div>
-                {disabled && (
-                  <div className='text-info text-sm'>(Already on board)</div>
-                )}
+
                 {course?.grade && showGrades && (
                   <div className='text-base-content text-sm'>
                     ({course.grade})
