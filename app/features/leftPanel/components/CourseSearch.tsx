@@ -8,7 +8,6 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { SortableItem } from '@/app/features/dnd-core/dnd-core-components/SortableItem';
-import { DroppableContainer } from '@/app/features/dnd-core/dnd-core-components/DroppableContainer';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import { useShallow } from 'zustand/react/shallow';
 
@@ -92,68 +91,70 @@ export default function CourseSearch() {
 
     const debounceTimeout = setTimeout(handleSearch, 800);
     return () => clearTimeout(debounceTimeout);
-  }, [searchQuery, setSearchResults, searchItems.length, isLoading]);
+  }, [searchQuery, setSearchResults, isLoading]);
 
   return (
-    <div className='flex h-full flex-col gap-2'>
-      <label className='input input-bordered flex w-full shrink-0 items-center'>
-        Search:
-        <input
-          type='text'
-          value={searchQuery}
-          onChange={handleInputChange}
-          placeholder='Enter course name'
-          className='validator grow'
-        />
-        {isLoading && (
-          <span className='loading loading-spinner loading-sm'></span>
-        )}
-      </label>
-
-      <div className='flex-grow'>
-        <DroppableContainer id={SEARCH_CONTAINER_ID} items={searchItems}>
-          <div className='h-full pb-4'>
-            {error ? (
-              <div className='flex min-h-[100px] items-center justify-center'>
-                <div className='alert alert-error w-full max-w-xs'>
-                  <span>{error}</span>
-                </div>
-              </div>
-            ) : isLoading && searchItems.length === 0 ? (
-              <LoadingSkeleton />
-            ) : searchItems.length === 0 && searchQuery ? (
-              <div className='flex min-h-[100px] items-center justify-center'>
-                <div className='text-base-content'>No courses found</div>
-              </div>
-            ) : (
-              <SortableContext
-                items={searchItems}
-                strategy={verticalListSortingStrategy}
-              >
-                {searchItems.map((courseId) => {
-                  const potentialCourseId = courseId
-                    .toString()
-                    .replace(SEARCH_ITEM_DELIMITER, '');
-                  const disabled = courses.hasOwnProperty(potentialCourseId);
-
-                  return (
-                    <SortableItem
-                      key={courseId}
-                      containerId={SEARCH_CONTAINER_ID}
-                      id={courseId}
-                      index={0}
-                      handle={false}
-                      style={() => ({})}
-                      getIndex={() => 0}
-                      wrapperStyle={() => ({})}
-                      disabled={disabled}
-                    />
-                  );
-                })}
-              </SortableContext>
+    <div className='card'>
+      <div className='card-body'>
+        <h2 className='card-title'>Find Rutgers Courses</h2>
+        <div className='bg-base-100 sticky top-2 z-10 pb-2'>
+          <label className='input input-bordered flex w-full items-center'>
+            Search:
+            <input
+              type='text'
+              value={searchQuery}
+              onChange={handleInputChange}
+              placeholder='Enter course name'
+              className='validator grow'
+            />
+            {isLoading && (
+              <span className='loading loading-spinner loading-sm'></span>
             )}
-          </div>
-        </DroppableContainer>
+          </label>
+        </div>
+        {/* <DroppableContainer id={SEARCH_CONTAINER_ID} items={searchItems}> */}
+        <div className='h-full pb-4'>
+          {error ? (
+            <div className='flex min-h-[100px] items-center justify-center'>
+              <div className='alert alert-error w-full max-w-xs'>
+                <span>{error}</span>
+              </div>
+            </div>
+          ) : isLoading && searchItems.length === 0 ? (
+            <LoadingSkeleton />
+          ) : searchItems.length === 0 && searchQuery ? (
+            <div className='flex min-h-[100px] items-center justify-center'>
+              <div className='text-base-content'>No courses found</div>
+            </div>
+          ) : (
+            <SortableContext
+              items={searchItems}
+              strategy={verticalListSortingStrategy}
+            >
+              {searchItems.map((courseId) => {
+                const potentialCourseId = courseId
+                  .toString()
+                  .replace(SEARCH_ITEM_DELIMITER, '');
+                const disabled = courses.hasOwnProperty(potentialCourseId);
+
+                return (
+                  <SortableItem
+                    key={courseId}
+                    containerId={SEARCH_CONTAINER_ID}
+                    id={courseId}
+                    index={0}
+                    handle={false}
+                    style={() => ({})}
+                    getIndex={() => 0}
+                    wrapperStyle={() => ({})}
+                    disabled={disabled}
+                  />
+                );
+              })}
+            </SortableContext>
+          )}
+        </div>
+        {/* </DroppableContainer> */}
       </div>
     </div>
   );
