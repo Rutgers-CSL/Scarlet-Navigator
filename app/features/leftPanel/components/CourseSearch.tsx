@@ -97,7 +97,7 @@ export default function CourseSearch() {
     <div className='card'>
       <div className='card-body'>
         <h2 className='card-title'>Find Rutgers Courses</h2>
-        <div className='bg-base-100 sticky top-2 z-10 pb-2'>
+        <div className='bg-base-100 sticky top-0 z-10 pb-2'>
           <label className='input input-bordered flex w-full items-center'>
             Search:
             <input
