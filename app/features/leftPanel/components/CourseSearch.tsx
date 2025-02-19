@@ -51,6 +51,11 @@ export default function CourseSearch() {
   );
   const searchItems = coursesBySemesterID[SEARCH_CONTAINER_ID] || [];
 
+  // Clear search results on mount
+  useEffect(() => {
+    setSearchResults([]);
+  }, []);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchQuery(value);

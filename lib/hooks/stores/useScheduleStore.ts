@@ -38,8 +38,8 @@ export const useScheduleStore = create<ScheduleStore>()(
       return {
         semesterOrder: [],
         coursesBySemesterID: {
-          [SEARCH_CONTAINER_ID]: [],
           [COURSE_POOL_CONTAINER_ID]: [],
+          [SEARCH_CONTAINER_ID]: [],
         },
         semesterByID: {},
         courses: {},
