@@ -17,8 +17,8 @@ interface LoadingSkeletonProps {
 }
 
 function LoadingSkeleton({
-  itemCount = 4,
-  opacityStep = 0.15,
+  itemCount = 5,
+  opacityStep = 0.25,
 }: LoadingSkeletonProps) {
   return (
     <div className='flex flex-col gap-2 p-4'>

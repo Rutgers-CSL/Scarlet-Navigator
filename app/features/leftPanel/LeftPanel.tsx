@@ -6,7 +6,7 @@ export default function LeftPanel() {
   return (
     <div
       id='leftPanelContainer'
-      className='text-base-content relative flex h-full w-full flex-col overflow-hidden border-r'
+      className='text-base-content relative flex h-full w-full flex-col border-r'
     >
       <div className='mt-4 ml-6 flex shrink-0 flex-col pb-3 whitespace-nowrap'>
         <div className='text-2xl font-bold'>Scarlet Navigator</div>
@@ -21,7 +21,7 @@ export default function LeftPanel() {
           </Link>
         </div>
       </div>
-      <div className='flex-grow overflow-y-auto'>
+      <div className='flex-grow overflow-y-scroll'>
         <div
           className='tabs tabs-border mt-3 flex justify-center'
           role='tablist'
