@@ -177,7 +177,7 @@ export function ScheduleBoard({
 
   return (
     <>
-      <div className='box-border flex h-full w-full flex-col overflow-auto p-5 pt-[10px]'>
+      <div className='box-border flex h-full w-full flex-col overflow-auto p-5 pt-[10px] select-none'>
         <SortableContext
           items={[...semesterOrder, PLACEHOLDER_ID]}
           strategy={rectSortingStrategy}
