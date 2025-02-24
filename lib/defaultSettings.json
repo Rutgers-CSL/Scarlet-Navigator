@@ -1,4 +1,9 @@
 {
+  "general": {
+    "beginningTerm": "Fall",
+    "beginningYear": "2025",
+    "includeWinterAndSummerTerms": false
+  },
   "gradePoints": {
     "A+": 4.0,
     "A": 4.0,

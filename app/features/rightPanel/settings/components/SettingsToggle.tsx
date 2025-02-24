@@ -17,18 +17,16 @@ export default function SettingsToggle({
   const setVisuals = useSettingsStore((state) => state.setVisuals);
 
   return (
-    <div className='flex items-center justify-between'>
-      <fieldset className='fieldset w-64'>
-        <label className='fieldset-label text-base-content'>
-          <input
-            type='checkbox'
-            checked={value as boolean}
-            className='toggle'
-            onChange={() => setVisuals({ [settingKey]: !value })}
-          />
-          {label || formatLabel(settingKey)}
-        </label>
-      </fieldset>
+    <div className='form-control'>
+      <label className='label cursor-pointer'>
+        <input
+          type='checkbox'
+          checked={value as boolean}
+          className='toggle'
+          onChange={() => setVisuals({ [settingKey]: !value })}
+        />
+        <span className='label-text'>{label || formatLabel(settingKey)}</span>
+      </label>
     </div>
   );
 }

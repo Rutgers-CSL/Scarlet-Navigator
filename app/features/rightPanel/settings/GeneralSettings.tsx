@@ -1,0 +1,112 @@
+import {
+  useSettingsStore,
+  ValidTerm,
+} from '@/lib/hooks/stores/useSettingsStore';
+import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
+import { useEffect } from 'react';
+import { calculateSemesterTitle } from '@/lib/utils/semesterTitle';
+
+export default function GeneralSettings() {
+  const { beginningTerm, beginningYear, includeWinterAndSummerTerms } =
+    useSettingsStore((state) => state.general);
+
+  const setGeneral = useSettingsStore((state) => state.setGeneral);
+  const semesterOrder = useScheduleStore((state) => state.semesterOrder);
+  const updateSemester = useScheduleStore((state) => state.updateSemester);
+
+  // Update all semester titles when settings change
+  useEffect(() => {
+    semesterOrder.forEach((semesterId, index) => {
+      const newTitle = calculateSemesterTitle(
+        beginningTerm,
+        beginningYear,
+        index,
+        includeWinterAndSummerTerms
+      );
+      updateSemester(semesterId, { title: newTitle });
+    });
+  }, [
+    beginningTerm,
+    beginningYear,
+    includeWinterAndSummerTerms,
+    semesterOrder,
+    updateSemester,
+  ]);
+
+  const handleTermChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setGeneral({
+      beginningTerm: e.target.value as ValidTerm,
+    });
+  };
+
+  const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const year = parseInt(e.target.value);
+    if (!isNaN(year)) {
+      setGeneral({
+        beginningYear: year,
+      });
+    }
+  };
+
+  const handleIncludeTermsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setGeneral({
+      includeWinterAndSummerTerms: e.target.checked,
+    });
+  };
+
+  // Generate year options from current year -10 to +10
+  const currentYear = new Date().getFullYear();
+  const yearOptions = Array.from(
+    { length: 21 }, // -10 to +10 = 21 years
+    (_, i) => currentYear - 10 + i
+  );
+
+  return (
+    <div className='space-y-4'>
+      <div className='form-control'>
+        <label className='label'>
+          <span className='label-text'>Starting Term</span>
+        </label>
+        <select
+          className='select select-bordered w-full'
+          value={beginningTerm}
+          onChange={handleTermChange}
+        >
+          <option value='Fall'>Fall</option>
+          <option value='Winter'>Winter</option>
+          <option value='Spring'>Spring</option>
+          <option value='Summer'>Summer</option>
+        </select>
+      </div>
+
+      <div className='form-control'>
+        <label className='label'>
+          <span className='label-text'>Starting Year</span>
+        </label>
+        <select
+          className='select select-bordered w-full'
+          value={beginningYear}
+          onChange={handleYearChange}
+        >
+          {yearOptions.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className='form-control'>
+        <label className='label cursor-pointer'>
+          <span className='label-text'>Include Winter and Summer Terms</span>
+          <input
+            type='checkbox'
+            className='toggle'
+            checked={includeWinterAndSummerTerms}
+            onChange={handleIncludeTermsChange}
+          />
+        </label>
+      </div>
+    </div>
+  );
+}

@@ -6,7 +6,7 @@ export default function MiscSettings() {
 
   return (
     <div className='space-y-4'>
-      <div className='flex items-center justify-between'>
+      <div className='form-control'>
         <button
           onClick={() =>
             (
@@ -15,7 +15,7 @@ export default function MiscSettings() {
               ) as HTMLDialogElement
             )?.showModal()
           }
-          className='btn btn-neutral'
+          className='btn btn-bordered w-full'
         >
           Reset All Settings
         </button>

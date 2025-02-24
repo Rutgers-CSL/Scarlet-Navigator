@@ -9,6 +9,8 @@ import {
   CourseByID,
   CoursesBySemesterID,
 } from '@/lib/types/models';
+import { calculateSemesterTitle } from './utils/semesterTitle';
+import { useSettingsStore } from './hooks/stores/useSettingsStore';
 
 export function formatLabel(key: string): string {
   return key
@@ -41,11 +43,20 @@ export const createDummySchedule = (): Omit<
   const allCourses: Course[][] = Array.from({ length: NUM_SEMESTERS }, (_, i) =>
     createCourseArray()
   );
+
+  const { beginningTerm, beginningYear, includeWinterAndSummerTerms } =
+    useSettingsStore.getState().general;
+
   const semesterArray: Semester[] = Array.from(
     { length: NUM_SEMESTERS },
     (_, i) => ({
       id: `semester${i}`,
-      title: `Semester ${i + 1}`,
+      title: calculateSemesterTitle(
+        beginningTerm,
+        beginningYear,
+        i,
+        includeWinterAndSummerTerms
+      ),
     })
   );
 

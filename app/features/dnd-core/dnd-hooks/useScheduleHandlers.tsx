@@ -3,6 +3,8 @@ import { unstable_batchedUpdates } from 'react-dom';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import useHistoryStore from '@/lib/hooks/stores/useHistoryStore';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
+import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
+import { calculateSemesterTitle } from '@/lib/utils/semesterTitle';
 
 export default function useScheduleHandlers() {
   const items = useScheduleStore((state) => state.coursesBySemesterID);
@@ -17,6 +19,9 @@ export default function useScheduleHandlers() {
   const _reset_ = useScheduleStore((state) => state.______reset______);
   const setCurrentInfo = useAuxiliaryStore((state) => state.setCurrentInfo);
 
+  const { beginningTerm, beginningYear, includeWinterAndSummerTerms } =
+    useSettingsStore((state) => state.general);
+
   const handleAddColumn = () => {
     const newContainerId = `semester${new Date().getTime()}`;
     const newItems = {
@@ -28,11 +33,19 @@ export default function useScheduleHandlers() {
     const currentState = useScheduleStore.getState();
     useHistoryStore.getState().addToHistory(currentState);
 
+    // Calculate the semester title based on settings
+    const semesterTitle = calculateSemesterTitle(
+      beginningTerm,
+      beginningYear,
+      containers.length,
+      includeWinterAndSummerTerms
+    );
+
     // Create new semester with title
     const newSemester = {
       id: newContainerId,
       courses: [],
-      title: `Semester ${containers.length + 1}`,
+      title: semesterTitle,
     };
 
     // Update both states atomically

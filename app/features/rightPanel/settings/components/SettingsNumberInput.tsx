@@ -23,17 +23,19 @@ export default function SettingsNumberInput({
   const setVisuals = useSettingsStore((state) => state.setVisuals);
 
   return (
-    <div className='flex items-center gap-2 text-sm whitespace-nowrap'>
-      <input
-        type='number'
-        className='input input-sm input-neutral w-16'
-        value={value as number}
-        onChange={(e) => setVisuals({ [settingKey]: Number(e.target.value) })}
-        min={min}
-        max={max}
-        step={step}
-      />
-      {label || formatLabel(settingKey)}
+    <div className='form-control'>
+      <label className='label'>
+        <span className='label-text'>{label || formatLabel(settingKey)}</span>
+        <input
+          type='number'
+          className='input input-bordered w-24'
+          value={value as number}
+          onChange={(e) => setVisuals({ [settingKey]: Number(e.target.value) })}
+          min={min}
+          max={max}
+          step={step}
+        />
+      </label>
     </div>
   );
 }
