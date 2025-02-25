@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import CoreInput from '@/app/components/CoreInput';
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
@@ -22,24 +22,16 @@ export default function CourseInfo({ id }: CourseInfoProps) {
     grade: null as string | null,
   });
   const [currentCore, setCurrentCore] = useState('');
+  const prevCourseIdRef = useRef(id);
 
-  useEffect(() => {
-    if (isEditing) {
-      handleEditToggle();
-    }
-  }, [currentCourse]);
+  // Safe destructuring with fallbacks
+  const name = currentCourse?.name || '';
+  const credits = currentCourse?.credits || 0;
+  const cores = currentCourse?.cores || [];
+  const grade = currentCourse?.grade || null;
+  const courseID = currentCourse?.id || '';
 
-  if (!currentCourse) {
-    return (
-      <div className='p-4 text-gray-500'>
-        Please select a course to view its details
-      </div>
-    );
-  }
-
-  const { name, credits, cores, grade, id: courseID } = currentCourse;
-
-  const handleEditToggle = () => {
+  const handleEditToggle = useCallback(() => {
     if (!isEditing) {
       setEditForm({
         name,
@@ -48,8 +40,16 @@ export default function CourseInfo({ id }: CourseInfoProps) {
         grade,
       });
     }
-    setIsEditing(!isEditing);
-  };
+    setIsEditing((prevIsEditing) => !prevIsEditing);
+  }, [currentCourse]);
+
+  useEffect(() => {
+    // Only exit edit mode if the course ID has changed
+    if (id !== prevCourseIdRef.current && isEditing) {
+      setIsEditing(false);
+    }
+    prevCourseIdRef.current = id;
+  }, [id, isEditing]);
 
   const handleSubmit = () => {
     updateCourse(courseID, {
@@ -60,6 +60,14 @@ export default function CourseInfo({ id }: CourseInfoProps) {
     });
     setIsEditing(false);
   };
+
+  if (!currentCourse) {
+    return (
+      <div className='p-4 text-gray-500'>
+        Please select a course to view its details
+      </div>
+    );
+  }
 
   return (
     <div className='space-y-4 p-4'>
