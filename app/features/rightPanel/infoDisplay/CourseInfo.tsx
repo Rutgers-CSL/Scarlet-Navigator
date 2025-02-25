@@ -41,7 +41,7 @@ export default function CourseInfo({ id }: CourseInfoProps) {
       });
     }
     setIsEditing((prevIsEditing) => !prevIsEditing);
-  }, [currentCourse]);
+  }, [cores, credits, grade, name, isEditing]);
 
   useEffect(() => {
     // Only exit edit mode if the course ID has changed
