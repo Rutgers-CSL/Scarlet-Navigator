@@ -13,7 +13,10 @@ export default function VisualsSettings() {
           min={0}
           max={200}
         />
-        <SettingsToggle settingKey='progressivelyDarkenSemestersBasedOnCreditGoal' />
+        <SettingsToggle
+          settingKey='progressivelyDarkenSemestersBasedOnCreditGoal'
+          label='Progressively Darken Semesters'
+        />
         <SettingsToggle settingKey='showGrades' />
         <SettingsToggle settingKey='showCoreLabelsInCoursesInsideScheduleBoard' />
         <SettingsToggle
@@ -21,7 +24,10 @@ export default function VisualsSettings() {
           label='Show GPAs in Semester Titles'
         />
         <SettingsToggle settingKey='showCreditCountOnCourseTitles' />
-        <SettingsToggle settingKey='showQuarterlyStudentTitlesOnSemesterTitles' />
+        <SettingsToggle
+          settingKey='showQuarterlyStudentTitlesOnSemesterTitles'
+          label='Show Student Credit Standing'
+        />
       </div>
       <div className='flex items-center justify-between'>
         <button onClick={resetVisuals} className='btn btn-sm btn-neutral'>

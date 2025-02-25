@@ -53,7 +53,7 @@ export default function CourseSearch() {
   // Clear search results on mount
   useEffect(() => {
     setSearchResults([]);
-  }, []);
+  }, [setSearchResults]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

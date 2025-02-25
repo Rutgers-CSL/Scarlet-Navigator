@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import Markdown from 'react-markdown';
 import { useNotesStore } from '@/lib/hooks/stores/useNotesStore';
 import { CourseID, SemesterID } from '@/lib/types/models';
+import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 
 interface NotesEditorProps {
   id: SemesterID | CourseID;
@@ -16,6 +17,10 @@ export default function NotesEditor({
   title,
 }: NotesEditorProps) {
   const { notes, setNote } = useNotesStore();
+
+  const currentCourse = useScheduleStore((state) => state.courses[id]);
+  const currentSemester = useScheduleStore((state) => state.semesterByID[id]);
+
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(notes[id]?.note || '');
   const [displayNextToSemester, setDisplayNextToSemester] = useState(
@@ -28,6 +33,10 @@ export default function NotesEditor({
    * if the user has already added them to the board.
    */
   const showNotes = !showDisplayOption || !displayNextToSemester;
+
+  useEffect(() => {
+    setIsEditing(false);
+  }, [currentCourse, currentSemester]);
 
   useEffect(() => {
     if (textAreaRef.current) {

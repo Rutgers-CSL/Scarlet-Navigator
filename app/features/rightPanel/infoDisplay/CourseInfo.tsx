@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import CoreInput from '@/app/components/CoreInput';
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
@@ -22,6 +22,12 @@ export default function CourseInfo({ id }: CourseInfoProps) {
     grade: null as string | null,
   });
   const [currentCore, setCurrentCore] = useState('');
+
+  useEffect(() => {
+    if (isEditing) {
+      handleEditToggle();
+    }
+  }, [currentCourse]);
 
   if (!currentCourse) {
     return (

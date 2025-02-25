@@ -207,7 +207,7 @@ export default function SemesterInfo({ id }: SemesterInfoProps) {
         )}
       </div>
 
-      <div className='flex justify-center gap-2'>
+      {/* <div className='flex justify-center gap-2'>
         <button
           onClick={isEditing ? handleSubmit : handleEditToggle}
           className='max-w-[200px] rounded-lg bg-gray-200 px-4 py-2 transition-colors hover:bg-gray-300'
@@ -220,7 +220,7 @@ export default function SemesterInfo({ id }: SemesterInfoProps) {
         >
           Remove Semester
         </button>
-      </div>
+      </div> */}
       <NotesEditor id={id} showDisplayOption={true} />
     </div>
   );
