@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import CoreInput from '@/app/components/CoreInput';
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
@@ -24,14 +24,21 @@ export default function CourseInfo({ id }: CourseInfoProps) {
   const [currentCore, setCurrentCore] = useState('');
   const prevCourseIdRef = useRef(id);
 
-  // Safe destructuring with fallbacks
-  const name = currentCourse?.name || '';
-  const credits = currentCourse?.credits || 0;
-  const cores = currentCourse?.cores || [];
-  const grade = currentCourse?.grade || null;
-  const courseID = currentCourse?.id || '';
+  // Safe destructuring with fallbacks using a single useMemo
+  const courseData = useMemo(
+    () => ({
+      name: currentCourse?.name || '',
+      credits: currentCourse?.credits || 0,
+      cores: currentCourse?.cores || [],
+      grade: currentCourse?.grade || null,
+      courseID: currentCourse?.id || '',
+    }),
+    [currentCourse]
+  );
 
-  const handleEditToggle = useCallback(() => {
+  const { name, credits, cores, grade, courseID } = courseData;
+
+  const handleEditToggle = () => {
     if (!isEditing) {
       setEditForm({
         name,
@@ -41,7 +48,7 @@ export default function CourseInfo({ id }: CourseInfoProps) {
       });
     }
     setIsEditing((prevIsEditing) => !prevIsEditing);
-  }, [cores, credits, grade, name, isEditing]);
+  };
 
   useEffect(() => {
     // Only exit edit mode if the course ID has changed
