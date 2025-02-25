@@ -11,6 +11,7 @@ import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
 import { CourseID } from '@/lib/types/models';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import CoreList from '@/app/components/CoreList';
+import { SEARCH_ITEM_DELIMITER } from '@/lib/constants';
 
 export interface Props {
   id: CourseID;
@@ -88,6 +89,16 @@ export const Item = React.memo(
       }, [dragOverlay]);
 
       const setCurrentInfo = useAuxiliaryStore((state) => state.setCurrentInfo);
+      const currentInfoID = useAuxiliaryStore((state) => state.currentInfoID);
+
+      const rawID = (id as string).replace(SEARCH_ITEM_DELIMITER, '');
+      const isSearchItem = (id as string).endsWith(SEARCH_ITEM_DELIMITER);
+
+      const isActive =
+        currentInfoID === id ||
+        (isSearchItem && currentInfoID === rawID) ||
+        (!isSearchItem && currentInfoID === `${id}${SEARCH_ITEM_DELIMITER}`);
+
       const course = useScheduleStore((state) => state.courses[id as string]);
       const showGrades = useSettingsStore((state) => state.visuals.showGrades);
       const showCreditCountOnCourseTitles = useSettingsStore(
@@ -134,7 +145,7 @@ export const Item = React.memo(
               dragOverlay && styles.dragOverlay,
               disabled && styles.disabled,
               color && styles.color,
-              'bg-base-200 text-md mx-3 my-2 rounded-md p-3 font-bold'
+              'bg-base-200 text-md relative mx-3 my-2 overflow-hidden rounded-md p-3 font-bold'
             )}
             style={style}
             data-cypress='draggable-item'
@@ -145,6 +156,11 @@ export const Item = React.memo(
               if (value) setCurrentInfo(id as string, 'course');
             }}
           >
+            <div
+              className={`bg-neutral absolute bottom-0 left-0 z-10 w-1 rounded-l-sm transition-all duration-300 ease-out ${
+                isActive ? 'h-full' : 'h-0'
+              }`}
+            />
             <div className='flex flex-col gap-2'>
               <div className='flex items-center gap-2 text-wrap'>
                 <div>

@@ -23,7 +23,7 @@ import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 import useScheduleHandlers from '../../dnd-core/dnd-hooks/useScheduleHandlers';
 import { EMPTY, PLACEHOLDER_ID } from '@/lib/constants';
-import { CoursesBySemesterID } from '@/lib/types/models';
+import { CoursesBySemesterID, CourseID } from '@/lib/types/models';
 import {
   calculateSemesterCredits,
   calculateRunningCredits,
@@ -32,7 +32,7 @@ import {
 import { getColor, dropAnimation } from '../../dnd-core/dnd-utils';
 import NotesBox from './components/NotesBox';
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
-import { calculateSemesterGPA } from './utils/gpa';
+import { calculateSemesterGPA, calculateCumulativeGPA } from './utils/gpa';
 import MenuContainer from './components/MenuContainer';
 interface Props {
   adjustScale?: boolean;
@@ -139,11 +139,13 @@ export function ScheduleBoard({
 
     if (containerId === PLACEHOLDER_ID) return title;
 
+    // Check if any courses in the semester have no grade assigned
     const hasUngraded = (coursesBySemesterID[containerId] || []).some(
-      (courseId) => courses[courseId]?.grade === null
+      (courseId) => !courses[courseId]?.grade
     );
 
-    const gpaVal = hasUngraded
+    // Calculate semester GPA - if there are ungraded courses, display N/A
+    const semesterGPA = hasUngraded
       ? 'N/A'
       : calculateSemesterGPA(
           coursesBySemesterID[containerId] || [],
@@ -151,14 +153,32 @@ export function ScheduleBoard({
           gradePoints
         );
 
-    const gpaInfo = showGPAsInSemesterTitles ? ` (GPA: ${gpaVal})` : '';
+    // Calculate cumulative GPA up to this semester
+    let allCoursesUpToThisSemester: CourseID[] = [];
+    for (const semesterId of semesterOrder) {
+      allCoursesUpToThisSemester = [
+        ...allCoursesUpToThisSemester,
+        ...(coursesBySemesterID[semesterId] || []),
+      ];
+      if (semesterId === containerId) break;
+    }
 
-    const credits = calculateSemesterCredits(
+    // If there are ungraded courses in this semester, cumulative GPA should also be N/A
+    const cumulativeGPA = hasUngraded
+      ? 'N/A'
+      : calculateCumulativeGPA(
+          allCoursesUpToThisSemester,
+          courses,
+          gradePoints
+        );
+
+    // Calculate credits
+    const semesterCredits = calculateSemesterCredits(
       coursesBySemesterID[containerId] || [],
       courses
     );
 
-    const totalCredits = calculateRunningCredits(
+    const runningCredits = calculateRunningCredits(
       semesterOrder,
       coursesBySemesterID,
       courses,
@@ -166,13 +186,28 @@ export function ScheduleBoard({
     );
 
     const studentStatus = showQuarterlyStudentTitlesOnSemesterTitles
-      ? ` - ${getStudentStatus(totalCredits)}`
+      ? ` - ${getStudentStatus(runningCredits)}`
       : '';
 
-    return `${title}${studentStatus}
-            ${gpaInfo}
-            (${credits} credits,
-            Total: ${totalCredits} / ${goalCreditsForGraduation})`;
+    // Format the title with the requested layout
+    const formattedGPA =
+      typeof semesterGPA === 'number' ? semesterGPA.toFixed(2) : semesterGPA;
+    const formattedCumulativeGPA =
+      typeof cumulativeGPA === 'number'
+        ? cumulativeGPA.toFixed(2)
+        : cumulativeGPA;
+
+    // If GPAs should not be shown in semester titles, return a simpler layout
+    if (!showGPAsInSemesterTitles) {
+      return (
+        <div className='w-full'>
+          <div className='text-center font-bold'>
+            {title}
+            {studentStatus}
+          </div>
+        </div>
+      );
+    }
   };
 
   return (

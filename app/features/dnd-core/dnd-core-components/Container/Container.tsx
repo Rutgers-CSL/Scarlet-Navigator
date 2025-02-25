@@ -7,7 +7,7 @@ import styles from './Container.module.scss';
 type BaseProps = {
   children: React.ReactNode;
   columns?: number;
-  label?: string;
+  label?: React.ReactNode;
   style?: React.CSSProperties;
   horizontal?: boolean;
   hover?: boolean;
@@ -79,34 +79,28 @@ export const Container = forwardRef(
         onClick={onClick}
       >
         {label ? (
-          <div className={classNames(styles.Header, headerClassName)}>
-            {label}
-
-            {/* {handleProps ? <Handle {...handleProps} /> : null} */}
-
-            {onRemove ? (
-              <button
-                onClick={onRemove}
-                className='rounded-sm p-1 hover:bg-gray-100'
-                title='Edit semester'
-              >
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  width='16'
-                  height='16'
-                  viewBox='0 0 24 24'
-                  fill='none'
-                  stroke='currentColor'
-                  strokeWidth='2'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                >
-                  <path d='M12 20h9'></path>
-                  <path d='M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z'></path>
-                </svg>
-              </button>
-            ) : null}
-          </div>
+          onRemove ? (
+            <button
+              onClick={onRemove}
+              className={classNames(
+                styles.Header,
+                headerClassName,
+                'group relative w-full cursor-pointer'
+              )}
+              title='Edit semester'
+            >
+              <div className='flex w-full items-center justify-between'>
+                <div className='flex-grow'>{label}</div>
+              </div>
+              <div className='bg-base-200 absolute bottom-0 left-0 h-0.5 w-0 transition-all duration-300 ease-out group-hover:w-full'></div>
+            </button>
+          ) : (
+            <div
+              className={classNames(styles.Header, headerClassName, 'w-full')}
+            >
+              {label}
+            </div>
+          )
         ) : null}
         {children}
       </Tag>

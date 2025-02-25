@@ -9,12 +9,17 @@ export function calculateCourseGPA(
   course: Course,
   gradePoints: GradePointMap
 ): number | null {
-  if (!course.grade) return 0;
+  // If no grade is assigned, return null (shouldn't affect GPA)
+  if (!course.grade) return null;
 
   // Grade doesn't exist in the system
-  if (!(course.grade in gradePoints)) return 0;
+  if (!(course.grade in gradePoints)) return null;
 
-  // Pass/Fail grades return null to indicate they don't affect GPA
+  // Check if it's a Pass/Fail grade (implementation depends on how Pass/Fail is represented)
+  // For example, if Pass/Fail grades have a value of -1 in the gradePoints map
+  if (gradePoints[course.grade] === -1) return null;
+
+  // Return the grade point value
   return gradePoints[course.grade];
 }
 
@@ -32,13 +37,13 @@ export function calculateSemesterGPA(
 
   courseIds.forEach((courseId) => {
     const course = courses[courseId];
-    if (course && course.grade) {
+    if (course) {
       const courseGPA = calculateCourseGPA(course, gradePoints);
-      // Only include in GPA calculation if it's not Pass/Fail
-      if (courseGPA == null) return;
-
-      totalPoints += courseGPA * course.credits;
-      totalCredits += course.credits;
+      // Only include in GPA calculation if it's not null (not Pass/Fail or ungraded)
+      if (courseGPA !== null) {
+        totalPoints += courseGPA * course.credits;
+        totalCredits += course.credits;
+      }
     }
   });
 
@@ -59,13 +64,13 @@ export function calculateCumulativeGPA(
 
   allCourseIds.forEach((courseId) => {
     const course = courses[courseId];
-    if (course && course.grade) {
+    if (course) {
       const courseGPA = calculateCourseGPA(course, gradePoints);
-      // Only include in GPA calculation if it's not Pass/Fail
-      if (courseGPA == null) return;
-
-      totalPoints += courseGPA * course.credits;
-      totalCredits += course.credits;
+      // Only include in GPA calculation if it's not null (not Pass/Fail or ungraded)
+      if (courseGPA !== null) {
+        totalPoints += courseGPA * course.credits;
+        totalCredits += course.credits;
+      }
     }
   });
 
