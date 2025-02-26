@@ -170,17 +170,19 @@ export const Item = React.memo(
                   )}
                 </div>
 
-                {course?.grade && showGrades && (
-                  <div className='text-base-content text-sm'>
-                    ({course.grade})
-                  </div>
-                )}
                 {course?.credits && showCreditCountOnCourseTitles && (
                   <div className='text-base-content text-sm'>
                     ({course.credits} cr)
                   </div>
                 )}
               </div>
+
+              {course?.grade && showGrades && (
+                <div className='text-base-content text-sm font-medium'>
+                  Grade: {course.grade}
+                </div>
+              )}
+
               {showCores && course && course.cores.length > 0 && (
                 <div>
                   <CoreList cores={course.cores} />

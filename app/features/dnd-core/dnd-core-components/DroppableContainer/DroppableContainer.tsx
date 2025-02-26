@@ -10,6 +10,7 @@ import {
   getHeaderColorClass,
 } from '../../../middlePanel/dashboard/utils/credits';
 import { COURSE_POOL_CONTAINER_ID } from '../../../leftPanel/components/CourseCreation';
+import { useState } from 'react';
 
 export default function DroppableContainer({
   children,
@@ -25,6 +26,8 @@ export default function DroppableContainer({
   items: UniqueIdentifier[];
   style?: React.CSSProperties;
 }) {
+  const [isHovered, setIsHovered] = useState(false);
+
   const {
     active,
     attributes,
@@ -92,6 +95,9 @@ export default function DroppableContainer({
       }}
       columns={columns}
       headerClassName={headerColorClass}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      isHovered={isHovered}
       {...props}
     >
       {children}

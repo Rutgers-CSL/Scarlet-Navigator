@@ -79,41 +79,50 @@ export default function CourseInfo({ id }: CourseInfoProps) {
   return (
     <div className='space-y-4 p-4'>
       <div>
-        {isEditing ? (
-          <input
-            type='text'
-            value={editForm.name}
-            onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-            className='mb-3 w-40 rounded-sm border px-2 py-1 text-2xl font-bold'
-            maxLength={10}
-          />
-        ) : (
-          <h1 className='mb-3 text-2xl font-bold'>{name}</h1>
-        )}
-        <div className='space-y-2'>
-          <p>
-            <span className='font-medium'>Course ID:</span> {courseID}
-          </p>
-          <p>
-            <span className='font-medium'>Credits:</span>{' '}
-            {isEditing ? (
+        {/* Course Name */}
+        <div className='relative mb-3'>
+          <h1 className={`text-2xl font-bold ${isEditing ? 'opacity-0' : ''}`}>
+            {name}
+          </h1>
+          {isEditing && (
+            <input
+              type='text'
+              value={editForm.name}
+              onChange={(e) =>
+                setEditForm({ ...editForm, name: e.target.value })
+              }
+              className='absolute inset-0 w-full rounded-sm border px-2 py-0 text-2xl font-bold'
+              maxLength={10}
+              style={{ top: '-1px', height: 'calc(100% + 2px)' }}
+            />
+          )}
+        </div>
+
+        {/* Course Details */}
+        <div className='space-y-4'>
+          <div className='relative flex h-8 items-center'>
+            <span className='inline-block w-24 font-medium'>Credits:</span>
+            <span className={isEditing ? 'opacity-0' : ''}>{credits}</span>
+            {isEditing && (
               <input
                 type='number'
                 value={editForm.credits}
                 onChange={(e) =>
                   setEditForm({ ...editForm, credits: Number(e.target.value) })
                 }
-                className='w-20 rounded-sm border px-2 py-1'
+                className='absolute top-0 left-24 w-16 rounded-sm border px-2 py-1'
                 min={1}
                 max={6}
               />
-            ) : (
-              credits
             )}
-          </p>
-          <p>
-            <span className='font-medium'>Grade:</span>{' '}
-            {isEditing ? (
+          </div>
+
+          <div className='relative flex h-8 items-center'>
+            <span className='inline-block w-24 font-medium'>Grade:</span>
+            <span className={isEditing ? 'opacity-0' : ''}>
+              {grade || 'N/A'}
+            </span>
+            {isEditing && (
               <select
                 value={editForm.grade || ''}
                 onChange={(e) =>
@@ -122,7 +131,7 @@ export default function CourseInfo({ id }: CourseInfoProps) {
                     grade: e.target.value || null,
                   })
                 }
-                className='select select-bordered select-sm'
+                className='select select-bordered select-sm absolute top-0 left-24 w-24'
               >
                 <option value=''>None</option>
                 {Object.keys(gradePoints).map((grade) => (
@@ -131,23 +140,25 @@ export default function CourseInfo({ id }: CourseInfoProps) {
                   </option>
                 ))}
               </select>
-            ) : (
-              grade || 'N/A'
             )}
-          </p>
+          </div>
+
+          <div className='h-10'>
+            {isEditing ? (
+              <button onClick={handleSubmit} className='btn'>
+                Save Changes
+              </button>
+            ) : (
+              <button onClick={handleEditToggle} className='btn'>
+                Edit Course
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
-      <div className='flex'>
-        <button
-          onClick={isEditing ? handleSubmit : handleEditToggle}
-          className='btn'
-        >
-          {isEditing ? 'Save Changes' : 'Edit Course'}
-        </button>
-      </div>
-
-      <div>
+      {/* Cores Section */}
+      <div className='mt-6'>
         <h3 className='mb-2 text-sm font-medium'>Cores:</h3>
         {isEditing ? (
           <CoreInput
@@ -163,7 +174,8 @@ export default function CourseInfo({ id }: CourseInfoProps) {
         )}
       </div>
 
-      <div className='border-t pt-4'>
+      {/* Notes Section */}
+      <div className='mt-4 border-t pt-4'>
         <NotesEditor id={id} title='Course Notes' />
       </div>
     </div>

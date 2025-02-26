@@ -7,7 +7,9 @@ import styles from './Container.module.scss';
 type BaseProps = {
   children: React.ReactNode;
   columns?: number;
-  label?: React.ReactNode;
+  label?:
+    | React.ReactNode
+    | ((props: { isHovered: boolean }) => React.ReactNode);
   style?: React.CSSProperties;
   horizontal?: boolean;
   hover?: boolean;
@@ -18,6 +20,9 @@ type BaseProps = {
   unstyled?: boolean;
   headerClassName?: string;
   onRemove?(): void;
+  isHovered?: boolean;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 };
 
 type AsButton = BaseProps & {
@@ -52,12 +57,15 @@ export const Container = forwardRef(
       shadow,
       unstyled,
       headerClassName,
+      isHovered = false,
+      onMouseEnter,
+      onMouseLeave,
       ...props
     }: Props,
     ref
   ) => {
     return (
-      <Tag
+      <div
         {...props}
         ref={ref as any}
         style={
@@ -77,33 +85,20 @@ export const Container = forwardRef(
           shadow && styles.shadow
         )}
         onClick={onClick}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
       >
-        {label ? (
-          onRemove ? (
-            <button
-              onClick={onRemove}
-              className={classNames(
-                styles.Header,
-                headerClassName,
-                'group relative w-full cursor-pointer'
-              )}
-              title='Edit semester'
-            >
-              <div className='flex w-full items-center justify-between'>
-                <div className='flex-grow'>{label}</div>
-              </div>
-              <div className='bg-base-200 absolute bottom-0 left-0 h-0.5 w-0 transition-all duration-300 ease-out group-hover:w-full'></div>
-            </button>
-          ) : (
-            <div
-              className={classNames(styles.Header, headerClassName, 'w-full')}
-            >
-              {label}
-            </div>
-          )
-        ) : null}
+        {label && (
+          <div className={classNames(styles.Header, headerClassName, 'w-full')}>
+            {/*
+              TODO: THIS IS VERY VERY WEIRD WAY OF DOING IT.
+              Works for now, but needs to be refactored.
+             */}
+            {typeof label === 'function' ? label({ isHovered }) : label}
+          </div>
+        )}
         {children}
-      </Tag>
+      </div>
     );
   }
 );

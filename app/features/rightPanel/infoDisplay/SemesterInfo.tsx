@@ -5,6 +5,7 @@ import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 import {
   calculateSemesterCredits,
   calculateRunningCredits,
+  getStudentStatus,
 } from '@/app/features/middlePanel/dashboard/utils/credits';
 import {
   calculateSemesterGPA,
@@ -48,18 +49,6 @@ export default function SemesterInfo({ id }: SemesterInfoProps) {
     return <div className='p-4 text-gray-500'>Loading semester... {id}</div>;
   }
 
-  /**
-   * TODO: THIS NEEDS TO BE REFACTORED
-   *
-   * When coursesIdsOfCurrentSemester gets rewritten properly to
-   * coursesOfCurrentSemester = semester.courses,
-   *
-   * it will show something erroneous. That is because semester.courses
-   * IS NEVER UPDATED when we update the board. The only thing updated
-   * is the coursesBySemesterID.
-   *
-   * This is why data shouldn't be duplicated so much.
-   */
   const courseIDsOfCurrentSemester = coursesBySemesterID[id];
   const { title } = currentSemester;
   const semesterCredits = calculateSemesterCredits(
@@ -69,11 +58,13 @@ export default function SemesterInfo({ id }: SemesterInfoProps) {
 
   const totalCredits = calculateRunningCredits(
     semesterOrder,
-    // TODO: this is gross. rewrite this in a refactor.
-    { [id]: courseIDsOfCurrentSemester },
+    coursesBySemesterID,
     globalCoursesMap,
     id
   );
+
+  // Get student status based on total credits
+  const studentStatus = getStudentStatus(totalCredits);
 
   const semesterGPA = calculateSemesterGPA(
     courseIDsOfCurrentSemester,
@@ -184,6 +175,10 @@ export default function SemesterInfo({ id }: SemesterInfoProps) {
           <span className='font-medium'>Total Credits:</span> {totalCredits}
         </div>
         <div>
+          <span className='font-medium'>Class Standing:</span> {studentStatus}
+        </div>
+        <br />
+        <div>
           <span className='font-medium'>Semester GPA:</span>{' '}
           {hasUngraded ? (
             <strong>missing grades</strong>
@@ -194,14 +189,16 @@ export default function SemesterInfo({ id }: SemesterInfoProps) {
         <div>
           <span className='font-medium'>Cumulative GPA:</span>{' '}
           {hasUngradedCumulative ? (
-            <strong>N/A</strong>
+            <strong>missing grades</strong>
           ) : (
             cumulativeGPA.toFixed(2)
           )}
         </div>
         {semesterCores.size > 0 && (
           <div>
-            <span className='mb-1 block font-medium'>Cores Fulfilled:</span>
+            <span className='mb-1 block font-medium'>
+              Cores Fulfilled by this semester:
+            </span>
             <CoreList cores={Array.from(semesterCores)} />
           </div>
         )}

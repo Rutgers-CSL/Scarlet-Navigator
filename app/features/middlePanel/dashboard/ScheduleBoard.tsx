@@ -15,7 +15,6 @@ import {
   SortingStrategy,
   rectSortingStrategy,
 } from '@dnd-kit/sortable';
-import { coordinateGetter as multipleContainersCoordinateGetter } from '../../dnd-core/multipleContainersKeyboardCoordinates';
 import SortableItem from '../../dnd-core/dnd-core-components/SortableItem/SortableItem';
 import useOverlayComponents from '../../dnd-core/dnd-hooks/useOverlayComponents';
 import DroppableContainer from '../../dnd-core/dnd-core-components/DroppableContainer/DroppableContainer';
@@ -24,16 +23,12 @@ import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 import useScheduleHandlers from '../../dnd-core/dnd-hooks/useScheduleHandlers';
 import { EMPTY, PLACEHOLDER_ID } from '@/lib/constants';
 import { CoursesBySemesterID, CourseID } from '@/lib/types/models';
-import {
-  calculateSemesterCredits,
-  calculateRunningCredits,
-  getStudentStatus,
-} from './utils/credits';
+import { calculateRunningCredits, getStudentStatus } from './utils/credits';
 import { getColor, dropAnimation } from '../../dnd-core/dnd-utils';
 import NotesBox from './components/NotesBox';
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
-import { calculateSemesterGPA, calculateCumulativeGPA } from './utils/gpa';
 import MenuContainer from './components/MenuContainer';
+import { Info } from 'lucide-react';
 interface Props {
   adjustScale?: boolean;
   cancelDrop?: CancelDrop;
@@ -63,20 +58,15 @@ interface Props {
 
 export function ScheduleBoard({
   adjustScale = false,
-  cancelDrop,
   columns,
   handle = false,
   items: initialItems,
   containerStyle,
-  coordinateGetter = multipleContainersCoordinateGetter,
   getItemStyles = () => ({}),
   wrapperStyle = () => ({}),
   minimal = false,
-  modifiers,
   renderItem,
   strategy = verticalListSortingStrategy,
-  trashable = false,
-  vertical = false,
   scrollable,
 }: Props) {
   const semesterOrder = useScheduleStore((state) => state.semesterOrder);
@@ -87,8 +77,6 @@ export function ScheduleBoard({
   const semesterByID = useScheduleStore((state) => state.semesterByID);
 
   const {
-    showGPAsInSemesterTitles,
-    goalCreditsForGraduation,
     showQuarterlyStudentTitlesOnSemesterTitles,
     showCoreLabelsInCoursesInsideScheduleBoard: showCoreLabels,
   } = useSettingsStore((state) => state.visuals);
@@ -100,8 +88,11 @@ export function ScheduleBoard({
   const setRecentlyMovedToNewContainer = useAuxiliaryStore(
     (state) => state.setRecentlyMovedToNewContainer
   );
+  const setCurrentInfo = useAuxiliaryStore((state) => state.setCurrentInfo);
   const moveRef = useRef(false);
   const resetRef = useRef(false);
+
+  const currentInfoID = useAuxiliaryStore((state) => state.currentInfoID);
 
   useEffect(() => {
     if (recentlyMovedToNewContainer?.current) {
@@ -134,24 +125,13 @@ export function ScheduleBoard({
   const { handleAddColumn, handleEditSemester, handlePopulateSchedule } =
     useScheduleHandlers();
 
-  const getContainerTitle = (containerId: UniqueIdentifier) => {
+  const getContainerTitle = (
+    containerId: UniqueIdentifier,
+    isHovered: boolean = false
+  ) => {
     const title = semesterByID[containerId as string]?.title || 'Untitled';
 
     if (containerId === PLACEHOLDER_ID) return title;
-
-    // Check if any courses in the semester have no grade assigned
-    const hasUngraded = (coursesBySemesterID[containerId] || []).some(
-      (courseId) => !courses[courseId]?.grade
-    );
-
-    // Calculate semester GPA - if there are ungraded courses, display N/A
-    const semesterGPA = hasUngraded
-      ? 'N/A'
-      : calculateSemesterGPA(
-          coursesBySemesterID[containerId] || [],
-          courses,
-          gradePoints
-        );
 
     // Calculate cumulative GPA up to this semester
     let allCoursesUpToThisSemester: CourseID[] = [];
@@ -162,21 +142,6 @@ export function ScheduleBoard({
       ];
       if (semesterId === containerId) break;
     }
-
-    // If there are ungraded courses in this semester, cumulative GPA should also be N/A
-    const cumulativeGPA = hasUngraded
-      ? 'N/A'
-      : calculateCumulativeGPA(
-          allCoursesUpToThisSemester,
-          courses,
-          gradePoints
-        );
-
-    // Calculate credits
-    const semesterCredits = calculateSemesterCredits(
-      coursesBySemesterID[containerId] || [],
-      courses
-    );
 
     const runningCredits = calculateRunningCredits(
       semesterOrder,
@@ -189,25 +154,41 @@ export function ScheduleBoard({
       ? ` - ${getStudentStatus(runningCredits)}`
       : '';
 
-    // Format the title with the requested layout
-    const formattedGPA =
-      typeof semesterGPA === 'number' ? semesterGPA.toFixed(2) : semesterGPA;
-    const formattedCumulativeGPA =
-      typeof cumulativeGPA === 'number'
-        ? cumulativeGPA.toFixed(2)
-        : cumulativeGPA;
+    // Handle info button click
+    const handleInfoClick = (e: React.MouseEvent) => {
+      e.stopPropagation(); // Prevent event from bubbling up
+      setCurrentInfo(containerId as string, 'semester');
+    };
 
-    // If GPAs should not be shown in semester titles, return a simpler layout
-    if (!showGPAsInSemesterTitles) {
-      return (
-        <div className='w-full'>
-          <div className='text-center font-bold'>
-            {title}
-            {studentStatus}
-          </div>
+    // Use currentInfoID from the component scope instead of calling the hook here
+    const isCurrentSemester = containerId === currentInfoID;
+
+    return (
+      <div className='relative flex w-full items-center justify-between p-2'>
+        {/* Indicator line for current semester */}
+        <div className='absolute bottom-0 left-0 flex w-full justify-center'>
+          <div
+            className={`bg-neutral h-1 transition-all duration-500 ${isCurrentSemester ? 'w-12' : 'w-0'}`}
+          />
         </div>
-      );
-    }
+
+        <div className='flex-grow text-center font-bold'>
+          {title}
+          {studentStatus}
+        </div>
+        <div className='flex h-5 w-5 items-center justify-center'>
+          {isHovered && (
+            <button
+              onClick={handleInfoClick}
+              className='cursor-pointer'
+              title='View semester details'
+            >
+              <Info size={20} />
+            </button>
+          )}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -225,7 +206,9 @@ export function ScheduleBoard({
                   <DroppableContainer
                     key={containerId}
                     id={containerId}
-                    label={getContainerTitle(containerId)}
+                    label={({ isHovered }) =>
+                      getContainerTitle(containerId, isHovered)
+                    }
                     columns={columns}
                     items={coursesBySemesterID[containerId]}
                     scrollable={scrollable}

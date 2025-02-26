@@ -96,15 +96,14 @@ export default function CourseSearch() {
   return (
     <div className='card'>
       <div className='card-body'>
-        <h2 className='card-title'>Find Rutgers Courses</h2>
+        {/* <h2 className='card-title'>Find Rutgers Courses</h2> */}
         <div className='bg-base-100 sticky top-0 z-10 pb-2'>
           <label className='input input-bordered flex w-full items-center'>
-            Search:
             <input
               type='text'
               value={searchQuery}
               onChange={handleInputChange}
-              placeholder='Enter course name'
+              placeholder='Find Rutgers Courses'
               className='validator grow'
             />
             {isLoading && (

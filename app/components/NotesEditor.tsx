@@ -36,7 +36,9 @@ export default function NotesEditor({
 
   useEffect(() => {
     setIsEditing(false);
-  }, [currentCourse, currentSemester]);
+    setDisplayNextToSemester(notes[id]?.displayNextToSemester || false);
+    setEditValue(notes[id]?.note || '');
+  }, [currentCourse, currentSemester, id, notes]);
 
   useEffect(() => {
     if (textAreaRef.current) {
