@@ -70,21 +70,21 @@ export default function NotesEditor({
       </div>
 
       {showDisplayOption && (
-        <div className='mb-2 flex items-center'>
-          <input
-            type='checkbox'
-            checked={displayNextToSemester}
-            onChange={(e) => {
-              setDisplayNextToSemester(e.target.checked);
-              setNote(id, {
-                note: editValue,
-                displayNextToSemester: e.target.checked,
-              });
-            }}
-            className='mr-2'
-          />
-          <label className='text-sm text-gray-600'>
-            Display next to semester
+        <div className='form-control'>
+          <label className='label cursor-pointer'>
+            <input
+              type='checkbox'
+              checked={displayNextToSemester}
+              onChange={(e) => {
+                setDisplayNextToSemester(e.target.checked);
+                setNote(id, {
+                  note: editValue,
+                  displayNextToSemester: e.target.checked,
+                });
+              }}
+              className='checkbox checkbox-sm'
+            />
+            <span className='label-text'>Display next to semester</span>
           </label>
         </div>
       )}
@@ -96,13 +96,14 @@ export default function NotesEditor({
             ref={textAreaRef}
             value={editValue}
             onChange={(e) => setEditValue(e.target.value)}
-            className='textarea textarea-bordered'
+            className='textarea textarea-bordered w-full'
             placeholder='Add your notes here...'
           />
           <div className='fieldset-label text-sm whitespace-normal'>
             Markdown supported: **bold**, *italic*, # heading, - list,
             [link](url)
-            <br />
+          </div>
+          <div>
             <a
               href='https://www.markdownguide.org/basic-syntax/'
               target='_blank'

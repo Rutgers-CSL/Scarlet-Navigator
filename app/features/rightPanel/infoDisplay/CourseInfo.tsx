@@ -91,9 +91,9 @@ export default function CourseInfo({ id }: CourseInfoProps) {
               onChange={(e) =>
                 setEditForm({ ...editForm, name: e.target.value })
               }
-              className='absolute inset-0 w-full rounded-sm border px-2 py-0 text-2xl font-bold'
+              className='absolute inset-0 top-0 w-full rounded-sm border px-2 py-0 text-2xl font-bold'
               maxLength={10}
-              style={{ top: '-1px', height: 'calc(100% + 2px)' }}
+              style={{ left: '-9px', height: 'calc(100% + 2px)' }}
             />
           )}
         </div>
@@ -110,7 +110,7 @@ export default function CourseInfo({ id }: CourseInfoProps) {
                 onChange={(e) =>
                   setEditForm({ ...editForm, credits: Number(e.target.value) })
                 }
-                className='absolute top-0 left-24 w-16 rounded-sm border px-2 py-1'
+                className='absolute top-0 left-22 w-16 rounded-sm border px-2 py-1'
                 min={1}
                 max={6}
               />
@@ -120,7 +120,7 @@ export default function CourseInfo({ id }: CourseInfoProps) {
           <div className='relative flex h-8 items-center'>
             <span className='inline-block w-24 font-medium'>Grade:</span>
             <span className={isEditing ? 'opacity-0' : ''}>
-              {grade || 'N/A'}
+              {grade || 'None'}
             </span>
             {isEditing && (
               <select
