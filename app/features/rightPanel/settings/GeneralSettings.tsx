@@ -16,9 +16,25 @@ export default function GeneralSettings() {
 
   // Update all semester titles when settings change
   useEffect(() => {
+    let _beginningTerm: ValidTerm = beginningTerm;
+    const validTermsForStandardSchedule =
+      beginningTerm == 'Fall' || beginningTerm == 'Spring';
+
+    if (!includeWinterAndSummerTerms && !validTermsForStandardSchedule) {
+      setGeneral({
+        beginningTerm: 'Fall',
+      });
+
+      _beginningTerm = 'Fall';
+    }
+
     semesterOrder.forEach((semesterId, index) => {
       const newTitle = calculateSemesterTitle(
-        beginningTerm,
+        //reason why we have _beginningTerm is because setGeneral
+        //occurs asynchronously with this function so it leads to some
+        //weird race conditions
+
+        _beginningTerm,
         beginningYear,
         index,
         includeWinterAndSummerTerms

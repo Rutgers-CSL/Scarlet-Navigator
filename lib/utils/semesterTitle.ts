@@ -23,6 +23,7 @@ export function calculateSemesterTitle(
   const offsets = includeWinterAndSummerTerms ? OFFSETS_FOUR : OFFSETS_TWO;
 
   const startingTermIndex = terms.indexOf(startingTerm);
+  console.log(startingTerm, terms, includeWinterAndSummerTerms);
   if (startingTermIndex === -1) {
     throw new Error(`Invalid starting term: ${startingTerm}`);
   }
