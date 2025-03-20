@@ -6,8 +6,6 @@ import { MiddlePanel } from '@/app/features/middlePanel/MiddlePanel';
 import { coordinateGetter } from '@/app/features/dnd-core/multipleContainersKeyboardCoordinates';
 import { customCollisionDetectionStrategy } from '@/app/features/dnd-core/dnd-utils';
 import useDragHandlers from '@/app/features/dnd-core/dnd-hooks/useDragHandlers';
-import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
-import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import { CoursesBySemesterID } from '@/lib/types/models';
 import {
   DndContext,
@@ -15,11 +13,10 @@ import {
   MeasuringStrategy,
   MouseSensor,
   TouchSensor,
-  UniqueIdentifier,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { useRef, useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useKeyboardShortcuts } from '@/lib/hooks/useKeyboardShortcuts';
 import { useDraggable } from '@/lib/hooks/useDraggable';
 import {
@@ -35,15 +32,6 @@ import DashboardSkeleton from '@/app/components/DashboardSkeleton';
 
 const Page: React.FC = () => {
   useKeyboardShortcuts();
-
-  const coursesBySemesterID = useScheduleStore((state) => {
-    return state.coursesBySemesterID;
-  });
-
-  const activeID = useAuxiliaryStore((state) => state.activeID);
-
-  const recentlyMovedToNewContainerInstance = useRef(false);
-
   const { DragHandle: LeftDragHandle, dimensionValue: leftPanelWidth } =
     useDraggable({
       dimensionValueModifier: (delta) =>
@@ -63,8 +51,6 @@ const Page: React.FC = () => {
     });
 
   const isMounted = useMountStatus();
-
-  const lastOverId = useRef<UniqueIdentifier | null>(null);
   const [clonedItems, setClonedItems] = useState<CoursesBySemesterID | null>(
     null
   );
@@ -77,11 +63,14 @@ const Page: React.FC = () => {
     handleDragMove,
   } = useDragHandlers(clonedItems, setClonedItems);
 
-  const sensorOptions = {
-    activationConstraint: {
-      distance: 5,
-    },
-  };
+  const sensorOptions = useMemo(
+    () => ({
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+    []
+  );
 
   const sensors = useSensors(
     useSensor(MouseSensor, sensorOptions),
@@ -91,15 +80,21 @@ const Page: React.FC = () => {
     })
   );
 
-  const leftPanelStyle = {
-    width: leftPanelWidth,
-    minWidth: LEFT_PANEL_MIN_WIDTH,
-  };
+  const leftPanelStyle = useMemo(
+    () => ({
+      width: leftPanelWidth,
+      minWidth: LEFT_PANEL_MIN_WIDTH,
+    }),
+    [leftPanelWidth]
+  );
 
-  const rightPanelStyle = {
-    width: rightPanelWidth,
-    minWidth: RIGHT_PANEL_MIN_WIDTH,
-  };
+  const rightPanelStyle = useMemo(
+    () => ({
+      width: rightPanelWidth,
+      minWidth: RIGHT_PANEL_MIN_WIDTH,
+    }),
+    [rightPanelWidth]
+  );
 
   if (!isMounted) {
     return <DashboardSkeleton />;

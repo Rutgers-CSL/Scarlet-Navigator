@@ -19,9 +19,6 @@
 
 // Import required dependencies
 const path = require('path');
-// const envFile =
-//   process.env.NODE_ENV === 'production' ? '.env.prod' : '.env.dev';
-// require('dotenv').config({ path: path.resolve(__dirname, '../../' + envFile) });
 require('dotenv').config();
 const fs = require('fs');
 const Typesense = require('typesense');
@@ -93,6 +90,7 @@ requiredEnvVars.forEach((envVar) => {
     fields: [
       { name: 'id', type: 'string' }, // Unique identifier for the course
       { name: 'name', type: 'string' }, // Course name/title
+      { name: 'prereqNotes', type: 'string', optional: true }, // Prerequisite notes
       { name: 'credits', type: 'int32', facet: true }, // Number of credits
       { name: 'cores', type: 'string[]', facet: true }, // Core requirements satisfied
       { name: 'grade', type: 'string', facet: true, optional: true }, // Grade requirement (can be null)

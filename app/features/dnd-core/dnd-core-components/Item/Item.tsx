@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import classNames from 'classnames';
 import type { DraggableSyntheticListeners } from '@dnd-kit/core';
 import type { Transform } from '@dnd-kit/utilities';
@@ -12,6 +12,7 @@ import { CourseID } from '@/lib/types/models';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import CoreList from '@/app/components/CoreList';
 import { SEARCH_ITEM_DELIMITER } from '@/lib/constants';
+import { useShallow } from 'zustand/react/shallow';
 
 export interface Props {
   id: CourseID;
@@ -32,6 +33,7 @@ export interface Props {
   wrapperStyle?: React.CSSProperties;
   value: React.ReactNode;
   showCores?: boolean;
+  currentInfoID: CourseID | null;
   onRemove?(): void;
   renderItem?(args: {
     dragOverlay: boolean;
@@ -72,37 +74,35 @@ export const Item = React.memo(
         value,
         wrapperStyle,
         showCores = true,
+        currentInfoID,
         ...props
       },
       ref
     ) => {
-      useEffect(() => {
-        if (!dragOverlay) {
-          return;
-        }
-
-        document.body.style.cursor = 'grabbing';
-
-        return () => {
-          document.body.style.cursor = '';
-        };
-      }, [dragOverlay]);
-
       const setCurrentInfo = useAuxiliaryStore((state) => state.setCurrentInfo);
-      const currentInfoID = useAuxiliaryStore((state) => state.currentInfoID);
-
-      const rawID = (id as string).replace(SEARCH_ITEM_DELIMITER, '');
-      const isSearchItem = (id as string).endsWith(SEARCH_ITEM_DELIMITER);
-
-      const isActive =
-        currentInfoID === id ||
-        (isSearchItem && currentInfoID === rawID) ||
-        (!isSearchItem && currentInfoID === `${id}${SEARCH_ITEM_DELIMITER}`);
-
-      const course = useScheduleStore((state) => state.courses[id as string]);
       const showGrades = useSettingsStore((state) => state.visuals.showGrades);
+      const course = useScheduleStore(
+        useShallow((state) => state.courses[id as string])
+      );
       const showCreditCountOnCourseTitles = useSettingsStore(
-        (state) => state.visuals.showCreditCountOnCourseTitles
+        useCallback((state) => state.visuals.showCreditCountOnCourseTitles, [])
+      );
+
+      const rawID = useMemo(
+        () => (id as string).replace(SEARCH_ITEM_DELIMITER, ''),
+        [id]
+      );
+      const isSearchItem = useMemo(
+        () => (id as string).endsWith(SEARCH_ITEM_DELIMITER),
+        [id]
+      );
+
+      const isActive = useMemo(
+        () =>
+          currentInfoID === id ||
+          (isSearchItem && currentInfoID === rawID) ||
+          (!isSearchItem && currentInfoID === `${id}${SEARCH_ITEM_DELIMITER}`),
+        [currentInfoID, id, isSearchItem, rawID]
       );
 
       return (
@@ -131,7 +131,7 @@ export const Item = React.memo(
               '--scale-y': transform?.scaleY
                 ? `${transform.scaleY}`
                 : undefined,
-              '--index': index,
+              // '--index': index,
               '--color': color,
             } as React.CSSProperties
           }

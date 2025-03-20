@@ -10,6 +10,7 @@ import {
 import { SortableItem } from '@/app/features/dnd-core/dnd-core-components/SortableItem';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import { useShallow } from 'zustand/react/shallow';
+import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 
 interface LoadingSkeletonProps {
   itemCount?: number;
@@ -49,6 +50,7 @@ export default function CourseSearch() {
     })
   );
   const searchItems = coursesBySemesterID[SEARCH_CONTAINER_ID] || [];
+  const currentInfoID = useAuxiliaryStore((state) => state.currentInfoID);
 
   // Clear search results on mount
   useEffect(() => {
@@ -138,6 +140,7 @@ export default function CourseSearch() {
 
                 return (
                   <SortableItem
+                    currentInfoID={currentInfoID === courseId ? courseId : null}
                     key={courseId}
                     containerId={SEARCH_CONTAINER_ID}
                     id={courseId}

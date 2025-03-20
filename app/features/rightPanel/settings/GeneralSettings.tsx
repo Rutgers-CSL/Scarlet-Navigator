@@ -15,39 +15,43 @@ export default function GeneralSettings() {
   const updateSemester = useScheduleStore((state) => state.updateSemester);
 
   // Update all semester titles when settings change
-  useEffect(() => {
-    let _beginningTerm: ValidTerm = beginningTerm;
-    const validTermsForStandardSchedule =
-      beginningTerm == 'Fall' || beginningTerm == 'Spring';
+  useEffect(
+    () => {
+      let _beginningTerm: ValidTerm = beginningTerm;
+      const validTermsForStandardSchedule =
+        beginningTerm == 'Fall' || beginningTerm == 'Spring';
 
-    if (!includeWinterAndSummerTerms && !validTermsForStandardSchedule) {
-      setGeneral({
-        beginningTerm: 'Fall',
+      if (!includeWinterAndSummerTerms && !validTermsForStandardSchedule) {
+        setGeneral({
+          beginningTerm: 'Fall',
+        });
+
+        _beginningTerm = 'Fall';
+      }
+
+      semesterOrder.forEach((semesterId, index) => {
+        const newTitle = calculateSemesterTitle(
+          //reason why we have _beginningTerm is because setGeneral
+          //occurs asynchronously with this function so it leads to some
+          //weird race conditions
+
+          _beginningTerm,
+          beginningYear,
+          index,
+          includeWinterAndSummerTerms
+        );
+        updateSemester(semesterId, { title: newTitle });
       });
-
-      _beginningTerm = 'Fall';
-    }
-
-    semesterOrder.forEach((semesterId, index) => {
-      const newTitle = calculateSemesterTitle(
-        //reason why we have _beginningTerm is because setGeneral
-        //occurs asynchronously with this function so it leads to some
-        //weird race conditions
-
-        _beginningTerm,
-        beginningYear,
-        index,
-        includeWinterAndSummerTerms
-      );
-      updateSemester(semesterId, { title: newTitle });
-    });
-  }, [
-    beginningTerm,
-    beginningYear,
-    includeWinterAndSummerTerms,
-    semesterOrder,
-    updateSemester,
-  ]);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      beginningTerm,
+      beginningYear,
+      includeWinterAndSummerTerms,
+      semesterOrder,
+      updateSemester,
+    ]
+  );
 
   const handleTermChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setGeneral({

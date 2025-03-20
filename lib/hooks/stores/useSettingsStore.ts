@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import defaultSettings from '@/lib/defaultSettings.json';
+import { SETTINGS_STORAGE_KEY } from './storeKeys';
 
 export type GradePointMap = Record<string, number | null>;
 export type ValidTerm = 'Fall' | 'Spring' | 'Winter' | 'Summer';
@@ -92,7 +93,7 @@ export const useSettingsStore = create<SettingsStore>()(
       },
     }),
     {
-      name: 'settings-storage',
+      name: SETTINGS_STORAGE_KEY,
       version: 1,
     }
   )

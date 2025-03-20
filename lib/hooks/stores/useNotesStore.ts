@@ -3,6 +3,7 @@
 import { SemesterID, CourseID } from '@/lib/types/models';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { NOTES_STORAGE_KEY } from './storeKeys';
 
 type validID = SemesterID | CourseID;
 
@@ -37,7 +38,7 @@ export const useNotesStore = create<NotesState>()(
         }),
     }),
     {
-      name: 'notes-storage',
+      name: NOTES_STORAGE_KEY,
     }
   )
 );

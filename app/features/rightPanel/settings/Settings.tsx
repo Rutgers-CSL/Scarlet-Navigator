@@ -2,7 +2,7 @@ import VisualsSettings from './VisualsSettings';
 import GradePointSettings from './GradePointSettings';
 import MiscSettings from './MiscSettings';
 import GeneralSettings from './GeneralSettings';
-
+import { ImportExportPanel } from '@/app/features/rightPanel/settings/ImportExport';
 export default function Settings() {
   return (
     <div className='h-full p-4'>
@@ -18,6 +18,16 @@ export default function Settings() {
           </div>
           <div className='collapse-content'>
             <GeneralSettings />
+          </div>
+        </div>
+
+        <div className='collapse-arrow bg-base-200 collapse'>
+          <input type='checkbox' name='grade-point-settings-accordion' />
+          <div className='collapse-title text-base font-medium'>
+            Backup & Sync Settings
+          </div>
+          <div className='collapse-content'>
+            <ImportExportPanel />
           </div>
         </div>
 

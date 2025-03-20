@@ -18,6 +18,7 @@ import { SEARCH_CONTAINER_ID, SEARCH_ITEM_DELIMITER } from '@/lib/constants';
 import useHistoryStore from './useHistoryStore';
 import { createDummySchedule } from '@/lib/utils';
 import { UniqueIdentifier } from '@dnd-kit/core';
+import { SCHEDULE_STORAGE_KEY } from './storeKeys';
 
 type ScheduleStore = ScheduleActions & Omit<ScheduleState, 'past' | 'future'>;
 type SchedulePersist = (
@@ -32,7 +33,7 @@ export const useScheduleStore = create<ScheduleStore>()(
       get: () => ScheduleStore
     ) => {
       const saveToHistory = (currentState: ScheduleStore) => {
-        useHistoryStore.getState().addToHistory(currentState);
+        // useHistoryStore.getState().addToHistory(currentState);
       };
 
       return {
@@ -282,7 +283,7 @@ export const useScheduleStore = create<ScheduleStore>()(
       };
     },
     {
-      name: 'schedule-storage',
+      name: SCHEDULE_STORAGE_KEY,
       storage: {
         getItem: (name: string) => {
           const str = localStorage.getItem(name) || '';

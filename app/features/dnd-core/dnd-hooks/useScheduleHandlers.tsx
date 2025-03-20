@@ -5,6 +5,7 @@ import useHistoryStore from '@/lib/hooks/stores/useHistoryStore';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
 import { calculateSemesterTitle } from '@/lib/utils/semesterTitle';
+import { useShallow } from 'zustand/react/shallow';
 
 export default function useScheduleHandlers() {
   const items = useScheduleStore((state) => state.coursesBySemesterID);
@@ -22,6 +23,15 @@ export default function useScheduleHandlers() {
   const { beginningTerm, beginningYear, includeWinterAndSummerTerms } =
     useSettingsStore((state) => state.general);
 
+  const addToHistory = useHistoryStore((state) => state.addToHistory);
+
+  const { removeCourse, updateSemester } = useScheduleStore(
+    useShallow((state) => ({
+      removeCourse: state.removeCourse,
+      updateSemester: state.updateSemester,
+    }))
+  );
+
   const handleAddColumn = () => {
     const newContainerId = `semester${new Date().getTime()}`;
     const newItems = {
@@ -30,8 +40,8 @@ export default function useScheduleHandlers() {
     };
 
     // Save current state to history before making changes
-    const currentState = useScheduleStore.getState();
-    useHistoryStore.getState().addToHistory(currentState);
+    // const currentState = useScheduleStore.getState();
+    // addToHistory(currentState);
 
     // Calculate the semester title based on settings
     const semesterTitle = calculateSemesterTitle(
@@ -52,7 +62,7 @@ export default function useScheduleHandlers() {
     unstable_batchedUpdates(() => {
       setSemesterOrder([...containers, newContainerId]);
       setCoursesBySemesterID(newItems, true); // Skip history for this call since we already saved it
-      useScheduleStore.getState().updateSemester(newContainerId, newSemester);
+      updateSemester(newContainerId, newSemester);
     });
   };
 
@@ -71,7 +81,7 @@ export default function useScheduleHandlers() {
     courseID: UniqueIdentifier,
     containerID: UniqueIdentifier
   ) => {
-    useScheduleStore.getState().removeCourse(courseID as string, containerID);
+    removeCourse(courseID as string, containerID);
     setCurrentInfo('', 'course');
   };
 

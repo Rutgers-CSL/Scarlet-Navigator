@@ -3,14 +3,8 @@
 import { useState } from 'react';
 import { useProgramFulfillment } from '@/lib/hooks/stores/useProgramFulfillment';
 import { useCoreRequirements } from '@/lib/hooks/useCoreRequirements';
-import {
-  CoreCategory,
-  ProgramOfStudy,
-  SemesterID,
-  Course,
-} from '@/lib/types/models';
+import { CoreCategory, ProgramOfStudy, SemesterID } from '@/lib/types/models';
 import ConfirmationModal from '@/app/components/ConfirmationModal';
-import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 
 interface AddProgramFormProps {
   onSubmit: (name: string) => void;
@@ -348,12 +342,12 @@ function CategoryItem({
                   </span>
                   <div className='mt-1 text-xs text-gray-500'>
                     Fulfilled by:{' '}
-                    {Object.values(useScheduleStore.getState().courses)
+                    {/* {Object.values(useScheduleStore.getState().courses)
                       .filter((course: Course) =>
                         course.cores.includes(core.name)
                       )
                       .map((course: Course) => course.name)
-                      .join(', ') || 'No courses yet'}
+                      .join(', ') || 'No courses yet'} */}
                   </div>
                 </span>
                 <button

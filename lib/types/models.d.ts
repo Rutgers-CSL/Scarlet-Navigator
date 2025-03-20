@@ -36,6 +36,7 @@ export interface Course {
   credits: number;
   cores: string[];
   grade: string | null;
+  prereqNotes?: string;
 }
 
 export interface ScheduleState {
@@ -82,37 +83,6 @@ export interface ScheduleActions {
   ___TEMP___populate: () => void;
   ______reset______(): void;
   setSearchResults: (courses: Course[]) => void;
-}
-
-export interface _ScheduleActions {
-  // --- Semesters ---
-  reorderSemesters: (semOrder: SemesterOrder) => void;
-  updateSemester: (id: SemesterID, updates: Partial<Semester>) => void;
-  removeSemester: (id: SemesterID) => void;
-
-  // --- Courses ---
-  addNewCourseToCoursePool: (
-    name: string,
-    credits: number,
-    cores: string[]
-  ) => CourseID;
-
-  // setCoursesBySemesterID: (
-  //   semesters: CoursesBySemesterID,
-  //   skipHistory?: boolean
-  // ) => void;
-  setCourses: (courses: CourseByID) => void;
-
-  handleDragOperation: (
-    semesters: CoursesBySemesterID,
-    isNewContainerMove?: boolean
-  ) => void;
-  updateCourse: (id: CourseID, updates: Partial<Course>) => void;
-
-  undo: () => void;
-  redo: () => void;
-  ___TEMP___populate: () => void;
-  ______reset______(): void;
 }
 
 export interface CoreRequirement {

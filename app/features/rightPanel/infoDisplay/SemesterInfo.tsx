@@ -165,7 +165,6 @@ export default function SemesterInfo({ id }: SemesterInfoProps) {
           </h1>
         )}
       </div>
-
       <div className='space-y-2'>
         <div>
           <span className='font-medium'>Semester Credits:</span>{' '}
@@ -177,7 +176,7 @@ export default function SemesterInfo({ id }: SemesterInfoProps) {
         <div>
           <span className='font-medium'>Class Standing:</span> {studentStatus}
         </div>
-        <br />
+
         <div>
           <span className='font-medium'>Semester GPA:</span>{' '}
           {hasUngraded ? (
@@ -186,6 +185,7 @@ export default function SemesterInfo({ id }: SemesterInfoProps) {
             semesterGPA.toFixed(2)
           )}
         </div>
+
         <div>
           <span className='font-medium'>Cumulative GPA:</span>{' '}
           {hasUngradedCumulative ? (
@@ -194,10 +194,11 @@ export default function SemesterInfo({ id }: SemesterInfoProps) {
             cumulativeGPA.toFixed(2)
           )}
         </div>
+        <div className='divider' />
         {semesterCores.size > 0 && (
           <div>
             <span className='mb-1 block font-medium'>
-              Cores Fulfilled by this semester:
+              Cores fulfilled by this semester:
             </span>
             <CoreList cores={Array.from(semesterCores)} />
           </div>

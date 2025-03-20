@@ -52,11 +52,12 @@ export default function useOverlayComponents(
         renderItem={renderItem}
         dragOverlay
         showCores={isFromCoursePool || showCoreLabels}
+        currentInfoID={id}
       />
     );
   }
 
-  function renderContainerDragOverlay(containerId: UniqueIdentifier) {
+  function RenderContainerDragOverlay(containerId: UniqueIdentifier) {
     const semesterCredits = calculateSemesterCredits(
       items[containerId] || [],
       courses
@@ -68,7 +69,7 @@ export default function useOverlayComponents(
       containerId
     );
     const semesterTitle =
-      useScheduleStore.getState().semesterByID[containerId]?.title ||
+      useScheduleStore((state) => state.semesterByID[containerId]?.title) ||
       containerId;
 
     return (
@@ -101,6 +102,7 @@ export default function useOverlayComponents(
               color={getColor(id)}
               wrapperStyle={wrapperStyle({ index: 1 })}
               renderItem={renderItem}
+              currentInfoID={id}
             />
           );
         })}
@@ -110,6 +112,6 @@ export default function useOverlayComponents(
 
   return {
     renderSortableItemDragOverlay,
-    renderContainerDragOverlay,
+    RenderContainerDragOverlay,
   };
 }

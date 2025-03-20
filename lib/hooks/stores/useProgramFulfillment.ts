@@ -9,6 +9,7 @@ import {
   CoreRequirement,
   ProgramOfStudy,
 } from '@/lib/types/models';
+import { PROGRAM_FULFILLMENT_STORAGE_KEY } from './storeKeys';
 
 type ProgramFulfillmentStore = ProgramFulfillmentState &
   ProgramFulfillmentActions;
@@ -252,7 +253,7 @@ export const useProgramFulfillment = create<ProgramFulfillmentStore>()(
       return store;
     },
     {
-      name: 'program-fulfillment-storage',
+      name: PROGRAM_FULFILLMENT_STORAGE_KEY,
     }
   )
 );

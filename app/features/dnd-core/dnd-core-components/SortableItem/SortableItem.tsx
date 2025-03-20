@@ -5,6 +5,8 @@ import { getColor } from '../../dnd-utils';
 import useScheduleHandlers from '../../dnd-hooks/useScheduleHandlers';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import { SEARCH_ITEM_DELIMITER } from '@/lib/constants';
+import { useCallback, useMemo } from 'react';
+import { CourseID } from '@/lib/types/models';
 
 interface SortableItemProps {
   containerId: UniqueIdentifier;
@@ -16,6 +18,7 @@ interface SortableItemProps {
   getIndex(id: UniqueIdentifier): number;
   wrapperStyle({ index }: { index: number }): React.CSSProperties;
   showCores?: boolean;
+  currentInfoID: CourseID | null;
 }
 
 export default function SortableItem({
@@ -28,6 +31,7 @@ export default function SortableItem({
   getIndex,
   wrapperStyle,
   showCores = true,
+  currentInfoID,
 }: SortableItemProps) {
   const {
     setNodeRef,
@@ -43,44 +47,41 @@ export default function SortableItem({
     id,
   });
   const { handleRemoveCourse } = useScheduleHandlers();
+  const onRemove = useCallback(() => {
+    handleRemoveCourse(id, containerId);
+  }, [id, containerId, handleRemoveCourse]);
+  const course = useScheduleStore((state) => state.courses[id as string]);
+  const isSearchItem = useMemo(
+    () => id.toString().endsWith(SEARCH_ITEM_DELIMITER),
+    [id]
+  );
 
-  const courses = useScheduleStore.getState().courses;
-  if (!courses[id]) return null;
-  const courseName = courses[id].name;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const memoListeners = useMemo(() => listeners, [id]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const onRemoveProp = useMemo(() => (isSearchItem ? undefined : onRemove), []);
 
-  const isSearchItem = id.toString().endsWith(SEARCH_ITEM_DELIMITER);
+  if (!course) return null;
+  const courseName = course.name;
 
   return (
     <Item
       id={id}
       ref={disabled ? undefined : setNodeRef}
+      currentInfoID={currentInfoID}
       disabled={disabled}
       value={courseName}
-      onRemove={
-        isSearchItem
-          ? undefined
-          : () => {
-              handleRemoveCourse(id, containerId);
-            }
-      }
+      onRemove={onRemoveProp}
       dragging={isDragging}
       sorting={isSorting}
       handle={handle}
       handleProps={handle ? { ref: setActivatorNodeRef } : undefined}
       index={index}
-      wrapperStyle={wrapperStyle({ index })}
-      style={style({
-        index,
-        value: id,
-        isDragging,
-        isSorting,
-        overIndex: over ? getIndex(over.id) : overIndex,
-        containerId,
-      })}
+      // wrapperStyle={memoWrapperStyle({ index })}
       color={getColor(id)}
       transition={transition}
       transform={transform}
-      listeners={listeners}
+      listeners={memoListeners}
       showCores={showCores}
     />
   );

@@ -45,6 +45,7 @@ To start a development environment, install the following:
 
 - [Docker](https://docs.docker.com/desktop/setup/install/mac-install/) - Software container manager
 - [pnpm](https://pnpm.io/installation) - A Node.js package manager
+- [Python3](https://www.python.org/downloads/) - For Python scripts
 
 Then run the following commands:
 

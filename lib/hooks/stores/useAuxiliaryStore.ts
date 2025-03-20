@@ -2,6 +2,7 @@ import { SemesterID } from '@/lib/types/models';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { RefObject } from 'react';
+import { AUXILIARY_STORAGE_KEY } from './storeKeys';
 
 type AuxiliaryStore = {
   recentlyMovedToNewContainer: RefObject<boolean> | null;
@@ -57,7 +58,7 @@ const useAuxiliaryStore = create<AuxiliaryStore>()(
       },
     }),
     {
-      name: 'auxiliary-storage',
+      name: AUXILIARY_STORAGE_KEY,
       partialize: (state) => ({
         panelDimensions: state.panelDimensions,
         activeTab: state.activeTab,

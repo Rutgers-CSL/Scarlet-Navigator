@@ -29,6 +29,8 @@ import NotesBox from './components/NotesBox';
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
 import MenuContainer from './components/MenuContainer';
 import { Info } from 'lucide-react';
+import { useShallow } from 'zustand/react/shallow';
+
 interface Props {
   adjustScale?: boolean;
   cancelDrop?: CancelDrop;
@@ -81,15 +83,16 @@ export function ScheduleBoard({
     showCoreLabelsInCoursesInsideScheduleBoard: showCoreLabels,
   } = useSettingsStore((state) => state.visuals);
 
-  const gradePoints = useSettingsStore((state) => state.gradePoints);
-
-  const { recentlyMovedToNewContainer, activeID } =
-    useAuxiliaryStore.getState();
+  const { recentlyMovedToNewContainer, activeID } = useAuxiliaryStore(
+    useShallow((state) => ({
+      recentlyMovedToNewContainer: state.recentlyMovedToNewContainer,
+      activeID: state.activeID,
+    }))
+  );
   const setRecentlyMovedToNewContainer = useAuxiliaryStore(
-    (state) => state.setRecentlyMovedToNewContainer
+    useShallow((state) => state.setRecentlyMovedToNewContainer)
   );
   const setCurrentInfo = useAuxiliaryStore((state) => state.setCurrentInfo);
-  const moveRef = useRef(false);
   const resetRef = useRef(false);
 
   const currentInfoID = useAuxiliaryStore((state) => state.currentInfoID);
@@ -103,16 +106,10 @@ export function ScheduleBoard({
     }
   }, [recentlyMovedToNewContainer, setRecentlyMovedToNewContainer]);
 
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      moveRef.current = false;
-    });
-  }, [coursesBySemesterID]);
-
   const isSortingContainer = activeID
     ? semesterOrder.includes(activeID)
     : false;
-  const { renderContainerDragOverlay, renderSortableItemDragOverlay } =
+  const { RenderContainerDragOverlay, renderSortableItemDragOverlay } =
     useOverlayComponents(
       coursesBySemesterID,
       handle,
@@ -232,6 +229,9 @@ export function ScheduleBoard({
                             wrapperStyle={wrapperStyle}
                             containerId={containerId}
                             showCores={showCoreLabels}
+                            currentInfoID={
+                              currentInfoID === value ? value : null
+                            }
                             getIndex={(id) => {
                               return 0;
                             }}
@@ -278,7 +278,7 @@ export function ScheduleBoard({
         <DragOverlay adjustScale={adjustScale} dropAnimation={dropAnimation}>
           {activeID
             ? semesterOrder.includes(activeID)
-              ? renderContainerDragOverlay(activeID)
+              ? RenderContainerDragOverlay(activeID)
               : renderSortableItemDragOverlay(activeID)
             : null}
         </DragOverlay>,
