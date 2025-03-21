@@ -31,7 +31,7 @@ export interface Semester {
 }
 
 export interface Course {
-  id: CourseID;
+  id: CourseID; //01:198:112
   name: string;
   credits: number;
   cores: string[];
