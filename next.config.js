@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
 const { version } = require('./package.json');
 const nextConfig = {
-  version,
+  env: {
+    version,
+  },
 };
 
 module.exports = nextConfig;

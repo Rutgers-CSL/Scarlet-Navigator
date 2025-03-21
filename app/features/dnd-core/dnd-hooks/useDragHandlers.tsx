@@ -114,10 +114,10 @@ export default function useDragHandlers(
         (containerId) =>
           !coursesBySemesterID[containerId] ||
           cleanedItems[containerId].length !==
-            coursesBySemesterID[containerId].length
-        // cleanedItems[containerId].some(
-        //   (id, index) => id !== coursesBySemesterID[containerId][index]
-        // )
+            coursesBySemesterID[containerId].length ||
+          cleanedItems[containerId].some(
+            (id, index) => id !== coursesBySemesterID[containerId][index]
+          )
       );
 
       if (hasChanged) {
@@ -239,82 +239,74 @@ export default function useDragHandlers(
     [throttledDragOver]
   );
 
-  const handleDragEnd = useCallback(
-    (event: DragOverEvent) => {
-      const { active, over } = event;
-      const activeId = active.id;
+  const handleDragEnd = (event: DragOverEvent) => {
+    const { active, over } = event;
+    const activeId = active.id;
 
-      if (activeId in items && over?.id) {
-        const activeIndex = containers.indexOf(activeId);
-        const overIndex = containers.indexOf(over.id);
+    if (activeId in items && over?.id) {
+      const activeIndex = containers.indexOf(activeId);
+      const overIndex = containers.indexOf(over.id);
 
-        setSemesterOrderWrapper(arrayMove(containers, activeIndex, overIndex));
-      }
+      setSemesterOrderWrapper(arrayMove(containers, activeIndex, overIndex));
+    }
 
-      const activeContainer = findContainer(items, activeId);
-      const overContainer = findContainer(items, over?.id ?? '');
+    const activeContainer = findContainer(items, activeId);
+    const overContainer = findContainer(items, over?.id ?? '');
 
-      if (!overContainer || !activeContainer) {
-        return;
-      }
+    if (!overContainer || !activeContainer) {
+      return;
+    }
 
-      const draggingCourseIsSearchItem = active.id
-        .toString()
-        .endsWith(SEARCH_ITEM_DELIMITER);
+    const draggingCourseIsSearchItem = active.id
+      .toString()
+      .endsWith(SEARCH_ITEM_DELIMITER);
 
-      // If the user is dragging a search item within the search container,
-      // we want to prevent the search container items from re-arranging.
-      if (overContainer === SEARCH_CONTAINER_ID && draggingCourseIsSearchItem) {
-        return;
-      }
-      const overId = over?.id;
+    // If the user is dragging a search item within the search container,
+    // we want to prevent the search container items from re-arranging.
+    if (overContainer === SEARCH_CONTAINER_ID && draggingCourseIsSearchItem) {
+      return;
+    }
+    const overId = over?.id;
 
-      if (overId == null) {
-        setActiveId('');
-        return;
-      }
-
-      const activeIndex = items[activeContainer].indexOf(active.id);
-      const overIndex = items[overContainer].indexOf(overId);
-      const newItemState = {
-        ...items,
-        [overContainer]: arrayMove(
-          items[overContainer],
-          activeIndex,
-          overIndex
-        ),
-      };
-
-      if (!newItemState[overContainer][overIndex]) {
-        return;
-      }
-
-      if (draggingCourseIsSearchItem) {
-        const newCourseId = activeId
-          .toString()
-          .replace(SEARCH_ITEM_DELIMITER, '');
-        setCourses({
-          ...courses,
-          [newCourseId]: {
-            ...courses[activeId],
-            id: newCourseId,
-          },
-        });
-
-        newItemState[overContainer][overIndex] = newCourseId;
-      }
-
-      if (activeContainer === overContainer && moveRef.current) {
-        moveRef.current = true;
-      }
-
-      setItemsWrapper(newItemState, true);
+    if (overId == null) {
       setActiveId('');
-      document.body.style.cursor = '';
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [items, containers, courses]
-  );
+      return;
+    }
+
+    const activeIndex = items[activeContainer].indexOf(active.id);
+    const overIndex = items[overContainer].indexOf(overId);
+    const newItemState = {
+      ...items,
+      [overContainer]: arrayMove(items[overContainer], activeIndex, overIndex),
+    };
+
+    if (!newItemState[overContainer][overIndex]) {
+      return;
+    }
+
+    if (draggingCourseIsSearchItem) {
+      const newCourseId = activeId
+        .toString()
+        .replace(SEARCH_ITEM_DELIMITER, '');
+      setCourses({
+        ...courses,
+        [newCourseId]: {
+          ...courses[activeId],
+          id: newCourseId,
+        },
+      });
+
+      newItemState[overContainer][overIndex] = newCourseId;
+    }
+
+    if (activeContainer === overContainer && moveRef.current) {
+      moveRef.current = true;
+    }
+
+    setItemsWrapper(newItemState, true);
+    setActiveId('');
+    document.body.style.cursor = '';
+  };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleDragStart = useCallback((event: DragOverEvent) => {

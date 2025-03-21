@@ -276,11 +276,16 @@ export function ScheduleBoard({
       </div>
       {createPortal(
         <DragOverlay adjustScale={adjustScale} dropAnimation={dropAnimation}>
-          {activeID
-            ? semesterOrder.includes(activeID)
-              ? RenderContainerDragOverlay(activeID)
-              : renderSortableItemDragOverlay(activeID)
-            : null}
+          {/* Determine what to render in the drag overlay based on what's being dragged */}
+          {activeID && (
+            <>
+              {semesterOrder.includes(activeID)
+                ? // When dragging a semester container
+                  RenderContainerDragOverlay(activeID)
+                : // When dragging a course item
+                  renderSortableItemDragOverlay(activeID)}
+            </>
+          )}
         </DragOverlay>,
         document.body
       )}
