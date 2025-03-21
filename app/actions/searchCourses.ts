@@ -38,14 +38,14 @@ export async function searchCoursesAction(
 
   const searchParams = {
     q,
-    query_by: 'name',
+    query_by: 'expandedTitle',
     filter_by,
     sort_by,
   };
 
   try {
     const searchResults = await client
-      .collections('courses')
+      .collections('master')
       .documents()
       .search(searchParams);
 
@@ -53,7 +53,18 @@ export async function searchCoursesAction(
       return [];
     }
 
-    return searchResults.hits.map((hit) => hit.document as Course);
+    console.log(searchResults.hits);
+    return searchResults.hits.map((hit) => {
+      const rawCourse = hit.document as any;
+      const course: Course = {
+        id: rawCourse.courseString,
+        name: rawCourse.expandedTitle,
+        credits: rawCourse.credits,
+        cores: [],
+        grade: null,
+      };
+      return course;
+    });
   } catch (error) {
     console.error('searchCoursesAction error:', error);
     throw error;
