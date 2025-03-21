@@ -6,7 +6,6 @@ import useScheduleHandlers from '../../dnd-hooks/useScheduleHandlers';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import { SEARCH_ITEM_DELIMITER } from '@/lib/constants';
 import { useCallback, useMemo } from 'react';
-import { CourseID } from '@/lib/types/models';
 
 interface SortableItemProps {
   containerId: UniqueIdentifier;
@@ -18,7 +17,6 @@ interface SortableItemProps {
   getIndex(id: UniqueIdentifier): number;
   wrapperStyle({ index }: { index: number }): React.CSSProperties;
   showCores?: boolean;
-  currentInfoID: CourseID | null;
 }
 
 export default function SortableItem({
@@ -31,7 +29,6 @@ export default function SortableItem({
   getIndex,
   wrapperStyle,
   showCores = true,
-  currentInfoID,
 }: SortableItemProps) {
   const {
     setNodeRef,
@@ -56,8 +53,10 @@ export default function SortableItem({
     [id]
   );
 
+  // intentional blank dependency array to prevent performance issues
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const memoListeners = useMemo(() => listeners, [id]);
+  // intentional blank dependency array to prevent performance issues
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const onRemoveProp = useMemo(() => (isSearchItem ? undefined : onRemove), []);
 
@@ -68,7 +67,6 @@ export default function SortableItem({
     <Item
       id={id}
       ref={disabled ? undefined : setNodeRef}
-      currentInfoID={currentInfoID}
       disabled={disabled}
       value={courseName}
       onRemove={onRemoveProp}

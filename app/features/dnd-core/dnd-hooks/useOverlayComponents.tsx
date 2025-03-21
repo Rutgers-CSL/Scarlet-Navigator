@@ -52,7 +52,6 @@ export default function useOverlayComponents(
         renderItem={renderItem}
         dragOverlay
         showCores={isFromCoursePool || showCoreLabels}
-        currentInfoID={id}
       />
     );
   }
@@ -102,7 +101,6 @@ export default function useOverlayComponents(
               color={getColor(id)}
               wrapperStyle={wrapperStyle({ index: 1 })}
               renderItem={renderItem}
-              currentInfoID={id}
             />
           );
         })}

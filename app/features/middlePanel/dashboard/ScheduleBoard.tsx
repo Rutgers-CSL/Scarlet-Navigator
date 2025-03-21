@@ -228,9 +228,6 @@ export function ScheduleBoard({
                             wrapperStyle={wrapperStyle}
                             containerId={containerId}
                             showCores={showCoreLabels}
-                            currentInfoID={
-                              currentInfoID === value ? value : null
-                            }
                             getIndex={(id) => {
                               return 0;
                             }}
