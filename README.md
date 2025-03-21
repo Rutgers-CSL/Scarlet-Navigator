@@ -52,6 +52,7 @@ Then run the following commands:
 ```bash
 git clone https://github.com/Rutgers-CSL/Scarlet-Navigator.git
 cd Scarlet-Navigator
+mv .env.dev .env
 pnpm run i
 pnpm run dev
 ```
