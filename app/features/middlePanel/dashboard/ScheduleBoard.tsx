@@ -119,8 +119,7 @@ export function ScheduleBoard({
       wrapperStyle
     );
 
-  const { handleAddColumn, handleEditSemester, handlePopulateSchedule } =
-    useScheduleHandlers();
+  const { handleAddColumn, handleEditSemester } = useScheduleHandlers();
 
   const getContainerTitle = (
     containerId: UniqueIdentifier,
@@ -255,7 +254,7 @@ export function ScheduleBoard({
                   >
                     + Add column
                   </DroppableContainer>
-                  <DroppableContainer
+                  {/* <DroppableContainer
                     id='populate-placeholder'
                     disabled={isSortingContainer}
                     items={EMPTY}
@@ -264,7 +263,7 @@ export function ScheduleBoard({
                     as='button'
                   >
                     Populate with dummy data
-                  </DroppableContainer>
+                  </DroppableContainer> */}
                 </>
               )}
             </div>

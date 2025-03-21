@@ -1,7 +1,6 @@
 import { UniqueIdentifier } from '@dnd-kit/core';
 import { unstable_batchedUpdates } from 'react-dom';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
-import useHistoryStore from '@/lib/hooks/stores/useHistoryStore';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
 import { calculateSemesterTitle } from '@/lib/utils/semesterTitle';
@@ -22,8 +21,6 @@ export default function useScheduleHandlers() {
 
   const { beginningTerm, beginningYear, includeWinterAndSummerTerms } =
     useSettingsStore((state) => state.general);
-
-  const addToHistory = useHistoryStore((state) => state.addToHistory);
 
   const { removeCourse, updateSemester } = useScheduleStore(
     useShallow((state) => ({
