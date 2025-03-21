@@ -52,6 +52,8 @@ requiredEnvVars.forEach((envVar) => {
     process.exit(1);
   }
 
+  console.log(client.collections('master').retrieve());
+
   // Step 3: Define the collection schema
   const collectionSchema = {
     name: 'master',

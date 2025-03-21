@@ -60,11 +60,13 @@ export async function searchCoursesAction(
         id: rawCourse.courseString,
         name: rawCourse.expandedTitle,
         credits: rawCourse.credits,
-        cores: [],
+        cores: ['hello'],
         grade: null,
       };
       return course;
     });
+
+    // return searchResults.hits.map((hit) => hit.document as Course);
   } catch (error) {
     console.error('searchCoursesAction error:', error);
     throw error;
