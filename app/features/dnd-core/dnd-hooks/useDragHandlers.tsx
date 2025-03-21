@@ -129,6 +129,8 @@ export default function useDragHandlers(
 
   const setSemesterOrderWrapper = useCallback((containers: SemesterOrder) => {
     setSemesterOrder(containers);
+
+    // blank dependency array to prevent performance issues
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -308,20 +310,24 @@ export default function useDragHandlers(
     document.body.style.cursor = '';
   };
 
+  // intentional blank dependency array to prevent performance issues
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleDragStart = useCallback((event: DragOverEvent) => {
     const { active } = event;
     setActiveId(active.id);
 
     document.body.style.cursor = 'grabbing';
+    // intentional blank dependency array to prevent performance issues
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // intentional blank dependency array to prevent performance issues
+  // intentional blank dependency array to prevent performance issues
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleDragMove = useCallback((event: DragOverEvent) => {
     return;
   }, []);
-
+  // intentional blank dependency array to prevent performance issues
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleDragCancel = useCallback(() => {
     if (clonedItems) {
@@ -329,6 +335,7 @@ export default function useDragHandlers(
     }
     document.body.style.cursor = '';
     setActiveId('');
+    // intentional blank dependency array to prevent performance issues
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clonedItems]);
 

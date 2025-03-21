@@ -33,7 +33,6 @@ export interface Props {
   wrapperStyle?: React.CSSProperties;
   value: React.ReactNode;
   showCores?: boolean;
-  currentInfoID: CourseID | null;
   onRemove?(): void;
   renderItem?(args: {
     dragOverlay: boolean;
@@ -74,7 +73,6 @@ export const Item = React.memo(
         value,
         wrapperStyle,
         showCores = true,
-        currentInfoID,
         ...props
       },
       ref
@@ -96,6 +94,8 @@ export const Item = React.memo(
         () => (id as string).endsWith(SEARCH_ITEM_DELIMITER),
         [id]
       );
+
+      const currentInfoID = useAuxiliaryStore((state) => state.currentInfoID);
 
       const isActive = useMemo(
         () =>
@@ -157,9 +157,7 @@ export const Item = React.memo(
             }}
           >
             <div
-              className={`bg-neutral absolute bottom-0 left-0 z-10 w-1 rounded-l-sm transition-all duration-300 ease-out ${
-                isActive ? 'h-full' : 'h-0'
-              }`}
+              className={`bg-neutral absolute bottom-0 left-0 z-10 w-1 rounded-l-sm transition-all duration-300 ease-out ${isActive ? 'h-full' : 'h-0'}`}
             />
             <div className='flex flex-col gap-2'>
               <div className='flex items-center gap-2 text-wrap'>

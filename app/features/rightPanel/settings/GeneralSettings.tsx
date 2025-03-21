@@ -43,6 +43,7 @@ export default function GeneralSettings() {
         updateSemester(semesterId, { title: newTitle });
       });
     },
+    // intentional incomplete dependency array to prevent performance issues
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       beginningTerm,
