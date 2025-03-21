@@ -52,8 +52,6 @@ requiredEnvVars.forEach((envVar) => {
     process.exit(1);
   }
 
-  console.log(client.collections('master').retrieve());
-
   // Step 3: Define the collection schema
   const collectionSchema = {
     name: 'master',
@@ -75,17 +73,38 @@ requiredEnvVars.forEach((envVar) => {
     ],
   };
 
-  // Step 4: Create the collection with defined schema
+  // Step 4: Manage collection - drop if exists, then create
+  let collectionExists = false;
+
+  try {
+    await client.collections('master').retrieve();
+    collectionExists = true;
+  } catch (error) {
+    if (error.httpStatus !== 404) {
+      console.error('❌ Error checking collection:', error.message || error);
+      process.exit(1);
+    }
+    // 404 means collection doesn't exist, which is fine
+    console.log('ℹ️ Collection "master" does not exist. Will create new.');
+  }
+
+  if (collectionExists) {
+    try {
+      console.log('ℹ️ Collection "master" exists. Dropping it...');
+      await client.collections('master').delete();
+      console.log('✅ Collection "master" dropped successfully.');
+    } catch (error) {
+      console.error('❌ Error dropping collection:', error.message || error);
+      process.exit(1);
+    }
+  }
+
   try {
     await client.collections().create(collectionSchema);
     console.log('✅ Collection "master" created successfully.');
   } catch (error) {
-    if (error && error.message && error.message.includes('already exists')) {
-      console.log('ℹ️ Collection "master" already exists. Skipping creation.');
-    } else {
-      console.error('❌ Error creating collection:', error.message || error);
-      process.exit(1);
-    }
+    console.error('❌ Error creating collection:', error.message || error);
+    process.exit(1);
   }
 
   // Step 5: Import course data from JSONL file
