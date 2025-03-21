@@ -8,7 +8,6 @@ export interface Course {
 //cid -> 01:198:112
 //
 
-
 export type CourseMap = Record<CourseID, Course>;
 export type Semester = CourseID[];
 export type ScheduleBoard = Semester[];
@@ -34,15 +33,15 @@ function parsePreReqNotes(
   prereqNotes: string,
   visited: Set<CourseID>
 ): string[] {
-  if (prereqNotes === "") {
-    return [""];
+  if (prereqNotes === '') {
+    return [''];
   }
 
-  prereqNotes = prereqNotes.replace(/\s+/g, "");
+  prereqNotes = prereqNotes.replace(/\s+/g, '');
   let parsedStringArray: string[] = [];
   while (prereqNotes.length != 0) {
-    let stop_index: number = prereqNotes.indexOf("<em>");
-    let parseString: string = "";
+    let stop_index: number = prereqNotes.indexOf('<em>');
+    let parseString: string = '';
     if (stop_index == -1) {
       parseString = prereqNotes;
       // update prereqNotes here
@@ -120,7 +119,7 @@ function validatePrereq(prereq: string, visited: Set<CourseID>): boolean {
    * - prereq always 0 layers of parentheses or 1 layer of parentheses
    * - the outer operator is the opposite of the inner operator --> shouldn't matter
    */
-  if (prereq === "") {
+  if (prereq === '') {
     return true;
   }
 
@@ -129,9 +128,9 @@ function validatePrereq(prereq: string, visited: Set<CourseID>): boolean {
   let temp_str: string = prereq;
   let parentheses_count: number = 0;
 
-  while (temp_str.indexOf("(") != -1) {
+  while (temp_str.indexOf('(') != -1) {
     parentheses_count += 1;
-    const index: number = temp_str.indexOf("(");
+    const index: number = temp_str.indexOf('(');
     temp_str = temp_str.substring(index + 1);
   }
 
@@ -152,18 +151,18 @@ function validatePrereq(prereq: string, visited: Set<CourseID>): boolean {
       if (visited.has(id)) {
         prereq =
           prereq.substring(0, index_ptr) +
-          "T" +
+          'T' +
           prereq.substring(index_ptr + 1);
       } else {
         prereq =
           prereq.substring(0, index_ptr) +
-          "F" +
+          'F' +
           prereq.substring(index_ptr + 1);
       }
 
-      if (operator === "a") {
+      if (operator === 'a') {
         index_ptr += 4;
-      } else if (operator === "o") {
+      } else if (operator === 'o') {
         index_ptr += 3;
       } else {
         index_ptr += 1;
@@ -172,8 +171,8 @@ function validatePrereq(prereq: string, visited: Set<CourseID>): boolean {
   } else {
     //for loop stuff
     for (let i: number = 0; i < parentheses_count; i++) {
-      let start: number = prereq.indexOf("("); // ptr traversing through prereq. At the start of the loop it will always point at a course
-      let stop: number = prereq.indexOf(")");
+      let start: number = prereq.indexOf('('); // ptr traversing through prereq. At the start of the loop it will always point at a course
+      let stop: number = prereq.indexOf(')');
 
       let temp_prereq: string = prereq.substring(start + 1, stop);
       let index_ptr: number = 0; // ptr traversing through prereq. At the start of the loop it will always point at a course
@@ -188,18 +187,18 @@ function validatePrereq(prereq: string, visited: Set<CourseID>): boolean {
         if (visited.has(id)) {
           temp_prereq =
             temp_prereq.substring(0, index_ptr) +
-            "T" +
+            'T' +
             temp_prereq.substring(index_ptr + 10);
         } else {
           temp_prereq =
             temp_prereq.substring(0, index_ptr) +
-            "F" +
+            'F' +
             temp_prereq.substring(index_ptr + 10);
         }
 
-        if (operator === "a") {
+        if (operator === 'a') {
           index_ptr += 4;
-        } else if (operator === "o") {
+        } else if (operator === 'o') {
           index_ptr += 3;
         } else {
           index_ptr += 1;
@@ -208,7 +207,7 @@ function validatePrereq(prereq: string, visited: Set<CourseID>): boolean {
 
       //evaluate
       let bool: boolean;
-      if (temp_prereq[0] == "T") {
+      if (temp_prereq[0] == 'T') {
         bool = true;
       } else {
         bool = false;
@@ -217,15 +216,15 @@ function validatePrereq(prereq: string, visited: Set<CourseID>): boolean {
       temp_prereq = temp_prereq.substring(1);
 
       while (temp_prereq.length != 0) {
-        if (temp_prereq[0] === "a") {
-          if (temp_prereq[3] === "T") {
+        if (temp_prereq[0] === 'a') {
+          if (temp_prereq[3] === 'T') {
             bool = bool && true;
           } else {
             bool = bool && false;
           }
           temp_prereq = temp_prereq.substring(4);
         } else {
-          if (temp_prereq[2] === "T") {
+          if (temp_prereq[2] === 'T') {
             bool = bool || true;
           } else {
             bool = bool || false;
@@ -235,16 +234,16 @@ function validatePrereq(prereq: string, visited: Set<CourseID>): boolean {
       }
 
       if (bool) {
-        prereq = prereq.substring(0, start) + "T" + prereq.substring(stop + 1);
+        prereq = prereq.substring(0, start) + 'T' + prereq.substring(stop + 1);
       } else {
-        prereq = prereq.substring(0, start) + "F" + prereq.substring(stop + 1);
+        prereq = prereq.substring(0, start) + 'F' + prereq.substring(stop + 1);
       }
     }
   }
 
   //evaluate
   let bool: boolean;
-  if (prereq[0] == "T") {
+  if (prereq[0] == 'T') {
     bool = true;
   } else {
     bool = false;
@@ -253,15 +252,15 @@ function validatePrereq(prereq: string, visited: Set<CourseID>): boolean {
   prereq = prereq.substring(1);
 
   while (prereq.length != 0) {
-    if (prereq[0] === "a") {
-      if (prereq[3] === "T") {
+    if (prereq[0] === 'a') {
+      if (prereq[3] === 'T') {
         bool = bool && true;
       } else {
         bool = bool && false;
       }
       prereq = prereq.substring(4);
     } else {
-      if (prereq[2] === "T") {
+      if (prereq[2] === 'T') {
         bool = bool || true;
       } else {
         bool = bool || false;
@@ -280,7 +279,7 @@ function validatePrereqSatisfaction(
   const prereqs = parsePreReqNotes(course.prereqNotes, visited);
 
   for (const prereq of prereqs) {
-    console.log(prereq + " " + validatePrereq(prereq, visited));
+    console.log(prereq + ' ' + validatePrereq(prereq, visited));
     if (validatePrereq(prereq, visited)) {
       return true;
     }
@@ -290,15 +289,15 @@ function validatePrereqSatisfaction(
 }
 
 /**
- * 
+ *
  * 1. Letting the user know that there is an invalidly placed course
- *  a. validateScheduleBoard can the courseID and we can highlight the 
- *      course as red on the dashboard 
- * 
+ *  a. validateScheduleBoard can the courseID and we can highlight the
+ *      course as red on the dashboard
+ *
  *      only ONE course is highlighted (first one)
- * 
+ *
  *      highlights every course that is not good (April. done by Sibi)
- * 
+ *
  * 2. Fixing up validateScheduleBoard a bit so that it matches the current types
  */
 
