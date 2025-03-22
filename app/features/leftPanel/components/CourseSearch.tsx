@@ -139,6 +139,7 @@ export default function CourseSearch() {
                 return (
                   <SortableItem
                     key={courseId}
+                    course={courses[courseId]}
                     containerId={SEARCH_CONTAINER_ID}
                     id={courseId}
                     index={0}

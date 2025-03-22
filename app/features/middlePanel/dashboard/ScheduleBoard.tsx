@@ -221,6 +221,7 @@ export function ScheduleBoard({
                         return (
                           <SortableItem
                             disabled={isSortingContainer}
+                            course={courses[value]}
                             key={value}
                             id={value}
                             index={index}
