@@ -108,21 +108,11 @@ export default function useDragHandlers(
         }
       }
 
-      // Only update if items have actually changed
-      // This prevents unnecessary state updates during drag operations
-      const hasChanged = Object.keys(cleanedItems).some(
-        (containerId) =>
-          !coursesBySemesterID[containerId] ||
-          cleanedItems[containerId].length !==
-            coursesBySemesterID[containerId].length ||
-          cleanedItems[containerId].some(
-            (id, index) => id !== coursesBySemesterID[containerId][index]
-          )
-      );
-
-      if (hasChanged) {
-        handleDragOperation(cleanedItems);
-      }
+      // TODO:
+      // One optimization that can be made is to only call handleDragOperation
+      // if the items have actually changed. So we can check if the items have
+      // changed with some sort of deep equality check. (or shallow)
+      handleDragOperation(cleanedItems);
     },
     [coursesBySemesterID, handleDragOperation]
   );

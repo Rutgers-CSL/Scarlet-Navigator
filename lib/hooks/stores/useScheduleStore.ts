@@ -144,11 +144,7 @@ export const useScheduleStore = create<ScheduleStore>()(
           });
         },
 
-        handleDragOperation: (
-          semesters: CoursesBySemesterID,
-          isNewContainerMove: boolean = false
-        ) => {
-          const currentState = get();
+        handleDragOperation: (semesters: CoursesBySemesterID) => {
           // if (isNewContainerMove) {
           //   saveToHistory(currentState);
           // }

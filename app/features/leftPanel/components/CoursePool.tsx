@@ -11,6 +11,7 @@ function CoursePool() {
   const coursesBySemesterID = useScheduleStore(
     (state) => state.coursesBySemesterID
   );
+  const courses = useScheduleStore((state) => state.courses);
   const items = coursesBySemesterID[COURSE_POOL_CONTAINER_ID] || [];
 
   return (
@@ -25,6 +26,7 @@ function CoursePool() {
           <SortableContext items={items} strategy={verticalListSortingStrategy}>
             {items.map((value) => (
               <SortableItem
+                course={courses[value]}
                 containerId={COURSE_POOL_CONTAINER_ID}
                 key={value}
                 id={value}

@@ -3,10 +3,9 @@ import { useSortable } from '@dnd-kit/sortable';
 import { Item } from '../Item/Item';
 import { getColor } from '../../dnd-utils';
 import useScheduleHandlers from '../../dnd-hooks/useScheduleHandlers';
-import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import { SEARCH_ITEM_DELIMITER } from '@/lib/constants';
 import { useCallback, useMemo } from 'react';
-
+import { Course } from '@/lib/types/models';
 interface SortableItemProps {
   containerId: UniqueIdentifier;
   id: UniqueIdentifier;
@@ -17,6 +16,7 @@ interface SortableItemProps {
   getIndex(id: UniqueIdentifier): number;
   wrapperStyle({ index }: { index: number }): React.CSSProperties;
   showCores?: boolean;
+  course: Course;
 }
 
 export default function SortableItem({
@@ -24,11 +24,9 @@ export default function SortableItem({
   id,
   index,
   handle,
-  style,
   containerId,
-  getIndex,
-  wrapperStyle,
   showCores = true,
+  course,
 }: SortableItemProps) {
   const {
     setNodeRef,
@@ -36,18 +34,17 @@ export default function SortableItem({
     listeners,
     isDragging,
     isSorting,
-    over,
-    overIndex,
     transform,
     transition,
   } = useSortable({
     id,
   });
   const { handleRemoveCourse } = useScheduleHandlers();
+
   const onRemove = useCallback(() => {
     handleRemoveCourse(id, containerId);
   }, [id, containerId, handleRemoveCourse]);
-  const course = useScheduleStore((state) => state.courses[id as string]);
+
   const isSearchItem = useMemo(
     () => id.toString().endsWith(SEARCH_ITEM_DELIMITER),
     [id]
