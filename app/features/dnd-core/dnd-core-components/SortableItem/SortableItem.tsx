@@ -2,8 +2,9 @@ import { UniqueIdentifier } from '@dnd-kit/core';
 import { useSortable } from '@dnd-kit/sortable';
 import { Item } from '../Item/Item';
 import { getColor } from '../../dnd-utils';
+import useScheduleHandlers from '../../dnd-hooks/useScheduleHandlers';
 import { SEARCH_ITEM_DELIMITER } from '@/lib/constants';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Course } from '@/lib/types/models';
 interface SortableItemProps {
   containerId: UniqueIdentifier;
@@ -16,7 +17,6 @@ interface SortableItemProps {
   wrapperStyle({ index }: { index: number }): React.CSSProperties;
   showCores?: boolean;
   course: Course;
-  onRemove?: () => void;
 }
 
 export default function SortableItem({
@@ -27,7 +27,6 @@ export default function SortableItem({
   containerId,
   showCores = true,
   course,
-  onRemove,
 }: SortableItemProps) {
   const {
     setNodeRef,
@@ -40,6 +39,11 @@ export default function SortableItem({
   } = useSortable({
     id,
   });
+  const { handleRemoveCourse } = useScheduleHandlers();
+
+  const onRemove = useCallback(() => {
+    handleRemoveCourse(id, containerId);
+  }, [id, containerId, handleRemoveCourse]);
 
   const isSearchItem = useMemo(
     () => id.toString().endsWith(SEARCH_ITEM_DELIMITER),
