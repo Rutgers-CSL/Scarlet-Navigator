@@ -263,7 +263,7 @@ export function ScheduleBoard({
                   >
                     + Add column
                   </DroppableContainer>
-                  <DroppableContainer
+                  {/* <DroppableContainer
                     id='populate-placeholder'
                     disabled={isSortingContainer}
                     items={EMPTY}
@@ -272,7 +272,7 @@ export function ScheduleBoard({
                     as='button'
                   >
                     Populate with dummy data
-                  </DroppableContainer>
+                  </DroppableContainer> */}
                 </>
               )}
             </div>

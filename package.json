@@ -16,7 +16,8 @@
     "prepare": "husky",
     "security:audit": "pnpm audit",
     "security:outdated": "pnpm outdated",
-    "generateAndUploadFakeCourses": "sh ./scripts/generateAndUploadFakeCourses.sh"
+    "generateAndUploadFakeCourses": "sh ./scripts/generateAndUploadFakeCourses.sh",
+    "uploadMasterList": "node ./scripts/typesense/uploadMaster.js"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
