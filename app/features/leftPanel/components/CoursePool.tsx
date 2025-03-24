@@ -14,6 +14,8 @@ function CoursePool() {
   const courses = useScheduleStore((state) => state.courses);
   const items = coursesBySemesterID[COURSE_POOL_CONTAINER_ID] || [];
 
+  const handleRemoveCourse = useScheduleStore((state) => state.removeCourse);
+
   return (
     <div className='card bg-base-100'>
       <div className='card-body bg-base-100'>
@@ -35,6 +37,9 @@ function CoursePool() {
                 style={() => ({})}
                 wrapperStyle={() => ({})}
                 getIndex={() => 0}
+                onRemove={() =>
+                  handleRemoveCourse(value, COURSE_POOL_CONTAINER_ID)
+                }
               />
             ))}
           </SortableContext>

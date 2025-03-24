@@ -35,6 +35,7 @@
     "next": "15.2.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-fast-compare": "^3.2.2",
     "react-markdown": "^10.1.0",
     "sass": "^1.85.1",
     "typesense": "^2.0.3",

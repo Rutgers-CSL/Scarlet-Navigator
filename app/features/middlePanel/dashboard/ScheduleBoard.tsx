@@ -119,8 +119,12 @@ export function ScheduleBoard({
       wrapperStyle
     );
 
-  const { handleAddColumn, handleEditSemester, handlePopulateSchedule } =
-    useScheduleHandlers();
+  const {
+    handleAddColumn,
+    handleEditSemester,
+    handlePopulateSchedule,
+    handleRemoveCourse,
+  } = useScheduleHandlers();
 
   const getContainerTitle = (
     containerId: UniqueIdentifier,
@@ -220,6 +224,9 @@ export function ScheduleBoard({
                       {coursesBySemesterID[containerId].map((value, index) => {
                         return (
                           <SortableItem
+                            onRemove={() =>
+                              handleRemoveCourse(value, containerId)
+                            }
                             disabled={isSortingContainer}
                             course={courses[value]}
                             key={value}
