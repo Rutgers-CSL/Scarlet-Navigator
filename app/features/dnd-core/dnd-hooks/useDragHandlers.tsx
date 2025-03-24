@@ -150,7 +150,7 @@ export default function useDragHandlers(
             over &&
             active.rect.current.translated &&
             active.rect.current.translated.top >
-            over.rect.top + over.rect.height;
+              over.rect.top + over.rect.height;
 
           const modifier = isBelowOverItem ? 1 : 0;
 
