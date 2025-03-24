@@ -105,7 +105,7 @@ export const Item = React.memo(
       const cores = useMemo(() => {
         if (!course) return null;
         return <CoreList cores={course.cores} />;
-      }, []);
+      }, [course?.cores]);
 
       return (
         <li
