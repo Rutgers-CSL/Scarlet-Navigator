@@ -17,6 +17,8 @@ Check out the reddit post! @ [go.rutgers.edu/scarletnav](https://go.rutgers.edu/
 
 Awarded [Best Fullstack Project](https://github.com/kevinmonisit/Scarlet-Navigator/assets/7038712/f52cd55d-d7ec-4096-ae14-19067639d780) by the [Rutgers Computer Science Department](https://www.cs.rutgers.edu/)!
 
+**Spring 2025 Team**: Sanvi Patel, Sibi Tiruchirapalli, and Kevin Monisit
+
 ## Features
 
 - **Drag and Drop**
