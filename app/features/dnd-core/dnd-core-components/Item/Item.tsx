@@ -8,11 +8,9 @@ import { Handle, Remove } from './components';
 import styles from './Item.module.scss';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
-import { CourseID } from '@/lib/types/models';
-import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
+import { CourseID, Course } from '@/lib/types/models';
 import CoreList from '@/app/components/CoreList';
 import { SEARCH_ITEM_DELIMITER } from '@/lib/constants';
-import { useShallow } from 'zustand/react/shallow';
 
 export interface Props {
   id: CourseID;
@@ -33,6 +31,7 @@ export interface Props {
   wrapperStyle?: React.CSSProperties;
   value: React.ReactNode;
   showCores?: boolean;
+  course?: Course;
   onRemove?(): void;
   renderItem?(args: {
     dragOverlay: boolean;
@@ -73,15 +72,13 @@ export const Item = React.memo(
         value,
         wrapperStyle,
         showCores = true,
+        course,
         ...props
       },
       ref
     ) => {
       const setCurrentInfo = useAuxiliaryStore((state) => state.setCurrentInfo);
       const showGrades = useSettingsStore((state) => state.visuals.showGrades);
-      const course = useScheduleStore(
-        useShallow((state) => state.courses[id as string])
-      );
       const showCreditCountOnCourseTitles = useSettingsStore(
         useCallback((state) => state.visuals.showCreditCountOnCourseTitles, [])
       );
@@ -104,6 +101,8 @@ export const Item = React.memo(
           (!isSearchItem && currentInfoID === `${id}${SEARCH_ITEM_DELIMITER}`),
         [currentInfoID, id, isSearchItem, rawID]
       );
+
+      // const cores = React.memo(<CoreList cores={course?.cores} />, isEqual);
 
       return (
         <li

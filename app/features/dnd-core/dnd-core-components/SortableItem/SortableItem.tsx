@@ -62,6 +62,7 @@ export default function SortableItem({
       ref={disabled ? undefined : setNodeRef}
       disabled={disabled}
       value={courseName}
+      course={course}
       onRemove={onRemoveProp}
       dragging={isDragging}
       sorting={isSorting}

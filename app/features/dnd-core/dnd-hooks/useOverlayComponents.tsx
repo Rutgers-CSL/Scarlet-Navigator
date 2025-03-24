@@ -37,6 +37,7 @@ export default function useOverlayComponents(
       <Item
         id={id}
         value={courseName}
+        course={courses[id]}
         handle={handle}
         style={getItemStyles({
           containerId: sourceContainer,
@@ -57,6 +58,8 @@ export default function useOverlayComponents(
   }
 
   function RenderContainerDragOverlay(containerId: UniqueIdentifier) {
+    return null;
+
     const semesterCredits = calculateSemesterCredits(
       items[containerId] || [],
       courses
@@ -85,6 +88,7 @@ export default function useOverlayComponents(
           const courseName = courses[id]?.name ?? 'Loading...';
           return (
             <Item
+              course={courses[id]}
               id={id}
               key={id}
               value={courseName}

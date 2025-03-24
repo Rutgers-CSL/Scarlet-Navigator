@@ -1,6 +1,7 @@
 //accepts a color and list of cores and displays them
 
 import clsx from 'clsx';
+import { useMemo } from 'react';
 
 interface CoreListProps {
   cores: string[];
@@ -11,17 +12,9 @@ interface CoreListProps {
 function CoreList(props: CoreListProps) {
   const { cores, handleRemoveCore, handleOnClick } = props;
 
-  if (!cores || cores.length === 0) {
-    return (
-      <div className='text-base-content text-sm'>
-        No cores assigned to this course
-      </div>
-    );
-  }
-
-  return (
-    <div className='flex flex-wrap gap-2'>
-      {cores.map((core) => (
+  const memoizedCores = useMemo(
+    () =>
+      cores.map((core) => (
         <div
           key={core}
           onClick={() => {
@@ -35,9 +28,6 @@ function CoreList(props: CoreListProps) {
           )}
         >
           {core}
-          {/*
-            We don't want to show the remove button if the core is capable of being clicked
-           */}
           {handleRemoveCore && !handleOnClick && (
             <button
               type='button'
@@ -55,9 +45,20 @@ function CoreList(props: CoreListProps) {
             </button>
           )}
         </div>
-      ))}
-    </div>
+      )),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [cores]
   );
+
+  if (!cores || cores.length === 0) {
+    return (
+      <div className='text-base-content text-sm'>
+        No cores assigned to this course
+      </div>
+    );
+  }
+
+  return <div className='flex flex-wrap gap-2'>{memoizedCores}</div>;
 }
 
 export default CoreList;
