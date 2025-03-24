@@ -102,7 +102,10 @@ export const Item = React.memo(
         [currentInfoID, id, isSearchItem, rawID]
       );
 
-      // const cores = React.memo(<CoreList cores={course?.cores} />, isEqual);
+      const cores = useMemo(() => {
+        if (!course) return null;
+        return <CoreList cores={course.cores} />;
+      }, []);
 
       return (
         <li
@@ -181,9 +184,7 @@ export const Item = React.memo(
               )}
 
               {showCores && course && course.cores.length > 0 && (
-                <div>
-                  <CoreList cores={course.cores} />
-                </div>
+                <div>{cores}</div>
               )}
             </div>
             <span className={styles.Actions}>
