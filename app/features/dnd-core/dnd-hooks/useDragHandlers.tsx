@@ -1,3 +1,4 @@
+import isEqual from 'react-fast-compare';
 import { DragOverEvent } from '@dnd-kit/core';
 import React, { useRef, useCallback, useMemo } from 'react';
 import { findContainer } from '../dnd-utils';
@@ -12,52 +13,6 @@ import {
 } from '@/lib/constants';
 import { COURSE_POOL_CONTAINER_ID } from '@/app/features/leftPanel/components/CourseCreation';
 import { useShallow } from 'zustand/react/shallow';
-
-/**
- * Prevents dragOver from being called too frequently.
- * This is necessary because the dragOver event is called
- * a lot of times during a drag operation.
- *
- * Throttle: https://www.geeksforgeeks.org/javascript-throttling/
- *
- *
- * There are two reasons for the re-rendering madness:
- *
- * 1. The many calls of handleDragOver
- * 2. The changing of state when in handleDragOver
- *
- *
- * I chose to address the many calls of handleDragOver.
- */
-function throttle<T extends (...args: any[]) => any>(
-  func: T,
-  limit: number
-): (...args: Parameters<T>) => ReturnType<T> | undefined {
-  let lastFunc: number;
-  let lastRan: number;
-  return function (
-    this: any,
-    ...args: Parameters<T>
-  ): ReturnType<T> | undefined {
-    if (!lastRan) {
-      const result = func.apply(this, args);
-      lastRan = Date.now();
-      return result;
-    } else {
-      clearTimeout(lastFunc);
-      lastFunc = window.setTimeout(
-        () => {
-          if (Date.now() - lastRan >= limit) {
-            func.apply(this, args);
-            lastRan = Date.now();
-          }
-        },
-        limit - (Date.now() - lastRan)
-      );
-      return undefined;
-    }
-  };
-}
 
 export default function useDragHandlers(
   clonedItems: CoursesBySemesterID | null,
@@ -112,7 +67,9 @@ export default function useDragHandlers(
       // One optimization that can be made is to only call handleDragOperation
       // if the items have actually changed. So we can check if the items have
       // changed with some sort of deep equality check. (or shallow)
-      handleDragOperation(cleanedItems);
+      if (!isEqual(cleanedItems, coursesBySemesterID)) {
+        handleDragOperation(cleanedItems);
+      }
     },
     [coursesBySemesterID, handleDragOperation]
   );
@@ -124,7 +81,7 @@ export default function useDragHandlers(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Create a throttled version of the drag over handler
+  // dragOver is throttled to prevent crazy re-renders
   const throttledDragOver = useMemo(
     () =>
       throttle((event: DragOverEvent) => {
@@ -220,7 +177,7 @@ export default function useDragHandlers(
         };
 
         setItemsWrapper(newItems);
-      }, 100),
+      }, 200),
     [items, setItemsWrapper, moveRef]
   );
 
@@ -312,7 +269,6 @@ export default function useDragHandlers(
   }, []);
 
   // intentional blank dependency array to prevent performance issues
-  // intentional blank dependency array to prevent performance issues
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleDragMove = useCallback((event: DragOverEvent) => {
     return;
@@ -335,5 +291,51 @@ export default function useDragHandlers(
     handleDragEnd,
     handleDragCancel,
     handleDragMove,
+  };
+}
+
+/**
+ * Prevents dragOver from being called too frequently.
+ * This is necessary because the dragOver event is called
+ * a lot of times during a drag operation.
+ *
+ * Throttle: https://www.geeksforgeeks.org/javascript-throttling/
+ *
+ *
+ * There are two reasons for the re-rendering madness:
+ *
+ * 1. The many calls of handleDragOver
+ * 2. The changing of state when in handleDragOver
+ *
+ *
+ * I chose to address the many calls of handleDragOver.
+ */
+function throttle<T extends (...args: any[]) => any>(
+  func: T,
+  limit: number
+): (...args: Parameters<T>) => ReturnType<T> | undefined {
+  let lastFunc: number;
+  let lastRan: number;
+  return function (
+    this: any,
+    ...args: Parameters<T>
+  ): ReturnType<T> | undefined {
+    if (!lastRan) {
+      const result = func.apply(this, args);
+      lastRan = Date.now();
+      return result;
+    } else {
+      clearTimeout(lastFunc);
+      lastFunc = window.setTimeout(
+        () => {
+          if (Date.now() - lastRan >= limit) {
+            func.apply(this, args);
+            lastRan = Date.now();
+          }
+        },
+        limit - (Date.now() - lastRan)
+      );
+      return undefined;
+    }
   };
 }

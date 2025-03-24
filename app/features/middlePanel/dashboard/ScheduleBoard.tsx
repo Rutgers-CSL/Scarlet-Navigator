@@ -219,6 +219,9 @@ export function ScheduleBoard({
                       {coursesBySemesterID[containerId].map((value, index) => {
                         return (
                           <SortableItem
+                            onRemove={() =>
+                              handleRemoveCourse(value, containerId)
+                            }
                             disabled={isSortingContainer}
                             course={courses[value]}
                             key={value}
@@ -278,9 +281,9 @@ export function ScheduleBoard({
             <>
               {semesterOrder.includes(activeID)
                 ? // When dragging a semester container
-                  RenderContainerDragOverlay(activeID)
+                RenderContainerDragOverlay(activeID)
                 : // When dragging a course item
-                  renderSortableItemDragOverlay(activeID)}
+                renderSortableItemDragOverlay(activeID)}
             </>
           )}
         </DragOverlay>,
