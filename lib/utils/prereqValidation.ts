@@ -13,23 +13,23 @@ export type Semester = CourseID[];
 export type ScheduleBoard = Semester[];
 
 /**
- * 
+ *
  * This function will return an array of strings that is shown as:
- * 
+ *
  * [
  *  "(01:198:112 or 14:332:351) and (01:198:206)",
  *  "(01:198:112 or 14:332:351) and (01:640:477)"
  *  "(01:198:112 or 14:332:351) and (14:332:321)",
  *  "(01:198:112 or 14:332:351" and (14:332:226)""
  * ]
- * 
+ *
  * This is all one line in courses.json:
     "preReqNotes": "((01:198:112 DATA STRUCTURES  or 14:332:351 PROGRM METHODOLOGYII ) and (01:198:206 INTRODUCTION TO DISCRETE STRUCTURES II ))
     <em> OR </em> ((01:198:112 DATA STRUCTURES  or 14:332:351 PROGRM METHODOLOGYII ) and (01:640:477 MATHEMATICAL THEORY OF PROBABILITY ))
     <em> OR </em> ((01:198:112 DATA STRUCTURES  or 14:332:351 PROGRM METHODOLOGYII ) and (14:332:321 PROBABLTY&RANDOM PRC ))
     <em> OR </em> ((01:198:112 DATA STRUCTURES  or 14:332:351 PROGRM METHODOLOGYII ) and (14:332:226 PROBABILITY & RANDOM PROCESSES ))",
  */
-function parsePreReqNotes(
+export function parsePreReqNotes(
   prereqNotes: string,
   visited: Set<CourseID>
 ): string[] {
@@ -53,13 +53,13 @@ function parsePreReqNotes(
     }
     parseString = parseString.substring(1, parseString.length - 1); // removing outer parentheses
 
-    /* traverse string, remove any character that is not in the following ascii ranges 
+    /* traverse string, remove any character that is not in the following ascii ranges
             - [0-9] --> numbers 0-9
             - [40-41] --> parentheses "(" and ")"
             - [58] --> colon ":"
             - [97-122] --> any lower cases character. we only care about "a","n","d","o","r", but
             there shouldn't be any other characters besides those. for simplicty any lower case
-            character accepted.   
+            character accepted.
         */
     let index_ptr: number = 0;
 

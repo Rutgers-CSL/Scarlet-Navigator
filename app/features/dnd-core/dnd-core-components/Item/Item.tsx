@@ -105,6 +105,7 @@ export const Item = React.memo(
       const cores = useMemo(() => {
         if (!course) return null;
         return <CoreList cores={course.cores} />;
+        //eslint-disable-next-line react-hooks/exhaustive-deps
       }, [course?.cores]);
 
       return (

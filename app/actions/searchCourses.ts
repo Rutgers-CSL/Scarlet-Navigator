@@ -53,7 +53,6 @@ export async function searchCoursesAction(
       return [];
     }
 
-    console.log(searchResults.hits);
     return searchResults.hits.map((hit) => {
       const rawCourse = hit.document as any;
       const course: Course = {
@@ -62,6 +61,7 @@ export async function searchCoursesAction(
         credits: rawCourse.credits,
         cores: ['hello'],
         grade: null,
+        prereqNotes: rawCourse.preReqNotes,
       };
       return course;
     });

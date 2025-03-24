@@ -4,6 +4,7 @@ import CoreInput from '@/app/components/CoreInput';
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
 import NotesEditor from '@/app/components/NotesEditor';
 import CoreList from '@/app/components/CoreList';
+import { parsePreReqNotes } from '@/lib/utils/prereqValidation';
 
 interface CourseInfoProps {
   id: string;
@@ -24,7 +25,6 @@ export default function CourseInfo({ id }: CourseInfoProps) {
   const [currentCore, setCurrentCore] = useState('');
   const prevCourseIdRef = useRef(id);
 
-  // Safe destructuring with fallbacks using a single useMemo
   const courseData = useMemo(
     () => ({
       name: currentCourse?.name || '',
@@ -32,11 +32,20 @@ export default function CourseInfo({ id }: CourseInfoProps) {
       cores: currentCourse?.cores || [],
       grade: currentCourse?.grade || null,
       courseID: currentCourse?.id || '',
+      prereqNotes: currentCourse?.prereqNotes || '',
     }),
     [currentCourse]
   );
 
-  const { name, credits, cores, grade, courseID } = courseData;
+  const { name, credits, cores, grade, courseID, prereqNotes } = courseData;
+
+  const parsedPrereqs = useMemo(() => {
+    if (!prereqNotes) return [];
+    const visited = new Set<string>();
+    //TODO: remove the requirement that this function needs a visited set.
+    //it doesn't really make sense to have that.
+    return parsePreReqNotes(prereqNotes, visited);
+  }, [prereqNotes]);
 
   const handleEditToggle = () => {
     if (!isEditing) {
@@ -77,7 +86,7 @@ export default function CourseInfo({ id }: CourseInfoProps) {
   }
 
   return (
-    <div className='space-y-4 p-4'>
+    <div className='space-y-4 p-8'>
       <div>
         {/* Course Name */}
         <div className='relative mb-3'>
@@ -174,10 +183,68 @@ export default function CourseInfo({ id }: CourseInfoProps) {
         )}
       </div>
 
+      {/* Prerequisites Section */}
+
+      <div className='mt-6 border-t'>
+        <div className='my-2 text-lg font-bold'>Prerequisites</div>
+        <p className='mb-2 text-xs text-gray-500'>
+          The following are possible ways to satisfy this course&apos;s
+          prerequisites:
+        </p>
+        {parsedPrereqs.length > 0 ? (
+          <div className='space-y-1'>
+            {parsedPrereqs.map((prereq: string, index: number) => (
+              <div key={index} className='space-y-1'>
+                {index > 0 && (
+                  <div className='flex flex-col'>
+                    <div className='divider'>OR</div>
+                  </div>
+                )}
+                <div className='bg-base-200 rounded-md p-2'>
+                  <div className='text-sm'>{formatPrereq(prereq)}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className='text-sm text-gray-500'>No prerequisites listed.</div>
+        )}
+      </div>
+
       {/* Notes Section */}
       <div className='mt-4 border-t pt-4'>
         <NotesEditor id={id} title='Course Notes' />
       </div>
     </div>
   );
+}
+
+// Helper function to format prerequisite strings
+function formatPrereq(prereq: string): React.ReactNode {
+  if (!prereq) return null;
+
+  // Replace 'and' and 'or' with styled versions
+  const parts = prereq.split(/(\(|\))/g).filter(Boolean);
+
+  return parts.map((part, i) => {
+    if (part === '(')
+      return (
+        <span key={i} className='text-base-content'>
+          (
+        </span>
+      );
+    if (part === ')')
+      return (
+        <span key={i} className='text-base-content'>
+          )
+        </span>
+      );
+
+    // For content between parentheses
+    const formatted = part
+      .replace(/and/g, ' <span class="font-semibold ">AND</span> ')
+      .replace(/or/g, ' <span class="font-semibold">OR</span> ');
+
+    return <span key={i} dangerouslySetInnerHTML={{ __html: formatted }} />;
+  });
 }
