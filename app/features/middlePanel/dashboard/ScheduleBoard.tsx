@@ -119,8 +119,13 @@ export function ScheduleBoard({
       wrapperStyle
     );
 
-  const { handleAddColumn, handleEditSemester, handleRemoveCourse } =
-    useScheduleHandlers();
+
+  const {
+    handleAddColumn,
+    handleEditSemester,
+    handlePopulateSchedule,
+    handleRemoveCourse,
+  } = useScheduleHandlers();
 
   const getContainerTitle = (
     containerId: UniqueIdentifier,
