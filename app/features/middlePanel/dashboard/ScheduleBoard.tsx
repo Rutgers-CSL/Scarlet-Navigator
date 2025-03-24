@@ -282,9 +282,9 @@ export function ScheduleBoard({
             <>
               {semesterOrder.includes(activeID)
                 ? // When dragging a semester container
-                RenderContainerDragOverlay(activeID)
+                  RenderContainerDragOverlay(activeID)
                 : // When dragging a course item
-                renderSortableItemDragOverlay(activeID)}
+                  renderSortableItemDragOverlay(activeID)}
             </>
           )}
         </DragOverlay>,
