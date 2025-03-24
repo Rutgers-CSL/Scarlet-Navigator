@@ -119,7 +119,6 @@ export function ScheduleBoard({
       wrapperStyle
     );
 
-
   const {
     handleAddColumn,
     handleEditSemester,
