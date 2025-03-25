@@ -5,6 +5,7 @@ import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
 import NotesEditor from '@/app/components/NotesEditor';
 import CoreList from '@/app/components/CoreList';
 import { parsePreReqNotes } from '@/lib/utils/prereqValidation';
+import { SEARCH_ITEM_DELIMITER } from '@/lib/constants';
 
 interface CourseInfoProps {
   id: string;
@@ -14,6 +15,9 @@ export default function CourseInfo({ id }: CourseInfoProps) {
   const currentCourse = useScheduleStore((state) => state.courses[id]);
   const globalCores = useScheduleStore((state) => state.globalCores);
   const updateCourse = useScheduleStore((state) => state.updateCourse);
+  const validateCourseEdit = useScheduleStore(
+    (state) => state.validateCourseEdit
+  );
   const gradePoints = useSettingsStore((state) => state.gradePoints);
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
@@ -21,9 +25,14 @@ export default function CourseInfo({ id }: CourseInfoProps) {
     credits: 0,
     cores: [] as string[],
     grade: null as string | null,
+    id: '',
   });
   const [currentCore, setCurrentCore] = useState('');
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const prevCourseIdRef = useRef(id);
+
+  const isSearchItem = useMemo(() => id.endsWith(SEARCH_ITEM_DELIMITER), [id]);
+  const displayId = useMemo(() => id.replace(SEARCH_ITEM_DELIMITER, ''), [id]);
 
   const courseData = useMemo(
     () => ({
@@ -42,8 +51,6 @@ export default function CourseInfo({ id }: CourseInfoProps) {
   const parsedPrereqs = useMemo(() => {
     if (!prereqNotes) return [];
     const visited = new Set<string>();
-    //TODO: remove the requirement that this function needs a visited set.
-    //it doesn't really make sense to have that.
     return parsePreReqNotes(prereqNotes, visited);
   }, [prereqNotes]);
 
@@ -54,20 +61,40 @@ export default function CourseInfo({ id }: CourseInfoProps) {
         credits,
         cores: cores || [],
         grade,
+        id: displayId,
       });
+      setValidationErrors([]);
     }
     setIsEditing((prevIsEditing) => !prevIsEditing);
   };
 
   useEffect(() => {
-    // Only exit edit mode if the course ID has changed
     if (id !== prevCourseIdRef.current && isEditing) {
       setIsEditing(false);
     }
     prevCourseIdRef.current = id;
+
+    setValidationErrors([]);
   }, [id, isEditing]);
 
   const handleSubmit = () => {
+    // Use validateCourseEdit from the store for comprehensive validation
+    const validation = validateCourseEdit(currentCourse, {
+      ...editForm,
+      // Make sure cores is an array
+      cores: editForm.cores || [],
+    });
+
+    if (!validation.success) {
+      // Display validation errors
+      setValidationErrors(validation.errors);
+      return;
+    }
+
+    // Clear any existing validation errors
+    setValidationErrors([]);
+
+    // Proceed with the update if validation is successful
     updateCourse(courseID, {
       name: editForm.name,
       credits: editForm.credits,
@@ -110,9 +137,14 @@ export default function CourseInfo({ id }: CourseInfoProps) {
         {/* Course Details */}
         <div className='space-y-4'>
           <div className='relative flex h-8 items-center'>
+            <span className='inline-block w-24 font-medium'>ID:</span>
+            <span>{displayId}</span>
+          </div>
+
+          <div className='relative flex h-8 items-center'>
             <span className='inline-block w-24 font-medium'>Credits:</span>
             <span className={isEditing ? 'opacity-0' : ''}>{credits}</span>
-            {isEditing && (
+            {isEditing && !isSearchItem && (
               <input
                 type='number'
                 value={editForm.credits}
@@ -131,7 +163,7 @@ export default function CourseInfo({ id }: CourseInfoProps) {
             <span className={isEditing ? 'opacity-0' : ''}>
               {grade || 'None'}
             </span>
-            {isEditing && (
+            {isEditing && !isSearchItem && (
               <select
                 value={editForm.grade || ''}
                 onChange={(e) =>
@@ -152,17 +184,34 @@ export default function CourseInfo({ id }: CourseInfoProps) {
             )}
           </div>
 
-          <div className='h-10'>
-            {isEditing ? (
-              <button onClick={handleSubmit} className='btn'>
-                Save Changes
-              </button>
-            ) : (
-              <button onClick={handleEditToggle} className='btn'>
-                Edit Course
-              </button>
-            )}
-          </div>
+          {/* Validation Errors Display */}
+          {validationErrors.length > 0 && (
+            <div className='bg-error/10 text-error mt-2 rounded-md p-3'>
+              <p className='font-medium'>Please fix the following errors:</p>
+              <ul className='mt-1 ml-4 list-disc'>
+                {validationErrors.map((error, index) => (
+                  <li key={index}>{error}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {!isSearchItem && (
+            <div className='h-10'>
+              {isEditing && !isSearchItem ? (
+                <button
+                  onClick={handleSubmit}
+                  className='btn'
+                  disabled={!!(validationErrors.length > 0)}
+                >
+                  Save Changes
+                </button>
+              ) : !isSearchItem ? (
+                <button onClick={handleEditToggle} className='btn'>
+                  Edit Course
+                </button>
+              ) : null}
+            </div>
+          )}
         </div>
       </div>
 
@@ -187,7 +236,7 @@ export default function CourseInfo({ id }: CourseInfoProps) {
 
       <div className='mt-6 border-t'>
         <div className='my-2 text-lg font-bold'>Prerequisites</div>
-        <p className='mb-2 text-xs text-gray-500'>
+        <p className='text-base-content mb-2 text-xs'>
           The following are possible ways to satisfy this course&apos;s
           prerequisites:
         </p>
@@ -207,7 +256,9 @@ export default function CourseInfo({ id }: CourseInfoProps) {
             ))}
           </div>
         ) : (
-          <div className='text-sm text-gray-500'>No prerequisites listed.</div>
+          <div className='text-base-content text-sm'>
+            No prerequisites listed.
+          </div>
         )}
       </div>
 

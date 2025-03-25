@@ -27,22 +27,45 @@ export default function CourseCreation() {
     defaultValue: LEFT_PANEL_SECONDARY_DEFAULT_HEIGHT,
   });
 
-  const upperPanelStyle = {
-    height: panelHeight,
-  };
-
   const [courseName, setCourseName] = useState('');
+  const [courseId, setCourseId] = useState('');
   const [credits, setCredits] = useState<number>(3);
   const [currentCore, setCurrentCore] = useState('');
   const [selectedCores, setSelectedCores] = useState<string[]>([]);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
   const addCourse = useScheduleStore((state) => state.addCourse);
+  const validateCourseEdit = useScheduleStore(
+    (state) => state.validateCourseEdit
+  );
   const globalCores = useScheduleStore((state) => state.globalCores);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    addCourse(courseName, credits, selectedCores);
+
+    // Validate course before adding
+    const validation = validateCourseEdit(null, {
+      name: courseName,
+      credits,
+      cores: selectedCores,
+      id: courseId,
+    });
+
+    if (!validation.success) {
+      // Display validation errors
+      setValidationErrors(validation.errors);
+      return;
+    }
+
+    // Clear any validation errors
+    setValidationErrors([]);
+
+    // Proceed with adding the course
+    addCourse(courseName, credits, selectedCores, courseId);
+
+    // Reset form
     setCourseName('');
+    setCourseId('');
     setCredits(3);
     setSelectedCores([]);
   };
@@ -58,9 +81,35 @@ export default function CourseCreation() {
               <input
                 type='text'
                 value={courseName}
-                onChange={(e) => setCourseName(e.target.value.toUpperCase())}
+                onChange={(e) => {
+                  setCourseName(e.target.value.toUpperCase());
+                  // Clear validation errors when user starts typing
+                  if (validationErrors.length > 0) {
+                    setValidationErrors([]);
+                  }
+                }}
                 className='validator grow'
                 placeholder='Enter course name'
+                required
+              />
+            </label>
+          </div>
+
+          <div>
+            <label className='input input-bordered flex items-center gap-2'>
+              Course ID:
+              <input
+                type='text'
+                value={courseId}
+                onChange={(e) => {
+                  setCourseId(e.target.value);
+                  // Clear validation errors when user starts typing
+                  if (validationErrors.length > 0) {
+                    setValidationErrors([]);
+                  }
+                }}
+                className='validator grow'
+                placeholder='e.g. 01:198:112'
                 required
               />
             </label>
@@ -73,7 +122,13 @@ export default function CourseCreation() {
                 type='number'
                 required
                 value={credits}
-                onChange={(e) => setCredits(Number(e.target.value))}
+                onChange={(e) => {
+                  setCredits(Number(e.target.value));
+                  // Clear validation errors when user changes credits
+                  if (validationErrors.length > 0) {
+                    setValidationErrors([]);
+                  }
+                }}
                 min={0}
                 max={12}
                 className='validator grow'
@@ -86,9 +141,27 @@ export default function CourseCreation() {
             currentCore={currentCore}
             setCurrentCore={setCurrentCore}
             selectedCores={selectedCores}
-            setSelectedCores={setSelectedCores}
+            setSelectedCores={(cores) => {
+              setSelectedCores(cores);
+              // Clear validation errors when user changes cores
+              if (validationErrors.length > 0) {
+                setValidationErrors([]);
+              }
+            }}
             globalCores={globalCores}
           />
+
+          {/* Validation Errors Display */}
+          {validationErrors.length > 0 && (
+            <div className='bg-error/10 text-error rounded-md p-3'>
+              <p className='font-medium'>Please fix the following errors:</p>
+              <ul className='mt-1 ml-4 list-disc'>
+                {validationErrors.map((error, index) => (
+                  <li key={index}>{error}</li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <button type='submit' className='btn max-w-xs'>
             Create Course

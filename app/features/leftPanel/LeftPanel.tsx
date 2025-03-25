@@ -8,8 +8,9 @@ export default function LeftPanel() {
       id='leftPanelContainer'
       className='text-base-content relative flex h-full w-full flex-col border-r'
     >
-      <div className='mt-4 ml-6 flex shrink-0 flex-col pb-3 whitespace-nowrap'>
+      <div className='mt-4 ml-6 flex shrink-0 flex-col pb-3'>
         <div className='text-2xl font-bold'>Scarlet Navigator</div>
+        <div className='text-xs font-bold'>Unofficial Beta Release</div>
         <div className='text-sm'>
           Developed by{' '}
           <Link

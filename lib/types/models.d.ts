@@ -69,7 +69,12 @@ export interface ScheduleActions {
     skipHistory?: boolean
   ) => void;
   setCourses: (courses: CourseByID) => void;
-  addCourse: (name: string, credits: number, cores: string[]) => CourseID;
+  addCourse: (
+    name: string,
+    credits: number,
+    cores: string[],
+    id: CourseID
+  ) => CourseID;
   handleDragOperation: (
     semesters: CoursesBySemesterID,
     isNewContainerMove?: boolean
@@ -78,6 +83,13 @@ export interface ScheduleActions {
   updateSemester: (id: SemesterID, updates: Partial<Semester>) => void;
   removeSemester: (id: SemesterID) => void;
   removeCourse: (courseId: CourseID, containerId: UniqueIdentifier) => void;
+  validateCourseEdit: (
+    oldCourse: Course | null,
+    updates: Partial<Course>
+  ) => {
+    success: boolean;
+    errors: string[];
+  };
   undo: () => void;
   redo: () => void;
   ___TEMP___populate: () => void;

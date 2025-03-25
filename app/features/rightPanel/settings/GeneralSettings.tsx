@@ -94,9 +94,13 @@ export default function GeneralSettings() {
           onChange={handleTermChange}
         >
           <option value='Fall'>Fall</option>
-          <option value='Winter'>Winter</option>
           <option value='Spring'>Spring</option>
-          <option value='Summer'>Summer</option>
+          {includeWinterAndSummerTerms && (
+            <>
+              <option value='Winter'>Winter</option>
+              <option value='Summer'>Summer</option>
+            </>
+          )}
         </select>
       </div>
 

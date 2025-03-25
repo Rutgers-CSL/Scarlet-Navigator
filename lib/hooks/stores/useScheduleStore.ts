@@ -69,10 +69,15 @@ export const useScheduleStore = create<ScheduleStore>()(
           set({ courses });
         },
 
-        addCourse: (name: string, credits: number, cores: string[] = []) => {
+        addCourse: (
+          name: string,
+          credits: number,
+          cores: string[] = [],
+          customId: CourseID
+        ) => {
           const state = get();
           saveToHistory(state);
-          const newCourseId = `course_${Date.now()}`;
+          const newCourseId = customId;
           const newCourse: Course = {
             id: newCourseId,
             name: name.trim(),
@@ -235,6 +240,40 @@ export const useScheduleStore = create<ScheduleStore>()(
             coursesBySemesterID: updatedCoursesBySemesterID,
             courses: updatedCourses,
           });
+        },
+
+        /**
+         *
+         * Adds logical verification for edit/creation form for courses. For now,
+         * this function only checks the new proposed ID (if it exists).
+         *
+         * @param oldCourse state of course before edits are made
+         * if oldCourse is null, we can assume that its a course being created.
+         * @param updates
+         */
+        validateCourseEdit: (
+          oldCourse: Course | null,
+          updates: Partial<Course>
+        ) => {
+          const keys = Object.keys(get().courses);
+          const proposedID = updates.id as string;
+
+          const errors: string[] = [];
+          if (proposedID && oldCourse) {
+            //verify that a course ID is in the format xxx:xxxx:xxx
+            const regex = /^\d{1,3}:\d{1,3}:\d{1,3}$/;
+            if (!regex.test(proposedID)) {
+              errors.push(
+                'ID must be in a course number format xxx:xxx:xxx (e.g. 01:198:112, 121:302:101)'
+              );
+            }
+
+            if (oldCourse.id !== proposedID && keys.includes(proposedID)) {
+              errors.push('A course with this ID already exists');
+            }
+          }
+
+          return { success: errors.length === 0, errors };
         },
 
         setSearchResults: (courses: Course[]) => {
