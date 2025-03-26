@@ -85,8 +85,14 @@ export function ScheduleBoard({
   const [validationStatus, setValidationStatus] = useState<boolean | null>(
     null
   );
+  const [errorVisible, setErrorVisible] = useState(false);
+  const { validatePrerequisites } = useSettingsStore((state) => state.general);
 
   const validateScheduleAsync = async () => {
+    if (!validatePrerequisites) {
+      return true;
+    }
+
     // Convert the data structure to match what validateScheduleBoard expects
     const board = semesterOrder.map(
       (semesterId) => coursesBySemesterID[semesterId]
@@ -106,10 +112,19 @@ export function ScheduleBoard({
     const runValidation = async () => {
       const isValid = await validateScheduleAsync();
       setValidationStatus(isValid);
+
+      // Set error visibility with a slight delay for animation purposes
+      if (!isValid && validatePrerequisites) {
+        setTimeout(() => {
+          setErrorVisible(true);
+        }, 100);
+      } else {
+        setErrorVisible(false);
+      }
     };
 
     runValidation();
-  }, [semesterOrder, coursesBySemesterID, courses]);
+  }, [semesterOrder, coursesBySemesterID, courses, validatePrerequisites]);
 
   const {
     showQuarterlyStudentTitlesOnSemesterTitles,
@@ -152,12 +167,8 @@ export function ScheduleBoard({
       wrapperStyle
     );
 
-  const {
-    handleAddColumn,
-    handleEditSemester,
-    handlePopulateSchedule,
-    handleRemoveCourse,
-  } = useScheduleHandlers();
+  const { handleAddColumn, handleEditSemester, handleRemoveCourse } =
+    useScheduleHandlers();
 
   const getContainerTitle = (
     containerId: UniqueIdentifier,
@@ -234,12 +245,18 @@ export function ScheduleBoard({
         >
           <div className='flex h-full w-full flex-col'>
             <MenuContainer />
-            {validationStatus === false && (
-              <div className='mx-4 mb-4 rounded bg-red-500 p-2 text-center font-bold text-white'>
+            <div
+              className={`mx-4 mb-4 overflow-hidden transition-all duration-500 ease-in-out ${
+                errorVisible && validatePrerequisites
+                  ? 'max-h-20 opacity-100'
+                  : 'max-h-0 opacity-0'
+              }`}
+            >
+              <div className='rounded bg-red-400 p-2 text-center font-bold text-white'>
                 Error: Your schedule contains courses with unsatisfied
                 prerequisites.
               </div>
-            )}
+            </div>
             <div className='grid w-full grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-x-4 gap-y-4 px-4'>
               {semesterOrder.map((containerId) => (
                 <React.Fragment key={containerId}>

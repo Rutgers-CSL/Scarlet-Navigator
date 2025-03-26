@@ -164,7 +164,7 @@ export const Item = React.memo(
             />
             <div className='flex flex-col gap-2'>
               <div className='flex items-center gap-2 text-wrap'>
-                <div>
+                <div className='pr-1'>
                   {typeof value === 'string' ? value.toUpperCase() : value}
                   {disabled && (
                     <div className='text-info text-sm'>(Already on board)</div>

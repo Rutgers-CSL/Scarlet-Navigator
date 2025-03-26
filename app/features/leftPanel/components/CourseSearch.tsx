@@ -2,7 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { searchCoursesAction } from '@/app/actions/searchCourses';
-import { SEARCH_ITEM_DELIMITER, SEARCH_CONTAINER_ID } from '@/lib/constants';
+import {
+  SEARCH_ITEM_DELIMITER,
+  SEARCH_CONTAINER_ID,
+  CAMPUSES,
+} from '@/lib/constants';
 import {
   SortableContext,
   verticalListSortingStrategy,
@@ -39,6 +43,7 @@ export default function CourseSearch() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedCampus, setSelectedCampus] = useState<string | null>(null);
   const { coursesBySemesterID, courses, setSearchResults } = useScheduleStore(
     useShallow((state) => {
       return {
@@ -64,6 +69,14 @@ export default function CourseSearch() {
     setIsLoading(shouldLoad);
   };
 
+  const handleCampusChange = (campus: string | null) => {
+    if (campus == selectedCampus) return;
+    setSelectedCampus(campus);
+    if (searchQuery.trim()) {
+      setIsLoading(true);
+    }
+  };
+
   useEffect(() => {
     const handleSearch = async () => {
       if (!searchQuery.trim()) {
@@ -74,7 +87,11 @@ export default function CourseSearch() {
 
       setError(null);
       try {
-        const results = await searchCoursesAction({ q: searchQuery });
+        const filter_by = selectedCampus ? `mainCampus:${selectedCampus}` : '';
+        const results = await searchCoursesAction({
+          q: searchQuery,
+          filter_by,
+        });
         const limitedResults = results.slice(0, 10);
 
         setSearchResults(limitedResults);
@@ -91,7 +108,7 @@ export default function CourseSearch() {
 
     const debounceTimeout = setTimeout(handleSearch, 800);
     return () => clearTimeout(debounceTimeout);
-  }, [searchQuery, setSearchResults, isLoading]);
+  }, [searchQuery, setSearchResults, isLoading, selectedCampus]);
 
   return (
     <div className='card'>
@@ -110,51 +127,76 @@ export default function CourseSearch() {
               <span className='loading loading-spinner loading-sm'></span>
             )}
           </label>
-        </div>
-        {/* <DroppableContainer id={SEARCH_CONTAINER_ID} items={searchItems}> */}
-        <div className='h-full pb-4'>
-          {error ? (
-            <div className='flex min-h-[100px] items-center justify-center'>
-              <div className='alert alert-error w-full max-w-xs'>
-                <span>{error}</span>
-              </div>
-            </div>
-          ) : isLoading && searchItems.length === 0 ? (
-            <LoadingSkeleton />
-          ) : searchItems.length === 0 && searchQuery ? (
-            <div className='flex min-h-[100px] items-center justify-center'>
-              <div className='text-base-content'>No courses found</div>
-            </div>
-          ) : (
-            <SortableContext
-              items={searchItems}
-              strategy={verticalListSortingStrategy}
-            >
-              {searchItems.map((courseId) => {
-                const potentialCourseId = courseId
-                  .toString()
-                  .replace(SEARCH_ITEM_DELIMITER, '');
-                const disabled = courses.hasOwnProperty(potentialCourseId);
-
-                return (
-                  <SortableItem
-                    key={courseId}
-                    course={courses[courseId]}
-                    containerId={SEARCH_CONTAINER_ID}
-                    id={courseId}
-                    index={0}
-                    handle={false}
-                    style={() => ({})}
-                    getIndex={() => 0}
-                    wrapperStyle={() => ({})}
-                    disabled={disabled}
+          <div className='mt-2 flex w-full justify-center'>
+            <div className='m-2 filter'>
+              <input
+                className='btn filter-reset btn-sm'
+                type='radio'
+                name='campuses'
+                aria-label='All'
+                onClick={() => {
+                  handleCampusChange(null);
+                }}
+              />
+              {Object.entries(CAMPUSES)
+                .filter(([code]) => code !== '')
+                .map(([code, name]) => (
+                  <input
+                    key={name}
+                    className='btn btn-sm'
+                    type='radio'
+                    name='campuses'
+                    aria-label={name}
+                    onClick={() => handleCampusChange(code)}
                   />
-                );
-              })}
-            </SortableContext>
-          )}
+                ))}
+            </div>
+          </div>
+          {/* <DroppableContainer id={SEARCH_CONTAINER_ID} items={searchItems}> */}
+          <div className='h-full pb-4'>
+            {error ? (
+              <div className='flex min-h-[100px] items-center justify-center'>
+                <div className='alert alert-error w-full max-w-xs'>
+                  <span>{error}</span>
+                </div>
+              </div>
+            ) : isLoading && searchItems.length === 0 ? (
+              <LoadingSkeleton />
+            ) : searchItems.length === 0 && searchQuery ? (
+              <div className='flex min-h-[100px] items-center justify-center'>
+                <div className='text-base-content'>No courses found</div>
+              </div>
+            ) : (
+              <SortableContext
+                items={searchItems}
+                strategy={verticalListSortingStrategy}
+              >
+                {searchItems.map((courseId) => {
+                  const potentialCourseId = courseId
+                    .toString()
+                    .replace(SEARCH_ITEM_DELIMITER, '');
+                  const disabled = courses.hasOwnProperty(potentialCourseId);
+
+                  return (
+                    <SortableItem
+                      key={courseId}
+                      course={courses[courseId]}
+                      containerId={SEARCH_CONTAINER_ID}
+                      id={courseId}
+                      index={0}
+                      handle={false}
+                      style={() => ({})}
+                      getIndex={() => 0}
+                      wrapperStyle={() => ({})}
+                      disabled={disabled}
+                    />
+                  );
+                })}
+              </SortableContext>
+            )}
+          </div>
+          {/* </DroppableContainer> */}
         </div>
-        {/* </DroppableContainer> */}
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 'use server';
 
+import { CAMPUSES, LEVELS } from '@/lib/constants';
 import { Course } from '@/lib/types/models';
 import Typesense from 'typesense';
 
@@ -38,7 +39,7 @@ export async function searchCoursesAction(
 
   const searchParams = {
     q,
-    query_by: 'expandedTitle',
+    query_by: ['title'],
     filter_by,
     sort_by,
   };
@@ -54,7 +55,26 @@ export async function searchCoursesAction(
     }
 
     return searchResults.hits.map((hit) => {
-      const rawCourse = hit.document as any;
+      const rawCourse = hit.document as {
+        subject: string;
+        preReqNotes: string;
+        courseString: string;
+        school: {
+          code: string;
+          description: string;
+        };
+        credits: number;
+        subjectDescription: string;
+        coreCodes: {
+          coreCode: string;
+        }[];
+        expandedTitle: string;
+        mainCampus: string;
+        level: string;
+        synopsisUrl: string;
+        lastOffered: string;
+        title: string;
+      };
 
       /**
        * Example of a raw course object in the master list:
@@ -74,31 +94,53 @@ export async function searchCoursesAction(
             "mainCampus": "CM",
             "level": "G",
             "synopsisUrl": "",
-            "Last Offered": "Spring2025"
+            "Last Offered": "Spring2025",
+            "coreCodes": [
+              {
+                  "id": "2024901198105  21",
+                  "year": "2024",
+                  "term": "9",
+                  "lastUpdated": 1468423768000,
+                  "description": "Information Technology and Research",
+                  "offeringUnitCode": "01",
+                  "offeringUnitCampus": "NB",
+                  "code": "ITR",
+                  "unit": "01",
+                  "course": "105",
+                  "subject": "198",
+                  "effective": "20249",
+                  "coreCodeReferenceId": "21",
+                  "coreCode": "ITR",
+                  "coreCodeDescription": "Information Technology and Research",
+                  "supplement": "  "
+              },
+            ]
           },
        */
 
       const school = rawCourse.school.description;
-      const level = rawCourse.level === 'G' ? 'Graduate' : 'Undergraduate';
+      const level = rawCourse.level === LEVELS.G ? LEVELS.G : LEVELS.UG;
       const mainCampus =
-        rawCourse.mainCampus === 'CM'
-          ? 'Camden'
-          : rawCourse.mainCampus === 'NB'
-            ? 'New Brunswick'
-            : rawCourse.mainCampus === 'NK'
-              ? 'Newark'
-              : 'Unknown Campus';
+        CAMPUSES[rawCourse.mainCampus as keyof typeof CAMPUSES];
+
+      const courseName = rawCourse.expandedTitle || rawCourse.title;
+
+      const credits = rawCourse.credits || 0;
+      const cores = rawCourse.coreCodes
+        ? rawCourse.coreCodes.map((core: { coreCode: string }) => core.coreCode)
+        : [];
 
       const course: Course = {
         id: rawCourse.courseString,
-        name: rawCourse.expandedTitle,
-        credits: rawCourse.credits,
+        name: courseName,
+        credits: credits,
         level: level,
         school: school,
         mainCampus: mainCampus,
-        cores: ['hello'],
+        cores: cores,
         grade: null,
         prereqNotes: rawCourse.preReqNotes,
+        lastOffered: rawCourse['lastOffered'],
       };
       return course;
     });

@@ -12,6 +12,7 @@ export interface SettingsState {
     beginningTerm: ValidTerm;
     beginningYear: number;
     includeWinterAndSummerTerms: boolean;
+    validatePrerequisites: boolean;
   };
   visuals: {
     showGrades: boolean;
@@ -44,6 +45,7 @@ export const useSettingsStore = create<SettingsStore>()(
         beginningYear: parseInt(defaultSettings.general.beginningYear),
         includeWinterAndSummerTerms:
           defaultSettings.general.includeWinterAndSummerTerms,
+        validatePrerequisites: true,
       },
       visuals: {
         ...defaultSettings.visuals,
@@ -88,6 +90,7 @@ export const useSettingsStore = create<SettingsStore>()(
             beginningYear: parseInt(defaultSettings.general.beginningYear),
             includeWinterAndSummerTerms:
               defaultSettings.general.includeWinterAndSummerTerms,
+            validatePrerequisites: true,
           },
         });
       },

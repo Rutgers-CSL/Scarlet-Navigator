@@ -16,3 +16,15 @@ export const LEFT_PANEL_SECONDARY_KEY = 'leftPanelSecondaryHeight';
 
 export const SEARCH_ITEM_DELIMITER = '-search';
 export const SEARCH_CONTAINER_ID = 'search-results-container';
+
+export const CAMPUSES = {
+  CM: 'Camden',
+  NB: 'New Brunswick',
+  NK: 'Newark',
+  '': 'Unknown Campus',
+};
+
+export const LEVELS = {
+  UG: 'Undergraduate',
+  G: 'Graduate',
+};

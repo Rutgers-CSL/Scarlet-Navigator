@@ -69,6 +69,7 @@ export default function useDragHandlers(
       // changed with some sort of deep equality check. (or shallow)
       if (!isEqual(cleanedItems, coursesBySemesterID)) {
         handleDragOperation(cleanedItems);
+        document.body.style.cursor = '';
       }
     },
     [coursesBySemesterID, handleDragOperation]

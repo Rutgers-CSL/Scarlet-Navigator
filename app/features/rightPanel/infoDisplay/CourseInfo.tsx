@@ -157,6 +157,11 @@ export default function CourseInfo({ id }: CourseInfoProps) {
           </div>
 
           <div className='relative flex h-8 items-center'>
+            <span className='inline-block w-24 font-medium'>Last Offered:</span>
+            <span>{currentCourse?.lastOffered || 'N/A'}</span>
+          </div>
+
+          <div className='relative flex h-8 items-center'>
             <span className='inline-block w-24 font-medium'>Credits:</span>
             <span className={isEditing ? 'opacity-0' : ''}>{credits}</span>
             {isEditing && !isSearchItem && (

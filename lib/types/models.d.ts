@@ -41,6 +41,7 @@ export interface Course {
   mainCampus?: string;
   school?: string;
   synopsisURL?: string;
+  lastOffered?: string;
 }
 
 export interface ScheduleState {

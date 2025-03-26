@@ -24,7 +24,6 @@ export default function SortableItem({
   id,
   index,
   handle,
-  containerId,
   showCores = true,
   course,
   onRemove,

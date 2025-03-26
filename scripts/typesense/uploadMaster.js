@@ -61,15 +61,18 @@ requiredEnvVars.forEach((envVar) => {
       { name: 'preReqNotes', type: 'string' },
       { name: 'courseString', type: 'string' },
       { name: 'school.description', type: 'string', facet: true },
-      { name: 'credits', type: 'int32', facet: true },
       { name: 'subjectDescription', type: 'string' },
-      { name: 'coreCodes.coreCode', type: 'string[]' },
       { name: 'expandedTitle', type: 'string', facet: true },
       { name: 'mainCampus', type: 'string', facet: true },
       { name: 'level', type: 'string' },
+      { name: 'title', type: 'string' },
       { name: 'synopsisUrl', type: 'string' },
       { name: 'lastOffered', type: 'string', facet: true },
       { name: 'uid', type: 'string' },
+
+      /* Potentially Problematic fields */
+      { name: 'credits', type: 'int32', facet: true, optional: true },
+      { name: 'coreCodes', type: 'auto' }, // important to note
     ],
   };
 

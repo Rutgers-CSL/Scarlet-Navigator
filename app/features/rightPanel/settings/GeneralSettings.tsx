@@ -7,8 +7,12 @@ import { useEffect } from 'react';
 import { calculateSemesterTitle } from '@/lib/utils/semesterTitle';
 
 export default function GeneralSettings() {
-  const { beginningTerm, beginningYear, includeWinterAndSummerTerms } =
-    useSettingsStore((state) => state.general);
+  const {
+    beginningTerm,
+    beginningYear,
+    includeWinterAndSummerTerms,
+    validatePrerequisites = true,
+  } = useSettingsStore((state) => state.general);
 
   const setGeneral = useSettingsStore((state) => state.setGeneral);
   const semesterOrder = useScheduleStore((state) => state.semesterOrder);
@@ -75,6 +79,14 @@ export default function GeneralSettings() {
     });
   };
 
+  const handleValidatePrerequisitesChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setGeneral({
+      validatePrerequisites: e.target.checked,
+    });
+  };
+
   // Generate year options from current year -10 to +10
   const currentYear = new Date().getFullYear();
   const yearOptions = Array.from(
@@ -129,6 +141,20 @@ export default function GeneralSettings() {
             className='toggle'
             checked={includeWinterAndSummerTerms}
             onChange={handleIncludeTermsChange}
+          />
+        </label>
+      </div>
+
+      <div className='form-control'>
+        <label className='label cursor-pointer'>
+          <span className='label-text'>
+            Validate Prerequisites (Experimental)
+          </span>
+          <input
+            type='checkbox'
+            className='toggle'
+            checked={validatePrerequisites}
+            onChange={handleValidatePrerequisitesChange}
           />
         </label>
       </div>
