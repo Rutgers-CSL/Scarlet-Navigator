@@ -72,7 +72,10 @@ export default function CourseCreation() {
 
   return (
     <div className='card bg-base-100 text-base-content rounded-box'>
-      <div className='card-body' style={{ height: panelHeight }}>
+      <div
+        className='card-body overflow-y-scroll'
+        style={{ height: panelHeight }}
+      >
         <h2 className='card-title'>Create Course</h2>
         <form onSubmit={handleSubmit} className='mb-6 space-y-4'>
           <div>

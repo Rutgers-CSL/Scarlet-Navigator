@@ -33,7 +33,8 @@ export function parsePreReqNotes(
   prereqNotes: string,
   visited: Set<CourseID>
 ): string[] {
-  if (prereqNotes === '') {
+  // Handle undefined, null, or empty prereqNotes
+  if (!prereqNotes || prereqNotes === '') {
     return [''];
   }
 
@@ -276,6 +277,11 @@ function validatePrereqSatisfaction(
   course: Course,
   visited: Set<CourseID>
 ): boolean {
+  // If the course has no prerequisites, consider it satisfied
+  if (!course.prereqNotes || course.prereqNotes === '') {
+    return true;
+  }
+
   const prereqs = parsePreReqNotes(course.prereqNotes, visited);
 
   for (const prereq of prereqs) {
@@ -310,18 +316,13 @@ export function validateScheduleBoard(
   for (const semester of board) {
     for (const courseID of semester) {
       const course = courseMap[courseID];
-      // const course_id = course.id.substring(course.id.length-10, course.id.length)
       if (!visited.has(course.id)) {
-        //console.log(validatePrereqSatisfaction(course, visited));
         if (validatePrereqSatisfaction(course, visited)) {
           visited.add(course.id);
         } else {
           return false;
         }
-        // return false;
       }
-
-      //   return true;
     }
   }
 

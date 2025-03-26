@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import {
   CancelDrop,
@@ -30,6 +30,11 @@ import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
 import MenuContainer from './components/MenuContainer';
 import { Info } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
+import {
+  validateScheduleBoard,
+  CourseMap,
+  ScheduleBoard as ValidationScheduleBoard,
+} from '@/lib/utils/prereqValidation';
 
 interface Props {
   adjustScale?: boolean;
@@ -77,6 +82,34 @@ export function ScheduleBoard({
   );
   const courses = useScheduleStore((state) => state.courses);
   const semesterByID = useScheduleStore((state) => state.semesterByID);
+  const [validationStatus, setValidationStatus] = useState<boolean | null>(
+    null
+  );
+
+  const validateScheduleAsync = async () => {
+    // Convert the data structure to match what validateScheduleBoard expects
+    const board = semesterOrder.map(
+      (semesterId) => coursesBySemesterID[semesterId]
+    ) as ValidationScheduleBoard;
+
+    // Run validation in the next event loop tick
+    return new Promise<boolean>((resolve) => {
+      setTimeout(() => {
+        const result = validateScheduleBoard(board, courses as CourseMap);
+        resolve(result);
+      }, 0);
+    });
+  };
+
+  // Trigger validation when schedule changes
+  useEffect(() => {
+    const runValidation = async () => {
+      const isValid = await validateScheduleAsync();
+      setValidationStatus(isValid);
+    };
+
+    runValidation();
+  }, [semesterOrder, coursesBySemesterID, courses]);
 
   const {
     showQuarterlyStudentTitlesOnSemesterTitles,
@@ -201,6 +234,12 @@ export function ScheduleBoard({
         >
           <div className='flex h-full w-full flex-col'>
             <MenuContainer />
+            {validationStatus === false && (
+              <div className='mx-4 mb-4 rounded bg-red-500 p-2 text-center font-bold text-white'>
+                Error: Your schedule contains courses with unsatisfied
+                prerequisites.
+              </div>
+            )}
             <div className='grid w-full grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-x-4 gap-y-4 px-4'>
               {semesterOrder.map((containerId) => (
                 <React.Fragment key={containerId}>

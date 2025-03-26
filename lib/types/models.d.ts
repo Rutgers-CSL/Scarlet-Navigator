@@ -37,6 +37,10 @@ export interface Course {
   cores: string[];
   grade: string | null;
   prereqNotes?: string;
+  level?: string;
+  mainCampus?: string;
+  school?: string;
+  synopsisURL?: string;
 }
 
 export interface ScheduleState {

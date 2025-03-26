@@ -130,12 +130,13 @@ function NotesDisplay({
 }) {
   if (!showNotes) return <span></span>;
 
-  if (notes?.length === 0)
-    return <span className='text-gray-500'>No notes added yet</span>;
-
   return (
     <article className='prose prose-sm overflow-scroll rounded-md p-2'>
-      <Markdown>{notes}</Markdown>
+      {notes?.length > 0 ? (
+        <Markdown>{notes}</Markdown>
+      ) : (
+        <span className='text-gray-500'>No notes added yet</span>
+      )}
     </article>
   );
 }

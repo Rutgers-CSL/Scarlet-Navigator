@@ -137,8 +137,23 @@ export default function CourseInfo({ id }: CourseInfoProps) {
         {/* Course Details */}
         <div className='space-y-4'>
           <div className='relative flex h-8 items-center'>
-            <span className='inline-block w-24 font-medium'>ID:</span>
+            <span className='inline-block w-24 font-medium'>Course #:</span>
             <span>{displayId}</span>
+          </div>
+
+          <div className='relative flex h-8 items-center'>
+            <span className='inline-block w-24 font-medium'>Level:</span>
+            <span>{currentCourse?.level || 'N/A'}</span>
+          </div>
+
+          <div className='relative flex h-8 items-center'>
+            <span className='inline-block w-24 font-medium'>School:</span>
+            <span>{currentCourse?.school || 'N/A'}</span>
+          </div>
+
+          <div className='relative flex h-8 items-center'>
+            <span className='inline-block w-24 font-medium'>Campus:</span>
+            <span>{currentCourse?.mainCampus || 'N/A'}</span>
           </div>
 
           <div className='relative flex h-8 items-center'>

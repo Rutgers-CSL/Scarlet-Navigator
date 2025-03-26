@@ -178,6 +178,12 @@ export const Item = React.memo(
                 )}
               </div>
 
+              {course?.mainCampus && isSearchItem && (
+                <div className='badge badge-primary text-sm font-normal'>
+                  {course.mainCampus}
+                </div>
+              )}
+
               {course?.grade && showGrades && (
                 <div className='text-base-content text-sm font-medium'>
                   Grade: {course.grade}
