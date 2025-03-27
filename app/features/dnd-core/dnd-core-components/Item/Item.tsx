@@ -32,6 +32,7 @@ export interface Props {
   value: React.ReactNode;
   showCores?: boolean;
   course?: Course;
+  error?: boolean;
   onRemove?(): void;
   renderItem?(args: {
     dragOverlay: boolean;
@@ -73,6 +74,7 @@ export const Item = React.memo(
         wrapperStyle,
         showCores = true,
         course,
+        error = false,
         ...props
       },
       ref
@@ -87,10 +89,8 @@ export const Item = React.memo(
         () => (id as string).replace(SEARCH_ITEM_DELIMITER, ''),
         [id]
       );
-      const isSearchItem = useMemo(
-        () => (id as string).endsWith(SEARCH_ITEM_DELIMITER),
-        [id]
-      );
+
+      const isSearchItem = (id as string).endsWith(SEARCH_ITEM_DELIMITER);
 
       const currentInfoID = useAuxiliaryStore((state) => state.currentInfoID);
 
@@ -148,6 +148,7 @@ export const Item = React.memo(
               dragOverlay && styles.dragOverlay,
               disabled && styles.disabled,
               color && styles.color,
+              error && 'border-2 border-red-500',
               'bg-base-200 text-md relative mx-3 my-2 overflow-hidden rounded-md p-3 font-bold'
             )}
             style={style}
@@ -177,6 +178,8 @@ export const Item = React.memo(
                   </div>
                 )}
               </div>
+
+              <div className='text-sm text-gray-500'>{rawID}</div>
 
               {course?.mainCampus && isSearchItem && (
                 <div className='badge badge-primary text-sm font-normal'>

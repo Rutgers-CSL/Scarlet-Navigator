@@ -14,6 +14,7 @@ import {
 import { SortableItem } from '@/app/features/dnd-core/dnd-core-components/SortableItem';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import { useShallow } from 'zustand/react/shallow';
+import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 
 interface LoadingSkeletonProps {
   itemCount?: number;
@@ -53,12 +54,26 @@ export default function CourseSearch() {
       };
     })
   );
+  const storeSearchQuery = useAuxiliaryStore((state) => state.searchQuery);
+  const setStoreSearchQuery = useAuxiliaryStore(
+    (state) => state.setSearchQuery
+  );
   const searchItems = coursesBySemesterID[SEARCH_CONTAINER_ID] || [];
 
   // Clear search results on mount
   useEffect(() => {
     setSearchResults([]);
   }, [setSearchResults]);
+
+  // Listen for search query changes from the store
+  useEffect(() => {
+    if (storeSearchQuery && storeSearchQuery !== searchQuery) {
+      setSearchQuery(storeSearchQuery);
+      setIsLoading(true);
+      // Clear the store query after using it
+      setStoreSearchQuery('');
+    }
+  }, [storeSearchQuery, searchQuery, setStoreSearchQuery]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

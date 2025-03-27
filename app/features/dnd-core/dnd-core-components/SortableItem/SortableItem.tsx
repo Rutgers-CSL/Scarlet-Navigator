@@ -17,6 +17,7 @@ interface SortableItemProps {
   showCores?: boolean;
   course: Course;
   onRemove?: () => void;
+  error?: boolean;
 }
 
 export default function SortableItem({
@@ -27,6 +28,7 @@ export default function SortableItem({
   showCores = true,
   course,
   onRemove,
+  error = false,
 }: SortableItemProps) {
   const {
     setNodeRef,
@@ -74,6 +76,7 @@ export default function SortableItem({
       transform={transform}
       listeners={memoListeners}
       showCores={showCores}
+      error={error}
     />
   );
 }

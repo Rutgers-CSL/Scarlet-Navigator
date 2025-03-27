@@ -6,6 +6,7 @@ import NotesEditor from '@/app/components/NotesEditor';
 import CoreList from '@/app/components/CoreList';
 import { parsePreReqNotes } from '@/lib/utils/prereqValidation';
 import { SEARCH_ITEM_DELIMITER } from '@/lib/constants';
+import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 
 interface CourseInfoProps {
   id: string;
@@ -26,6 +27,7 @@ export default function CourseInfo({ id }: CourseInfoProps) {
     cores: [] as string[],
     grade: null as string | null,
     id: '',
+    overridePrereqValidation: false,
   });
   const [currentCore, setCurrentCore] = useState('');
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
@@ -42,11 +44,21 @@ export default function CourseInfo({ id }: CourseInfoProps) {
       grade: currentCourse?.grade || null,
       courseID: currentCourse?.id || '',
       prereqNotes: currentCourse?.prereqNotes || '',
+      overridePrereqValidation:
+        currentCourse?.overridePrereqValidation || false,
     }),
     [currentCourse]
   );
 
-  const { name, credits, cores, grade, courseID, prereqNotes } = courseData;
+  const {
+    name,
+    credits,
+    cores,
+    grade,
+    courseID,
+    prereqNotes,
+    overridePrereqValidation,
+  } = courseData;
 
   const parsedPrereqs = useMemo(() => {
     if (!prereqNotes) return [];
@@ -62,6 +74,7 @@ export default function CourseInfo({ id }: CourseInfoProps) {
         cores: cores || [],
         grade,
         id: displayId,
+        overridePrereqValidation: overridePrereqValidation || false,
       });
       setValidationErrors([]);
     }
@@ -100,6 +113,7 @@ export default function CourseInfo({ id }: CourseInfoProps) {
       credits: editForm.credits,
       cores: editForm.cores,
       grade: editForm.grade,
+      overridePrereqValidation: editForm.overridePrereqValidation,
     });
     setIsEditing(false);
   };
@@ -255,12 +269,65 @@ export default function CourseInfo({ id }: CourseInfoProps) {
       {/* Prerequisites Section */}
 
       <div className='mt-6 border-t'>
-        <div className='my-2 text-lg font-bold'>Prerequisites</div>
+        <div className='my-2 flex items-center justify-between'>
+          <span className='text-lg font-bold'>Prerequisites</span>
+          {!isSearchItem && (
+            <div className='flex items-center gap-2'>
+              <div
+                className='tooltip tooltip-left'
+                data-tip={
+                  overridePrereqValidation
+                    ? 'Disable prerequisite override?'
+                    : 'Enable prerequisite override?'
+                }
+              >
+                <button
+                  className={`btn btn-xs ${overridePrereqValidation ? 'btn-neutral' : 'btn-outline'} transition-all`}
+                  onClick={() => {
+                    if (!isEditing) {
+                      updateCourse(courseID, {
+                        overridePrereqValidation: !overridePrereqValidation,
+                      });
+                    }
+                  }}
+                  disabled={isEditing}
+                >
+                  {overridePrereqValidation
+                    ? 'Prerequisites Overridden'
+                    : 'Override Prerequisites'}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
         <p className='text-base-content mb-2 text-xs'>
           The following are possible ways to satisfy this course&apos;s
           prerequisites:
         </p>
-        {parsedPrereqs.length > 0 ? (
+        {/* Handle the special GreaterThan prerequisite case */}
+        {parsedPrereqs &&
+        !Array.isArray(parsedPrereqs) &&
+        parsedPrereqs.type === 'greater_than' ? (
+          <div className='space-y-1'>
+            <div className='bg-base-200 rounded-md p-2'>
+              <div
+                className={`text-sm ${overridePrereqValidation ? 'line-through' : ''}`}
+              >
+                Any course equal to or greater than{' '}
+                <button
+                  className={`text-primary cursor-pointer font-semibold ${overridePrereqValidation ? 'line-through' : 'hover:underline'}`}
+                  onClick={() =>
+                    useAuxiliaryStore
+                      .getState()
+                      .setSearchQuery(parsedPrereqs.courseId)
+                  }
+                >
+                  {parsedPrereqs.courseId}
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : Array.isArray(parsedPrereqs) && parsedPrereqs.length > 0 ? (
           <div className='space-y-1'>
             {parsedPrereqs.map((prereq: string, index: number) => (
               <div key={index} className='space-y-1'>
@@ -270,7 +337,11 @@ export default function CourseInfo({ id }: CourseInfoProps) {
                   </div>
                 )}
                 <div className='bg-base-200 rounded-md p-2'>
-                  <div className='text-sm'>{formatPrereq(prereq)}</div>
+                  <div
+                    className={`text-sm ${overridePrereqValidation ? 'line-through' : ''}`}
+                  >
+                    {formatPrereq(prereq, overridePrereqValidation)}
+                  </div>
                 </div>
               </div>
             ))}
@@ -291,8 +362,18 @@ export default function CourseInfo({ id }: CourseInfoProps) {
 }
 
 // Helper function to format prerequisite strings
-function formatPrereq(prereq: string): React.ReactNode {
+function formatPrereq(
+  prereq: string,
+  prereqOverride: boolean
+): React.ReactNode {
   if (!prereq) return null;
+
+  const setSearchQuery = useAuxiliaryStore.getState().setSearchQuery;
+
+  // Function to handle course ID click
+  const handleCourseClick = (courseId: string) => {
+    setSearchQuery(courseId);
+  };
 
   // Replace 'and' and 'or' with styled versions
   const parts = prereq.split(/(\(|\))/g).filter(Boolean);
@@ -311,11 +392,68 @@ function formatPrereq(prereq: string): React.ReactNode {
         </span>
       );
 
-    // For content between parentheses
-    const formatted = part
-      .replace(/and/g, ' <span class="font-semibold ">AND</span> ')
-      .replace(/or/g, ' <span class="font-semibold">OR</span> ');
+    // Parse text to identify course IDs (assuming format like "01:123:456")
+    // This regex matches patterns like "01:123:456" or "01:123:456L"
+    const courseIdRegex = /\d{2}:\d{3}:\d{3}[A-Z]?/g;
+    let lastIndex = 0;
+    const fragments = [];
+    let match;
 
-    return <span key={i} dangerouslySetInnerHTML={{ __html: formatted }} />;
+    // Clone the part string to avoid modifying the original
+    let textPart = part;
+
+    // First replace and/or keywords
+    textPart = textPart
+      .replace(/\band\b/g, ' <span class="font-semibold">AND</span> ')
+      .replace(/\bor\b/g, ' <span class="font-semibold">OR</span> ');
+
+    // Then find and process course IDs
+    while ((match = courseIdRegex.exec(part)) !== null) {
+      const courseId = match[0];
+      const index = match.index;
+
+      // Add text before the match
+      if (index > lastIndex) {
+        fragments.push(
+          <span
+            key={`${i}-${lastIndex}`}
+            dangerouslySetInnerHTML={{
+              __html: textPart.substring(lastIndex, index),
+            }}
+          />
+        );
+      }
+
+      // Add the clickable course ID
+      fragments.push(
+        <button
+          key={`${i}-${index}`}
+          className={`text-primary cursor-pointer font-semibold ${prereqOverride ? 'line-through' : 'hover:underline'}`}
+          onClick={() => handleCourseClick(courseId)}
+        >
+          {courseId}
+        </button>
+      );
+
+      lastIndex = index + courseId.length;
+    }
+
+    // Add any remaining text
+    if (lastIndex < textPart.length) {
+      fragments.push(
+        <span
+          key={`${i}-${lastIndex}`}
+          dangerouslySetInnerHTML={{
+            __html: textPart.substring(lastIndex),
+          }}
+        />
+      );
+    }
+
+    return fragments.length > 0 ? (
+      <span key={i}>{fragments}</span>
+    ) : (
+      <span key={i} dangerouslySetInnerHTML={{ __html: textPart }} />
+    );
   });
 }

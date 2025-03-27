@@ -39,7 +39,7 @@ export async function searchCoursesAction(
 
   const searchParams = {
     q,
-    query_by: ['title'],
+    query_by: ['title', 'expandedTitle', 'courseString'],
     filter_by,
     sort_by,
   };

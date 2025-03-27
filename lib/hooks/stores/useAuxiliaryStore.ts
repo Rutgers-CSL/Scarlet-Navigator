@@ -10,13 +10,17 @@ type AuxiliaryStore = {
   currentInfoID: string;
   currentInfoType: 'course' | 'semester';
   activeTab: 'info' | 'tracker' | 'settings';
+  leftPanelTab: 'search' | 'create';
   panelDimensions: Record<string, number>;
+  searchQuery: string;
   setRecentlyMovedToNewContainer: (flag: RefObject<boolean>) => void;
   setActiveID: (id: SemesterID) => void;
   setCurrentInfo: (id: string, type: 'course' | 'semester') => void;
   setActiveTab: (tab: 'info' | 'tracker' | 'settings') => void;
+  setLeftPanelTab: (tab: 'search' | 'create') => void;
   setPanelDimension: (key: string, value: number) => void;
   getPanelDimension: (key: string, defaultValue: number) => number;
+  setSearchQuery: (query: string) => void;
 };
 
 /**
@@ -30,7 +34,9 @@ const useAuxiliaryStore = create<AuxiliaryStore>()(
       currentInfoID: '',
       currentInfoType: 'course',
       activeTab: 'info',
+      leftPanelTab: 'search',
       panelDimensions: {},
+      searchQuery: '',
       searchResultMap: {},
       setRecentlyMovedToNewContainer: (flag: RefObject<boolean>) =>
         set({ recentlyMovedToNewContainer: flag }),
@@ -46,6 +52,7 @@ const useAuxiliaryStore = create<AuxiliaryStore>()(
       },
       setActiveTab: (tab: 'info' | 'tracker' | 'settings') =>
         set({ activeTab: tab }),
+      setLeftPanelTab: (tab: 'search' | 'create') => set({ leftPanelTab: tab }),
       setPanelDimension: (key: string, value: number) =>
         set((state) => ({
           panelDimensions: {
@@ -56,12 +63,16 @@ const useAuxiliaryStore = create<AuxiliaryStore>()(
       getPanelDimension: (key: string, defaultValue: number) => {
         return get().panelDimensions[key] ?? defaultValue;
       },
+      setSearchQuery: (query: string) => {
+        set({ searchQuery: query, leftPanelTab: 'search' });
+      },
     }),
     {
       name: AUXILIARY_STORAGE_KEY,
       partialize: (state) => ({
         panelDimensions: state.panelDimensions,
         activeTab: state.activeTab,
+        leftPanelTab: state.leftPanelTab,
       }),
     }
   )

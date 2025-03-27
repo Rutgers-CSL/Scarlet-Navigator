@@ -1,8 +1,11 @@
 import CourseCreation from './components/CourseCreation';
 import CourseSearch from './components/CourseSearch';
 import Link from 'next/link';
+import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 
 export default function LeftPanel() {
+  const { leftPanelTab, setLeftPanelTab } = useAuxiliaryStore();
+
   return (
     <div
       id='leftPanelContainer'
@@ -32,7 +35,8 @@ export default function LeftPanel() {
             name='my_tabs_2'
             className='tab'
             aria-label='Search'
-            defaultChecked
+            checked={leftPanelTab === 'search'}
+            onChange={() => setLeftPanelTab('search')}
           />
           <div className='tab-content'>
             <CourseSearch />
@@ -42,6 +46,8 @@ export default function LeftPanel() {
             name='my_tabs_2'
             className='tab'
             aria-label='Create'
+            checked={leftPanelTab === 'create'}
+            onChange={() => setLeftPanelTab('create')}
           />
           <div className='tab-content'>
             <CourseCreation />

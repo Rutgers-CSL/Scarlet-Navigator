@@ -3,10 +3,14 @@ export type CourseID = string;
 export interface Course {
   id: CourseID;
   prereqNotes: string;
+  overridePrereqValidation?: boolean;
 }
 
-//cid -> 01:198:112
-//
+// Add a type to handle the special case of "Any Course EQUAL or GREATER Than" pattern
+export interface SpecialPrereq {
+  type: 'greater_than';
+  courseId: CourseID;
+}
 
 export type CourseMap = Record<CourseID, Course>;
 export type Semester = CourseID[];
@@ -32,10 +36,22 @@ export type ScheduleBoard = Semester[];
 export function parsePreReqNotes(
   prereqNotes: string,
   visited: Set<CourseID>
-): string[] {
+): string[] | SpecialPrereq {
   // Handle undefined, null, or empty prereqNotes
   if (!prereqNotes || prereqNotes === '') {
     return [''];
+  }
+
+  // Check for the special case: "Any Course EQUAL or GREATER Than: (01:XXX:XXX ...)"
+  if (prereqNotes.includes('Any Course EQUAL or GREATER Than:')) {
+    // Extract the course ID from the pattern
+    const match = prereqNotes.match(/\((\d+:\d+:\d+)/);
+    if (match && match[1]) {
+      return {
+        type: 'greater_than',
+        courseId: match[1],
+      };
+    }
   }
 
   prereqNotes = prereqNotes.replace(/\s+/g, '');
@@ -123,8 +139,6 @@ function validatePrereq(prereq: string, visited: Set<CourseID>): boolean {
   if (prereq === '') {
     return true;
   }
-
-  //console.log(visited);
 
   let temp_str: string = prereq;
   let parentheses_count: number = 0;
@@ -273,18 +287,65 @@ function validatePrereq(prereq: string, visited: Set<CourseID>): boolean {
   return bool;
 }
 
+/**
+ * Validates if a course with "greater than" prerequisite is satisfied
+ * @param specialPrereq The special prerequisite with greater than constraint
+ * @param visited Set of completed courses
+ * @returns boolean indicating if the constraint is satisfied
+ */
+function validateGreaterThanPrereq(
+  specialPrereq: SpecialPrereq,
+  visited: Set<CourseID>
+): boolean {
+  const baseId = specialPrereq.courseId;
+
+  // First check if the exact course is completed
+  if (visited.has(baseId)) {
+    return true;
+  }
+
+  // Extract components of the course ID
+  const [dept, subject, number] = baseId.split(':');
+
+  // Check if any course with the same dept and subject but higher number is completed
+  // Use Array.from to convert Set to array to fix the iteration issue
+  for (const courseId of Array.from(visited)) {
+    if (courseId.startsWith(`${dept}:${subject}:`)) {
+      const currentNumber = parseInt(courseId.split(':')[2], 10);
+      const baseNumber = parseInt(number, 10);
+
+      if (currentNumber >= baseNumber) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 function validatePrereqSatisfaction(
   course: Course,
   visited: Set<CourseID>
 ): boolean {
+  // If the overridePrereqValidation flag is set, consider prerequisites satisfied
+  if (course.overridePrereqValidation) {
+    return true;
+  }
+
   // If the course has no prerequisites, consider it satisfied
   if (!course.prereqNotes || course.prereqNotes === '') {
     return true;
   }
 
-  const prereqs = parsePreReqNotes(course.prereqNotes, visited);
+  const parsedPrereqs = parsePreReqNotes(course.prereqNotes, visited);
 
-  for (const prereq of prereqs) {
+  // Handle special case for "Any Course EQUAL or GREATER Than"
+  if (!Array.isArray(parsedPrereqs) && parsedPrereqs.type === 'greater_than') {
+    return validateGreaterThanPrereq(parsedPrereqs, visited);
+  }
+
+  // Handle normal prerequisites
+  for (const prereq of parsedPrereqs as string[]) {
     console.log(prereq + ' ' + validatePrereq(prereq, visited));
     if (validatePrereq(prereq, visited)) {
       return true;
@@ -297,7 +358,7 @@ function validatePrereqSatisfaction(
 /**
  *
  * 1. Letting the user know that there is an invalidly placed course
- *  a. validateScheduleBoard can the courseID and we can highlight the
+ *  a. validateScheduleBord can the courseID and we can highlight the
  *      course as red on the dashboard
  *
  *      only ONE course is highlighted (first one)
@@ -310,21 +371,32 @@ function validatePrereqSatisfaction(
 export function validateScheduleBoard(
   board: ScheduleBoard,
   courseMap: CourseMap
-): boolean {
-  const visited = new Set<CourseID>();
+): Set<CourseID> {
+  const visited = new Set<CourseID>(); // Courses from previous semesters only
+  const invalidCourses = new Set<CourseID>(); // Courses with unsatisfied prerequisites
 
   for (const semester of board) {
+    // Create a set to track courses that are valid for this semester
+    const semesterValid = new Set<CourseID>();
+
     for (const courseID of semester) {
       const course = courseMap[courseID];
+
+      // Check if course is not already taken and prerequisites are satisfied
       if (!visited.has(course.id)) {
         if (validatePrereqSatisfaction(course, visited)) {
-          visited.add(course.id);
+          semesterValid.add(course.id);
         } else {
-          return false;
+          invalidCourses.add(course.id);
         }
       }
     }
+
+    // After validating all courses in the semester, add them to visited
+    Array.from(semesterValid).forEach((validCourseID) => {
+      visited.add(validCourseID);
+    });
   }
 
-  return true;
+  return invalidCourses;
 }

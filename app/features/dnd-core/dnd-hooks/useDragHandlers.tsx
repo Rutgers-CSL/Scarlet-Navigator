@@ -71,8 +71,9 @@ export default function useDragHandlers(
         handleDragOperation(cleanedItems);
         document.body.style.cursor = '';
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
-    [coursesBySemesterID, handleDragOperation]
+    [coursesBySemesterID]
   );
 
   const setSemesterOrderWrapper = useCallback((containers: SemesterOrder) => {

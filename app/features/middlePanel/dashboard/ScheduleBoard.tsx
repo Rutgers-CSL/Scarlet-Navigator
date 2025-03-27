@@ -82,15 +82,15 @@ export function ScheduleBoard({
   );
   const courses = useScheduleStore((state) => state.courses);
   const semesterByID = useScheduleStore((state) => state.semesterByID);
-  const [validationStatus, setValidationStatus] = useState<boolean | null>(
-    null
+  const [invalidCourses, setInvalidCourses] = useState<Set<CourseID>>(
+    new Set()
   );
   const [errorVisible, setErrorVisible] = useState(false);
   const { validatePrerequisites } = useSettingsStore((state) => state.general);
 
   const validateScheduleAsync = async () => {
     if (!validatePrerequisites) {
-      return true;
+      return new Set<CourseID>();
     }
 
     // Convert the data structure to match what validateScheduleBoard expects
@@ -99,10 +99,13 @@ export function ScheduleBoard({
     ) as ValidationScheduleBoard;
 
     // Run validation in the next event loop tick
-    return new Promise<boolean>((resolve) => {
+    return new Promise<Set<CourseID>>((resolve) => {
       setTimeout(() => {
-        const result = validateScheduleBoard(board, courses as CourseMap);
-        resolve(result);
+        const invalidCourses = validateScheduleBoard(
+          board,
+          courses as CourseMap
+        );
+        resolve(invalidCourses);
       }, 0);
     });
   };
@@ -110,8 +113,9 @@ export function ScheduleBoard({
   // Trigger validation when schedule changes
   useEffect(() => {
     const runValidation = async () => {
-      const isValid = await validateScheduleAsync();
-      setValidationStatus(isValid);
+      const invalidCourseIds = await validateScheduleAsync();
+      setInvalidCourses(invalidCourseIds);
+      const isValid = invalidCourseIds.size === 0;
 
       // Set error visibility with a slight delay for animation purposes
       if (!isValid && validatePrerequisites) {
@@ -124,6 +128,7 @@ export function ScheduleBoard({
     };
 
     runValidation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [semesterOrder, coursesBySemesterID, courses, validatePrerequisites]);
 
   const {
@@ -246,7 +251,7 @@ export function ScheduleBoard({
           <div className='flex h-full w-full flex-col'>
             <MenuContainer />
             <div
-              className={`mx-4 mb-4 overflow-hidden transition-all duration-500 ease-in-out ${
+              className={`mx-4 mb-4 overflow-hidden transition-all duration-500 ${
                 errorVisible && validatePrerequisites
                   ? 'max-h-20 opacity-100'
                   : 'max-h-0 opacity-0'
@@ -278,14 +283,15 @@ export function ScheduleBoard({
                       strategy={strategy}
                     >
                       {coursesBySemesterID[containerId].map((value, index) => {
+                        const isInvalid = invalidCourses.has(value);
                         return (
                           <SortableItem
+                            key={value}
                             onRemove={() =>
                               handleRemoveCourse(value, containerId)
                             }
                             disabled={isSortingContainer}
                             course={courses[value]}
-                            key={value}
                             id={value}
                             index={index}
                             handle={handle}
@@ -293,6 +299,7 @@ export function ScheduleBoard({
                             wrapperStyle={wrapperStyle}
                             containerId={containerId}
                             showCores={showCoreLabels}
+                            error={isInvalid}
                             getIndex={(id) => {
                               return 0;
                             }}

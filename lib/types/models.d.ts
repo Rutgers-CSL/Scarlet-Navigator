@@ -41,6 +41,7 @@ export interface Course {
   mainCampus?: string;
   school?: string;
   synopsisURL?: string;
+  overridePrereqValidation?: boolean;
   lastOffered?: string;
 }
 
