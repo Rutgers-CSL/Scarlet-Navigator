@@ -258,8 +258,8 @@ export function ScheduleBoard({
               }`}
             >
               <div className='rounded bg-red-400 p-2 text-center font-bold text-white'>
-                Error: Your schedule contains courses with unsatisfied
-                prerequisites.
+                Error: Your schedule contains courses with unsatisfied or
+                out-of-order prerequisites.
               </div>
             </div>
             <div className='grid w-full grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-x-4 gap-y-4 px-4'>

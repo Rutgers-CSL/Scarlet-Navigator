@@ -1,0 +1,16 @@
+name: 'Bachelor of Science in Computer Science'
+requirements:
+  - name: 'Computer Science Electives'
+    sets:
+      - ref: 'cs_electives'
+        num_req: 7
+    sets_num_req: 1
+
+  - name: 'R4: Arts and Humanities'
+    sets:
+      - ref: 'AhO'
+      - ref: 'AhP'
+      - ref: 'AHq'
+      - ref: 'AHr'
+    distinct_num: 2
+    sets_num_req: 2

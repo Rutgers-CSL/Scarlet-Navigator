@@ -45,9 +45,9 @@ export default function LeftPanel() {
             type='radio'
             name='my_tabs_2'
             className='tab'
-            aria-label='Create'
-            checked={leftPanelTab === 'create'}
-            onChange={() => setLeftPanelTab('create')}
+            aria-label='Misc.'
+            checked={leftPanelTab === 'other'}
+            onChange={() => setLeftPanelTab('other')}
           />
           <div className='tab-content'>
             <CourseCreation />

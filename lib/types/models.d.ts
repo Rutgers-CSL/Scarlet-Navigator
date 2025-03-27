@@ -45,6 +45,46 @@ export interface Course {
   lastOffered?: string;
 }
 
+export interface StudyProgram {
+  name: string;
+  requirements: Requirement[];
+}
+
+/**
+ * A CourseSet can be of two types:
+ *   - "courses": Holds an array of specific course IDs.
+ *   - "core": Holds a single core code. We then check how many courses in the schedule have that core.
+ */
+export interface CourseSet {
+  [ref: string]: {
+    type: 'core' | 'courses';
+    coreCode?: string; // used if type = "core"
+    courses?: string[]; // used if type = "courses"
+  };
+}
+
+/**
+ * A Requirement is composed of one or more "sets" (each referencing a key in CourseSet).
+ *
+ * - `sets` is an array of objects with:
+ *      ref:      a key in the CourseSet map
+ *      num_req?: how many courses are needed from that set (optional)
+ *        => If omitted for a "courses" type, we need ALL from that set.
+ *        => If omitted for a "core" type, we just need 1 course that has the core.
+ *
+ * - `distinct_num?`: how many distinct courses overall must be used to fulfill the requirement
+ * - `sets_num_req`: how many of the sets (among `sets`) must be satisfied to fulfill the requirement
+ */
+export interface Requirement {
+  name: string;
+  sets: {
+    ref: string;
+    num_req?: number;
+  }[];
+  distinct_num?: number;
+  sets_num_req: number;
+}
+
 export interface ScheduleState {
   semesterOrder: SemesterOrder;
   coursesBySemesterID: CoursesBySemesterID;

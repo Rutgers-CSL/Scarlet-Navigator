@@ -1,0 +1,28 @@
+cs_electives:
+  type: 'courses'
+  courses:
+    - '01:198:210'
+    - '01:198:213'
+    - '01:198:352'
+
+eng_core:
+  type: 'courses'
+  courses:
+    - '01:350:201'
+    - '01:350:202'
+
+AhO:
+  type: 'core'
+  coreCode: 'AHo'
+
+AhP:
+  type: 'core'
+  coreCode: 'AHp'
+
+AHq:
+  type: 'core'
+  coreCode: 'AHq'
+
+AHr:
+  type: 'core'
+  coreCode: 'AHr'

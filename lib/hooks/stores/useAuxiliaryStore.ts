@@ -10,14 +10,14 @@ type AuxiliaryStore = {
   currentInfoID: string;
   currentInfoType: 'course' | 'semester';
   activeTab: 'info' | 'tracker' | 'settings';
-  leftPanelTab: 'search' | 'create';
+  leftPanelTab: 'search' | 'other';
   panelDimensions: Record<string, number>;
   searchQuery: string;
   setRecentlyMovedToNewContainer: (flag: RefObject<boolean>) => void;
   setActiveID: (id: SemesterID) => void;
   setCurrentInfo: (id: string, type: 'course' | 'semester') => void;
   setActiveTab: (tab: 'info' | 'tracker' | 'settings') => void;
-  setLeftPanelTab: (tab: 'search' | 'create') => void;
+  setLeftPanelTab: (tab: 'search' | 'other') => void;
   setPanelDimension: (key: string, value: number) => void;
   getPanelDimension: (key: string, defaultValue: number) => number;
   setSearchQuery: (query: string) => void;
@@ -52,7 +52,7 @@ const useAuxiliaryStore = create<AuxiliaryStore>()(
       },
       setActiveTab: (tab: 'info' | 'tracker' | 'settings') =>
         set({ activeTab: tab }),
-      setLeftPanelTab: (tab: 'search' | 'create') => set({ leftPanelTab: tab }),
+      setLeftPanelTab: (tab: 'search' | 'other') => set({ leftPanelTab: tab }),
       setPanelDimension: (key: string, value: number) =>
         set((state) => ({
           panelDimensions: {

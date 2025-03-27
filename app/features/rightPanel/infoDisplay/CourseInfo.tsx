@@ -282,7 +282,7 @@ export default function CourseInfo({ id }: CourseInfoProps) {
                 }
               >
                 <button
-                  className={`btn btn-xs ${overridePrereqValidation ? 'btn-neutral' : 'btn-outline'} transition-all`}
+                  className={`btn btn-xs ${overridePrereqValidation ? 'btn-success' : 'btn-outline'} transition-all`}
                   onClick={() => {
                     if (!isEditing) {
                       updateCourse(courseID, {
