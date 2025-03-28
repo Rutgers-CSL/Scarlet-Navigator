@@ -4,7 +4,6 @@ import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
 import { useNotesStore } from '@/lib/hooks/stores/useNotesStore';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 import useHistoryStore from '@/lib/hooks/stores/useHistoryStore';
-import { useProgramFulfillment } from '@/lib/hooks/stores/useProgramFulfillment';
 import { APP_VERSION, checkVersionCompatibility } from '@/lib/utils/version';
 import {
   ALL_STORAGE_KEYS,
@@ -289,16 +288,6 @@ const applyDataToStores = (
       past: data.history.past || [],
       future: data.history.future || [],
     });
-  }
-
-  if (opts.programFulfillment) {
-    localStorage.setItem(
-      PROGRAM_FULFILLMENT_STORAGE_KEY,
-      data[PROGRAM_FULFILLMENT_STORAGE_KEY]
-    );
-    useProgramFulfillment.setState(
-      JSON.parse(data[PROGRAM_FULFILLMENT_STORAGE_KEY]).state
-    );
   }
 };
 

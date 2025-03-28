@@ -123,7 +123,10 @@ export async function searchCoursesAction(
       const mainCampus =
         CAMPUSES[rawCourse.mainCampus as keyof typeof CAMPUSES];
 
-      const courseName = rawCourse.expandedTitle || rawCourse.title;
+      const courseName =
+        rawCourse.expandedTitle && rawCourse.expandedTitle.trim().length > 0
+          ? rawCourse.expandedTitle
+          : rawCourse.title;
 
       const credits = rawCourse.credits || 0;
       const cores = rawCourse.coreCodes

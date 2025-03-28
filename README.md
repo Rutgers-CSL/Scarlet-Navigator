@@ -23,15 +23,19 @@ Awarded [Best Fullstack Project](https://github.com/kevinmonisit/Scarlet-Navigat
 
 - **Drag and Drop**
 
-  - Intuitively move your courses around like it's no big deal. From a list of over thousands of Rutgers University courses, drag them into your schedule. Don’t see a course? No problem! You have the option to create courses yourself.
+  - Intuitively move your courses around like it's no big deal. From a list of over thousands of Rutgers University courses, drag them into your schedule. Don't see a course? No problem! You have the option to create courses yourself.
 
 - **Customizable Degree/Program Tracker**
 
   - So many cores and requirements to track. Pre-med. Pre-pt. Pre-dental. Computer Science. How about you create them yourself? Or… you can choose from a small list of already-made tracks.
 
+- **Program Fulfillment Tracker**
+
+  - Track your progress towards completing various study programs with an interactive visual dashboard. See which requirements you've satisfied, which ones are in progress, and exactly which courses are contributing to each requirement. Each program's requirements are collapsible for easy navigation.
+
 - **GPA Calculator & Credit Calculator**
 
-  - See if you’d be on track to completing your graduation with the GPA that you want. Add in your current grades or grades that you predict you’ll receive in the future
+  - See if you'd be on track to completing your graduation with the GPA that you want. Add in your current grades or grades that you predict you'll receive in the future
 
 - **Add in Helpful Notes**
 

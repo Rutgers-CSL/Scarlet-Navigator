@@ -88,9 +88,9 @@ export function evaluateRequirement(
       // Otherwise, user needs requiredCount from that set.
 
       // Which of these expectedCourses are actually in the schedule?
-      matchingCourses = expectedCourses.filter((cId) =>
-        allCourseIDs.includes(cId)
-      );
+      matchingCourses = expectedCourses.filter((cId) => {
+        return allCourseIDs.includes(cId);
+      });
 
       let isSatisfied = false;
       if (requiredCount === undefined) {
@@ -103,7 +103,7 @@ export function evaluateRequirement(
 
       return {
         ref: setRef,
-        coursesUsed: isSatisfied ? matchingCourses : [],
+        coursesUsed: matchingCourses,
         satisfied: isSatisfied,
       };
     } else {

@@ -13,9 +13,6 @@ export default function useScheduleHandlers() {
   const setCoursesBySemesterID = useScheduleStore(
     (state) => state.setCoursesBySemesterID
   );
-  const ___TEMP___populate = useScheduleStore(
-    (state) => state.___TEMP___populate
-  );
   const _reset_ = useScheduleStore((state) => state.______reset______);
   const setCurrentInfo = useAuxiliaryStore((state) => state.setCurrentInfo);
 
@@ -66,7 +63,6 @@ export default function useScheduleHandlers() {
   const handlePopulateSchedule = () => {
     unstable_batchedUpdates(() => {
       _reset_();
-      ___TEMP___populate();
     });
   };
 

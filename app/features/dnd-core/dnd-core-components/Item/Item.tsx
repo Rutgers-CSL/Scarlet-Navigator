@@ -168,7 +168,7 @@ export const Item = React.memo(
                 <div className='pr-1'>
                   {typeof value === 'string' ? value.toUpperCase() : value}
                   {disabled && (
-                    <div className='text-info text-sm'>(Already on board)</div>
+                    <div className='text-info text-sm'>(Already Saved)</div>
                   )}
                 </div>
 

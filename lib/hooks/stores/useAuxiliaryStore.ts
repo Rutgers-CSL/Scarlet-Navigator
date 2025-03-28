@@ -13,14 +13,20 @@ type AuxiliaryStore = {
   leftPanelTab: 'search' | 'other';
   panelDimensions: Record<string, number>;
   searchQuery: string;
+  selectedCampus: string;
   setRecentlyMovedToNewContainer: (flag: RefObject<boolean>) => void;
   setActiveID: (id: SemesterID) => void;
-  setCurrentInfo: (id: string, type: 'course' | 'semester') => void;
+  setCurrentInfo: (
+    id: string,
+    type: 'course' | 'semester',
+    preventSwitchToInfoTab?: boolean
+  ) => void;
   setActiveTab: (tab: 'info' | 'tracker' | 'settings') => void;
   setLeftPanelTab: (tab: 'search' | 'other') => void;
   setPanelDimension: (key: string, value: number) => void;
   getPanelDimension: (key: string, defaultValue: number) => number;
   setSearchQuery: (query: string) => void;
+  setSelectedCampus: (campus: string) => void;
 };
 
 /**
@@ -37,17 +43,21 @@ const useAuxiliaryStore = create<AuxiliaryStore>()(
       leftPanelTab: 'search',
       panelDimensions: {},
       searchQuery: '',
-      searchResultMap: {},
+      selectedCampus: 'NB', // Default to New Brunswick
       setRecentlyMovedToNewContainer: (flag: RefObject<boolean>) =>
         set({ recentlyMovedToNewContainer: flag }),
       setActiveID: (id: SemesterID) => {
         set({ activeID: id });
       },
-      setCurrentInfo: (id: string, type: 'course' | 'semester') => {
+      setCurrentInfo: (
+        id: string,
+        type: 'course' | 'semester',
+        preventSwitchToInfoTab?: boolean
+      ) => {
         set({
           currentInfoID: id,
           currentInfoType: type,
-          activeTab: 'info', // Switch to info tab when selection changes
+          activeTab: preventSwitchToInfoTab ? get().activeTab : 'info', // Switch to info tab when selection changes
         });
       },
       setActiveTab: (tab: 'info' | 'tracker' | 'settings') =>
@@ -66,6 +76,9 @@ const useAuxiliaryStore = create<AuxiliaryStore>()(
       setSearchQuery: (query: string) => {
         set({ searchQuery: query, leftPanelTab: 'search' });
       },
+      setSelectedCampus: (campus: string) => {
+        set({ selectedCampus: campus });
+      },
     }),
     {
       name: AUXILIARY_STORAGE_KEY,
@@ -73,6 +86,7 @@ const useAuxiliaryStore = create<AuxiliaryStore>()(
         panelDimensions: state.panelDimensions,
         activeTab: state.activeTab,
         leftPanelTab: state.leftPanelTab,
+        selectedCampus: state.selectedCampus,
       }),
     }
   )

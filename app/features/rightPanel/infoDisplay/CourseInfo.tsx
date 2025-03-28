@@ -5,8 +5,10 @@ import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
 import NotesEditor from '@/app/components/NotesEditor';
 import CoreList from '@/app/components/CoreList';
 import { parsePreReqNotes } from '@/lib/utils/prereqValidation';
-import { SEARCH_ITEM_DELIMITER } from '@/lib/constants';
+import { SEARCH_ITEM_DELIMITER, SEARCH_CONTAINER_ID } from '@/lib/constants';
+import { COURSE_POOL_CONTAINER_ID } from '@/app/features/leftPanel/components/CourseCreation';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
+import { Check } from 'lucide-react';
 
 interface CourseInfoProps {
   id: string;
@@ -127,13 +129,16 @@ export default function CourseInfo({ id }: CourseInfoProps) {
   }
 
   return (
-    <div className='space-y-4 p-8'>
+    <div className='@container space-y-4 p-8'>
       <div>
         {/* Course Name */}
         <div className='relative mb-3'>
           <h1 className={`text-2xl font-bold ${isEditing ? 'opacity-0' : ''}`}>
             {name}
           </h1>
+          <div className='mt-2 w-2/3 text-sm italic'>
+            {currentCourse?.school}
+          </div>
           {isEditing && (
             <input
               type='text'
@@ -158,11 +163,6 @@ export default function CourseInfo({ id }: CourseInfoProps) {
           <div className='relative flex h-8 items-center'>
             <span className='inline-block w-24 font-medium'>Level:</span>
             <span>{currentCourse?.level || 'N/A'}</span>
-          </div>
-
-          <div className='relative flex h-8 items-center'>
-            <span className='inline-block w-24 font-medium'>School:</span>
-            <span>{currentCourse?.school || 'N/A'}</span>
           </div>
 
           <div className='relative flex h-8 items-center'>
@@ -269,12 +269,12 @@ export default function CourseInfo({ id }: CourseInfoProps) {
       {/* Prerequisites Section */}
 
       <div className='mt-6 border-t'>
-        <div className='my-2 flex items-center justify-between'>
+        <div className='my-2 flex flex-col justify-between @sm:flex-row'>
           <span className='text-lg font-bold'>Prerequisites</span>
           {!isSearchItem && (
             <div className='flex items-center gap-2'>
               <div
-                className='tooltip tooltip-left'
+                className='tooltip tooltip-top z-100'
                 data-tip={
                   overridePrereqValidation
                     ? 'Disable prerequisite override?'
@@ -370,6 +370,24 @@ function formatPrereq(
 
   const setSearchQuery = useAuxiliaryStore.getState().setSearchQuery;
 
+  // Get all courses in the schedule to check for completed prerequisites
+  const scheduleStore = useScheduleStore.getState();
+  const { courses, coursesBySemesterID } = scheduleStore;
+
+  // Get all course IDs that are in semesters (excluding course pool and search results)
+  const scheduledCourseIds = new Set<string>();
+  Object.entries(coursesBySemesterID).forEach(([semesterId, courseIds]) => {
+    if (
+      semesterId !== COURSE_POOL_CONTAINER_ID &&
+      semesterId !== SEARCH_CONTAINER_ID
+    ) {
+      courseIds.forEach((id) => {
+        // Convert to string to ensure we can compare properly
+        scheduledCourseIds.add(String(id).replace(SEARCH_ITEM_DELIMITER, ''));
+      });
+    }
+  });
+
   // Function to handle course ID click
   const handleCourseClick = (courseId: string) => {
     setSearchQuery(courseId);
@@ -412,6 +430,9 @@ function formatPrereq(
       const courseId = match[0];
       const index = match.index;
 
+      // Check if this course is already in the schedule
+      const isCompleted = scheduledCourseIds.has(courseId);
+
       // Add text before the match
       if (index > lastIndex) {
         fragments.push(
@@ -424,15 +445,25 @@ function formatPrereq(
         );
       }
 
-      // Add the clickable course ID
+      // Add the clickable course ID with checkmark if completed
       fragments.push(
-        <button
-          key={`${i}-${index}`}
-          className={`text-primary cursor-pointer font-semibold ${prereqOverride ? 'line-through' : 'hover:underline'}`}
-          onClick={() => handleCourseClick(courseId)}
-        >
-          {courseId}
-        </button>
+        <span key={`${i}-${index}`} className='inline-flex items-center'>
+          <button
+            className={`mx-1 cursor-pointer font-semibold text-blue-400 ${prereqOverride ? 'line-through' : 'hover:underline'}`}
+            onClick={() => handleCourseClick(courseId)}
+          >
+            {courseId}
+          </button>
+          {isCompleted && (
+            <span title='Course is in your schedule'>
+              <Check
+                className='mr-1 mb-0.5 -ml-0.5 h-4 w-4 text-green-600'
+                size={16}
+                strokeWidth={4}
+              />
+            </span>
+          )}
+        </span>
       );
 
       lastIndex = index + courseId.length;

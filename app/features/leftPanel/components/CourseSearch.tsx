@@ -44,7 +44,6 @@ export default function CourseSearch() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedCampus, setSelectedCampus] = useState<string | null>(null);
   const { coursesBySemesterID, courses, setSearchResults } = useScheduleStore(
     useShallow((state) => {
       return {
@@ -57,6 +56,10 @@ export default function CourseSearch() {
   const storeSearchQuery = useAuxiliaryStore((state) => state.searchQuery);
   const setStoreSearchQuery = useAuxiliaryStore(
     (state) => state.setSearchQuery
+  );
+  const selectedCampus = useAuxiliaryStore((state) => state.selectedCampus);
+  const setSelectedCampus = useAuxiliaryStore(
+    (state) => state.setSelectedCampus
   );
   const searchItems = coursesBySemesterID[SEARCH_CONTAINER_ID] || [];
 
@@ -84,8 +87,8 @@ export default function CourseSearch() {
     setIsLoading(shouldLoad);
   };
 
-  const handleCampusChange = (campus: string | null) => {
-    if (campus == selectedCampus) return;
+  const handleCampusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const campus = e.target.value;
     setSelectedCampus(campus);
     if (searchQuery.trim()) {
       setIsLoading(true);
@@ -142,30 +145,20 @@ export default function CourseSearch() {
               <span className='loading loading-spinner loading-sm'></span>
             )}
           </label>
-          <div className='mt-2 flex w-full justify-center'>
-            <div className='m-2 filter'>
-              <input
-                className='btn filter-reset btn-sm'
-                type='radio'
-                name='campuses'
-                aria-label='All'
-                onClick={() => {
-                  handleCampusChange(null);
-                }}
-              />
+          <div className='mt-2'>
+            <select
+              className='select w-full'
+              value={selectedCampus}
+              onChange={handleCampusChange}
+            >
               {Object.entries(CAMPUSES)
                 .filter(([code]) => code !== '')
                 .map(([code, name]) => (
-                  <input
-                    key={name}
-                    className='btn btn-sm'
-                    type='radio'
-                    name='campuses'
-                    aria-label={name}
-                    onClick={() => handleCampusChange(code)}
-                  />
+                  <option key={code} value={code}>
+                    {name}
+                  </option>
                 ))}
-            </div>
+            </select>
           </div>
           {/* <DroppableContainer id={SEARCH_CONTAINER_ID} items={searchItems}> */}
           <div className='h-full pb-4'>
