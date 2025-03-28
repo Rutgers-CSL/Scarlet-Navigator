@@ -182,7 +182,7 @@ export const Item = React.memo(
               <div className='text-sm text-gray-500'>{rawID}</div>
 
               {course?.mainCampus && isSearchItem && (
-                <div className='badge badge-primary text-sm font-normal'>
+                <div className='badge bg-red-400 text-xs font-bold text-white'>
                   {course.mainCampus}
                 </div>
               )}

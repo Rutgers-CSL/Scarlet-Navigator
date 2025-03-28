@@ -1,0 +1,45 @@
+requirements:
+  - name: 'R1: Contemporary Challenges [CC]'
+    sets:
+      - ref: 'CCO'
+      - ref: 'CCD'
+    sets_num_req: 2 # Must satisfy BOTH sets
+    distinct_num: 2 # Requires 2 distinct courses total
+
+  - name: 'R2: Areas of Inquiry: Natural Sciences [NS]'
+    sets:
+      - ref: 'NS'
+        num_req: 2 # Need 2 courses carrying the NS core
+    sets_num_req: 1
+    distinct_num: 2
+
+  - name: 'R3: Areas of Inquiry: Social [SCL] and Historical [HST] Analysis'
+    sets:
+      - ref: 'HST'
+      - ref: 'SCL'
+    sets_num_req: 2 # 1 course each from HST and SCL
+    distinct_num: 2
+
+  - name: 'R4: Areas of Inquiry: Arts and Humanities [AHo], [AHp], [AHq], [AHr]'
+    sets:
+      - ref: 'AHo'
+      - ref: 'AHp'
+      - ref: 'AHq'
+      - ref: 'AHr'
+    sets_num_req: 2 # Choose 2 out of these 4 sets
+    distinct_num: 2
+
+  - name: 'R5: Cognitive Skills and Processes: Writing and Communication [WC], [WCr], [WCd]'
+    sets:
+      - ref: 'WC'
+      - ref: 'WCr'
+      - ref: 'WCd'
+    sets_num_req: 3 # Must fulfill all three (WC, WCr, WCd)
+    distinct_num: 3 # Requires 3 distinct courses
+
+  - name: 'R6: Cognitive Skills and Processes: Quantitative and Formal Reasoning [QQ], [QR]'
+    sets:
+      - ref: 'QQ'
+      - ref: 'QR'
+    sets_num_req: 2 # Must complete both QQ and QR
+    distinct_num: 2

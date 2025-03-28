@@ -58,6 +58,7 @@ export interface StudyProgram {
 export interface CourseSet {
   [ref: string]: {
     type: 'core' | 'courses';
+    name?: string;
     coreCode?: string; // used if type = "core"
     courses?: string[]; // used if type = "courses"
   };

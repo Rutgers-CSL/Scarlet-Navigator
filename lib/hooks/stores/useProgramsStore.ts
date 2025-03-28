@@ -40,7 +40,10 @@ export const useProgramsStore = create<ProgramState>()(
         try {
           // This would typically fetch from an API endpoint
           // For now, hardcoding the initial available program
-          set({ availablePrograms: ['computerScience'] });
+          set({
+            availablePrograms: ['computerScience', 'sasCore'],
+            selectedPrograms: ['computerScience', 'sasCore'],
+          });
         } catch (error) {
           console.error('Failed to load available programs:', error);
         }

@@ -1,21 +1,142 @@
-cs_electives:
+# -------- R1: Computer Science Core sets --------
+cs_core_set1:
+  type: 'courses'
+  courses:
+    - '01:198:111'
+    - '01:198:112'
+    - '01:198:205'
+    - '01:198:211'
+    - '01:198:344'
+
+cs_core_set2:
+  type: 'courses'
+  courses:
+    - '01:198:206'
+    - '01:640:477'
+    - '14:332:226'
+
+# -------- R2: Mathematics Core set --------
+math_core_set1:
+  type: 'courses'
+  courses:
+    - '01:640:151'
+    - '01:640:152'
+    - '01:640:250'
+
+# -------- R3: Computer Science Electives sets --------
+# "cs_elec_all" can include the full range of valid B.S. electives;
+# here we list only the known ones for illustration.
+cs_elec_all:
   type: 'courses'
   courses:
     - '01:198:210'
     - '01:198:213'
+    - '01:198:214'
+    - '01:198:336'
     - '01:198:352'
+    - '01:198:416'
+    - '01:198:419'
+    # etc. (Potentially more if "Electives for the B.S. Degree" includes them)
 
-eng_core:
+cs_elec_bs:
   type: 'courses'
   courses:
-    - '01:350:201'
-    - '01:350:202'
+    - '01:198:210'
+    - '01:198:213'
+    - '01:198:214'
+    - '01:198:336'
+    - '01:198:352'
+    - '01:198:416'
+    - '01:198:419'
 
-AhO:
+# -------- R4: Physics or Chemistry sets --------
+phychem_set1:
+  type: 'courses'
+  name: 'Physics Courses A'
+  courses:
+    - '01:750:271'
+    - '01:750:272'
+    - '01:750:275'
+    - '01:750:276'
+
+phychem_set2:
+  type: 'courses'
+  name: 'Physics Courses B'
+  courses:
+    - '01:750:203'
+    - '01:750:204'
+    - '01:750:205'
+    - '01:750:206'
+
+phychem_set3:
+  type: 'courses'
+  name: 'Physics Courses C'
+  courses:
+    - '01:750:123'
+    - '01:750:124'
+    - '01:750:227'
+    - '01:750:229'
+
+phychem_set4:
+  type: 'courses'
+  name: 'Physics Courses D'
+  courses:
+    - '01:750:193'
+    - '01:750:194'
+
+phychem_set5:
+  type: 'courses'
+  name: 'Chemistry Courses A'
+  courses:
+    - '01:160:159'
+    - '01:160:160'
+    - '01:160:171'
+
+phychem_set6:
+  type: 'courses'
+  name: 'Chemistry Courses B'
+  courses:
+    - '01:160:161'
+    - '01:160:162'
+    - '01:160:171'
+
+# -------- R5: Residency Requirement --------
+residency_nb:
+  type: 'courses'
+  courses:
+    - '01:198:112'
+    - '01:198:206'
+    - '01:198:210'
+    - '01:198:211'
+    - '01:198:213'
+    - '01:198:352'
+    - '01:198:419'
+
+CCO:
+  type: 'core'
+  coreCode: 'CCO'
+
+CCD:
+  type: 'core'
+  coreCode: 'CCD'
+
+NS:
+  type: 'core'
+  coreCode: 'NS'
+
+HST:
+  type: 'core'
+  coreCode: 'HST'
+
+SCL:
+  type: 'core'
+  coreCode: 'SCL'
+
+AHo:
   type: 'core'
   coreCode: 'AHo'
 
-AhP:
+AHp:
   type: 'core'
   coreCode: 'AHp'
 
@@ -26,3 +147,23 @@ AHq:
 AHr:
   type: 'core'
   coreCode: 'AHr'
+
+WC:
+  type: 'core'
+  coreCode: 'WC'
+
+WCr:
+  type: 'core'
+  coreCode: 'WCr'
+
+WCd:
+  type: 'core'
+  coreCode: 'WCd'
+
+QQ:
+  type: 'core'
+  coreCode: 'QQ'
+
+QR:
+  type: 'core'
+  coreCode: 'QR'

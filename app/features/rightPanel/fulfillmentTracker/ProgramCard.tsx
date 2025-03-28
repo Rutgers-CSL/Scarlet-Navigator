@@ -1,14 +1,31 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { RequirementEvaluation } from '@/lib/utils/programValidation';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import { useShallow } from 'zustand/react/shallow';
+import { useProgramsStore } from '@/lib/hooks/stores/useProgramsStore';
+import { CourseSet } from '@/lib/types/models';
+
+// Extend the RequirementEvaluation interface to add distinct courses info
+interface ExtendedRequirementEvaluation extends RequirementEvaluation {
+  distinctReq?: number; // Only for backward compatibility
+}
+
+// Extend the SetEvaluationResult interface for additional properties
+interface ExtendedSetResult {
+  ref: string;
+  name?: string;
+  coursesUsed: string[];
+  satisfied: boolean;
+  requiredCount?: number; // To store the required number of courses
+}
 
 // Constants moved from FulfillmentTracker
 export const programDisplayNames: Record<string, string> = {
-  computerScience: 'Computer Science BS',
+  computerScience: 'Computer Science B.S.',
+  sasCore: 'SAS Core',
   mathematics: 'Mathematics BA',
   physics: 'Physics BS',
   psychology: 'Psychology BA',
@@ -28,19 +45,65 @@ export const programCategories: Record<string, string[]> = {
     'psychology',
     'biology',
     'economics',
+    'sasCore',
   ],
   'Business School': ['businessAdmin'],
   'School of Communication': ['communications', 'itiBusiness', 'itiDesign'],
 };
 
-// Map of set refs to their required course counts
-const setRequirements: Record<string, number> = {
-  cs_electives: 7, // Based on the requirement in the example
-};
+// Global cache for set requirements (populated dynamically)
+const setRequirementsCache: Record<string, number> = {};
 
 // Helper to get the number of required courses for a set
-const getRequiredCoursesCount = (setRef: string) => {
-  return setRequirements[setRef] || 1; // Default to 1 if not specified
+const getRequiredCoursesCount = (
+  setRef: string,
+  evaluations?: RequirementEvaluation[]
+) => {
+  // First check the cache
+  if (setRequirementsCache[setRef]) {
+    return setRequirementsCache[setRef];
+  }
+
+  // If evaluations are available, try to find the set directly from the evaluation results
+  if (evaluations) {
+    for (const evaluation of evaluations) {
+      const setResult = evaluation.setResults.find((set) => set.ref === setRef);
+      if (setResult && setResult.requiredCount !== undefined) {
+        return setResult.requiredCount;
+      }
+    }
+  }
+
+  // Default to 1 if not found
+  return 1;
+};
+
+// Dynamically load set requirements
+const loadSetRequirements = async (programNames: string[]) => {
+  try {
+    for (const programName of programNames) {
+      const response = await fetch(`/study-programs/${programName}.yaml`);
+      if (!response.ok) continue;
+
+      const text = await response.text();
+      const { parse } = await import('yaml');
+      const programData = parse(text);
+
+      if (programData?.requirements) {
+        programData.requirements.forEach((req: any) => {
+          if (req.sets) {
+            req.sets.forEach((set: any) => {
+              if (set.ref && set.num_req !== undefined) {
+                setRequirementsCache[set.ref] = set.num_req;
+              }
+            });
+          }
+        });
+      }
+    }
+  } catch (error) {
+    console.error('Error loading set requirements:', error);
+  }
 };
 
 // Helper to calculate program progress percentage
@@ -71,9 +134,9 @@ function ProgramHeader({
   toggleExpansion,
 }: ProgramHeaderProps) {
   return (
-    <div className='flex items-center justify-between'>
+    <div className='flex w-full items-center justify-between'>
       <div
-        className='flex w-full cursor-pointer items-center'
+        className='flex flex-grow cursor-pointer items-center'
         onClick={toggleExpansion}
       >
         <div>
@@ -83,26 +146,25 @@ function ProgramHeader({
           {Object.entries(programCategories).map(
             ([category, programs]) =>
               programs.includes(programName) && (
-                <span key={category} className='badge badge-sm badge-ghost'>
-                  {category}
-                </span>
+                <span key={category}>{category}</span>
               )
           )}
         </div>
-        <svg
-          className={`ml-2 h-4 w-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
-          fill='none'
-          stroke='currentColor'
-          viewBox='0 0 24 24'
-        >
-          <path
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            strokeWidth='2'
-            d='M19 9l-7 7-7-7'
-          ></path>
-        </svg>
       </div>
+      <svg
+        className={`h-4 w-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+        fill='none'
+        stroke='currentColor'
+        viewBox='0 0 24 24'
+        onClick={toggleExpansion}
+      >
+        <path
+          strokeLinecap='round'
+          strokeLinejoin='round'
+          strokeWidth='2'
+          d='M19 9l-7 7-7-7'
+        ></path>
+      </svg>
     </div>
   );
 }
@@ -120,7 +182,7 @@ function ProgramProgress({ evaluations }: ProgramProgressProps) {
   return (
     <div className='mb-4 flex items-center'>
       <progress
-        className='progress progress-primary mr-2 w-full'
+        className='progress progress-neutral mr-2 w-full'
         value={progressPercentage}
         max='100'
       ></progress>
@@ -180,16 +242,15 @@ interface CourseProgressProps {
   setRef: string;
   coursesUsed: string[];
   satisfied: boolean;
+  requiredCount: number;
 }
 
 function CourseProgress({
   setRef,
   coursesUsed,
   satisfied,
+  requiredCount,
 }: CourseProgressProps) {
-  if (setRef !== 'cs_electives') return null;
-
-  const requiredCount = getRequiredCoursesCount(setRef);
   const currentCount = coursesUsed.length;
 
   return (
@@ -215,22 +276,23 @@ function CourseProgress({
 interface ContributingCoursesProps {
   courses: string[];
   setRef: string;
+  requiredCount: number;
 }
 
-function ContributingCourses({ courses, setRef }: ContributingCoursesProps) {
-  const requiredCount = getRequiredCoursesCount(setRef);
+function ContributingCourses({
+  courses,
+  setRef,
+  requiredCount,
+}: ContributingCoursesProps) {
   const coursesByID = useScheduleStore(
     useShallow((state) => {
-      console.log('test');
       return state.courses;
     })
   );
 
   if (courses.length === 0) {
-    return <div className='text-warning'>No courses contributing yet</div>;
+    return <div className='text-base-content'>No courses contributing yet</div>;
   }
-
-  const toolTip = coursesByID[courses[0]]?.name.slice(0, 12) || courses[0];
 
   return (
     <div>
@@ -245,7 +307,7 @@ function ContributingCourses({ courses, setRef }: ContributingCoursesProps) {
                 .setCurrentInfo(course, 'course', true);
             }}
             className='tooltip tooltip-top z-[1000]'
-            data-tip={toolTip}
+            data-tip={coursesByID[courses[i]]?.name.slice(0, 12) || 'N/A'}
           >
             <div className='badge badge-neutral cursor-pointer text-sm font-normal'>
               {course}
@@ -254,11 +316,94 @@ function ContributingCourses({ courses, setRef }: ContributingCoursesProps) {
         ))}
       </div>
 
-      {setRef === 'cs_electives' && courses.length < requiredCount && (
+      {courses.length < requiredCount && (
         <div className='text-warning mt-2 font-medium'>
-          Need {requiredCount - courses.length} more CS elective(s)
+          Need {requiredCount - courses.length} more course
+          {requiredCount - courses.length !== 1 ? 's' : ''}
         </div>
       )}
+    </div>
+  );
+}
+
+// ===============================
+// Possible Courses Component
+// ===============================
+interface PossibleCoursesProps {
+  setRef: string;
+  coursesUsed: string[];
+}
+
+function PossibleCourses({ setRef, coursesUsed }: PossibleCoursesProps) {
+  const [possibleCourses, setPossibleCourses] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch possible courses for this set
+  useEffect(() => {
+    async function fetchCourseSets() {
+      try {
+        const res = await fetch('/courseSets.yaml');
+        if (!res.ok) {
+          console.error('Failed to fetch course sets');
+          return;
+        }
+
+        const text = await res.text();
+        const { parse } = await import('yaml');
+        const courseSets = parse(text) as CourseSet;
+
+        // Get courses for this set
+        if (courseSets[setRef] && courseSets[setRef].courses) {
+          setPossibleCourses(courseSets[setRef].courses || []);
+        }
+      } catch (error) {
+        console.error('Error fetching course sets:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchCourseSets();
+  }, [setRef]);
+
+  if (loading) {
+    return (
+      <div className='mt-2 animate-pulse'>Loading possible courses...</div>
+    );
+  }
+
+  if (!possibleCourses || possibleCourses.length === 0) {
+    return null;
+  }
+
+  // Filter out courses that are already being used
+  const remainingCourses = possibleCourses.filter(
+    (course) => !coursesUsed.includes(course)
+  );
+
+  if (remainingCourses.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className='mt-3'>
+      <div className='mb-1 font-medium'>Possible Courses:</div>
+      <div className='flex flex-wrap gap-1'>
+        {remainingCourses.map((course, i) => (
+          <div
+            key={i}
+            onClick={() => {
+              useAuxiliaryStore.getState().setSearchQuery(course);
+            }}
+            className='tooltip tooltip-top z-[1000]'
+            data-tip='Click to search'
+          >
+            <div className='badge cursor-pointer bg-gray-400 text-sm font-normal text-white'>
+              {course}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -269,19 +414,36 @@ function ContributingCourses({ courses, setRef }: ContributingCoursesProps) {
 interface SetItemProps {
   setResult: any;
   idx: number;
+  evaluations?: RequirementEvaluation[];
 }
 
-function SetItem({ setResult, idx }: SetItemProps) {
+function SetItem({ setResult, idx, evaluations }: SetItemProps) {
+  const [showPossibleCourses, setShowPossibleCourses] = useState(false);
+  const requiredCount = getRequiredCoursesCount(setResult.ref, evaluations);
+
   return (
     <div key={idx} className='rounded border'>
       {/* Set header */}
       <div
         className={`flex items-center justify-between p-2 ${setResult.satisfied ? 'bg-success/10' : 'bg-warning/10'}`}
       >
-        <span className='font-medium'>{setResult.ref}</span>
-        <span className='font-medium'>
-          {setResult.satisfied ? '✓ Satisfied' : '✗ Not Satisfied'}
-        </span>
+        <div>
+          <span className='font-medium'>{setResult.name || setResult.ref}</span>
+          <button
+            className='btn btn-xs btn-ghost mx-2 pb-0.5'
+            onClick={() => setShowPossibleCourses(!showPossibleCourses)}
+          >
+            {showPossibleCourses ? 'Hide Options' : 'Show Options'}
+          </button>
+        </div>
+        <div className='flex flex-col items-end'>
+          <span className='text-sm font-medium'>
+            {setResult.satisfied ? '✓ Satisfied' : '✗ Not Satisfied'}
+          </span>
+          <span className='text-base-content/70 text-xs'>
+            Need {requiredCount} course{requiredCount !== 1 ? 's' : ''}
+          </span>
+        </div>
       </div>
 
       {/* Set details */}
@@ -290,11 +452,19 @@ function SetItem({ setResult, idx }: SetItemProps) {
           setRef={setResult.ref}
           coursesUsed={setResult.coursesUsed}
           satisfied={setResult.satisfied}
+          requiredCount={requiredCount}
         />
         <ContributingCourses
           courses={setResult.coursesUsed}
           setRef={setResult.ref}
+          requiredCount={requiredCount}
         />
+        {showPossibleCourses && (
+          <PossibleCourses
+            setRef={setResult.ref}
+            coursesUsed={setResult.coursesUsed}
+          />
+        )}
       </div>
     </div>
   );
@@ -314,8 +484,6 @@ function RequirementDetails({
 }: RequirementDetailsProps) {
   if (!isExpanded) return null;
 
-  console.log(evaluation);
-
   return (
     <div className='bg-base-100 border-t p-3'>
       <UsedCoursesSummary courses={evaluation.distinctCoursesUsed} />
@@ -323,7 +491,12 @@ function RequirementDetails({
       <div className='space-y-3'>
         <div className='text-sm font-medium'>Set Details:</div>
         {evaluation.setResults.map((setResult, idx) => (
-          <SetItem key={idx} setResult={setResult} idx={idx} />
+          <SetItem
+            key={idx}
+            setResult={setResult}
+            idx={idx}
+            evaluations={[evaluation]}
+          />
         ))}
       </div>
     </div>
@@ -344,6 +517,12 @@ function RequirementItem({
   isExpanded,
   onToggle,
 }: RequirementItemProps) {
+  // Use the distinctCoursesRequired directly from the evaluation
+  const distinctCoursesCount = evaluation.distinctCoursesUsed?.length || 0;
+  const hasDistinctRequirement =
+    evaluation.distinctCoursesRequired !== undefined &&
+    evaluation.distinctCoursesRequired > 0;
+
   return (
     <div className='overflow-hidden rounded-lg border'>
       {/* Requirement header */}
@@ -353,17 +532,18 @@ function RequirementItem({
         }`}
         onClick={() => onToggle(evaluation.requirementName)}
       >
-        <div className='flex items-center'>
-          <div
-            className={`badge ${evaluation.satisfied ? 'badge-success' : 'badge-warning'} mr-2`}
-          >
-            {evaluation.satisfied ? '✓' : '!'}
-          </div>
+        <div className='flex max-w-1/2 items-center'>
           <span className='font-semibold'>{evaluation.requirementName}</span>
         </div>
         <div className='flex items-center'>
           <span className='mr-2 text-sm font-medium'>
             {evaluation.setsFulfilled}/{getRequiredSetsCount(evaluation)} sets
+            {hasDistinctRequirement && (
+              <span className='text-base-content/70 ml-1 text-xs'>
+                ({distinctCoursesCount}/{evaluation.distinctCoursesRequired}{' '}
+                distinct)
+              </span>
+            )}
           </span>
           <svg
             className={`h-4 w-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
@@ -403,6 +583,9 @@ function ProgramContent({
   toggleRequirement,
 }: ProgramContentProps) {
   const evaluations = programEvaluations[programName];
+
+  // Since we now have distinctCoursesRequired directly in the RequirementEvaluation,
+  // we don't need to enhance them separately
 
   if (!evaluations) {
     return (
@@ -449,12 +632,17 @@ export default function ProgramCard({
   programName,
   isSelected,
   programEvaluations,
-  onToggleSelection,
 }: ProgramCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [expandedRequirements, setExpandedRequirements] = useState<Set<string>>(
     new Set()
   );
+  const { selectedPrograms } = useProgramsStore();
+
+  // Load set requirements when the component mounts
+  useEffect(() => {
+    loadSetRequirements(selectedPrograms);
+  }, [selectedPrograms]);
 
   const toggleRequirement = (requirementName: string) => {
     setExpandedRequirements((prev) => {

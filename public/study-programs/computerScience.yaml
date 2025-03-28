@@ -1,16 +1,52 @@
-name: 'Computer Science B.S.'
 requirements:
-  - name: 'Computer Science Electives'
+  - name: 'Computer Science Core'
+    # Must fulfill 2 sets out of 2 total sets.
+    # 1st set requires 5 courses; 2nd set requires 1 course.
     sets:
-      - ref: 'cs_electives'
-        num_req: 7
+      - ref: 'cs_core_set1'
+        num_req: 5
+      - ref: 'cs_core_set2'
+        num_req: 1
+    sets_num_req: 2
+
+  - name: 'Mathematics Core'
+    # Single set requiring 3 courses
+    sets:
+      - ref: 'math_core_set1'
+        num_req: 3
     sets_num_req: 1
 
-  - name: 'R4: Arts and Humanities'
+  - name: 'Computer Science Electives'
+    # Requires 2 sets out of 2 (both must be met):
+    #  - 7 courses from the broader electives pool
+    #  - 5 courses specifically from the BS-specific electives
     sets:
-      - ref: 'AhO'
-      - ref: 'AhP'
-      - ref: 'AHq'
-      - ref: 'AHr'
-    distinct_num: 2
+      - ref: 'cs_elec_all'
+        num_req: 7
+      # - ref: 'cs_elec_bs'
+      #   num_req: 5
     sets_num_req: 2
+
+  - name: 'Physics or Chemistry Courses'
+    # Must satisfy only 1 of the following 6 sets
+    sets:
+      - ref: 'phychem_set1'
+        num_req: 4
+      - ref: 'phychem_set2'
+        num_req: 4
+      - ref: 'phychem_set3'
+        num_req: 4
+      - ref: 'phychem_set4'
+        num_req: 2
+      - ref: 'phychem_set5'
+        num_req: 3
+      - ref: 'phychem_set6'
+        num_req: 3
+    sets_num_req: 1
+
+  # - name: 'Residency Requirement in RU-NB'
+  #   # Single set, requiring 7 RU–NB CS courses
+  #   sets:
+  #     - ref: 'residency_nb'
+  #       num_req: 7
+  #   sets_num_req: 1

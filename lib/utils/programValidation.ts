@@ -21,13 +21,17 @@ type ScheduleBoard = Semester[];
 /**
  * Interface for the result of checking a single set within a requirement.
  * - ref: which set we evaluated
+ * - name: the display name for this set (if available)
  * - coursesUsed: the IDs of courses that counted toward fulfilling this set
  * - satisfied: whether the set's conditions are met
+ * - requiredCount: how many courses are required for this set (if specified)
  */
 interface SetEvaluationResult {
   ref: string;
+  name?: string;
   coursesUsed: CourseID[];
   satisfied: boolean;
+  requiredCount?: number;
 }
 
 /**
@@ -37,6 +41,7 @@ interface SetEvaluationResult {
  * - setsFulfilled: how many sets within the requirement got fulfilled
  * - setResults: detailed info about each set
  * - distinctCoursesUsed: all unique course IDs used across the sets that were fulfilled
+ * - distinctCoursesRequired: number of distinct courses required (from distinct_num)
  */
 export interface RequirementEvaluation {
   requirementName: string;
@@ -44,6 +49,7 @@ export interface RequirementEvaluation {
   setsFulfilled: number;
   setResults: SetEvaluationResult[];
   distinctCoursesUsed: CourseID[];
+  distinctCoursesRequired?: number;
 }
 
 /**
@@ -103,8 +109,11 @@ export function evaluateRequirement(
 
       return {
         ref: setRef,
+        name: config.name,
         coursesUsed: matchingCourses,
         satisfied: isSatisfied,
+        requiredCount:
+          requiredCount !== undefined ? requiredCount : expectedCourses.length,
       };
     } else {
       // Evaluate "core" type set
@@ -125,11 +134,12 @@ export function evaluateRequirement(
         // Need 'requiredCount' courses with that core
         isSatisfied = matchingCourses.length >= requiredCount;
       }
-
       return {
         ref: setRef,
+        name: config.name,
         coursesUsed: isSatisfied ? matchingCourses : [],
         satisfied: isSatisfied,
+        requiredCount: requiredCount !== undefined ? requiredCount : 1,
       };
     }
   });
@@ -160,6 +170,7 @@ export function evaluateRequirement(
     setsFulfilled,
     setResults,
     distinctCoursesUsed,
+    distinctCoursesRequired: requirement.distinct_num,
   };
 }
 
