@@ -8,7 +8,7 @@ import config from '@/next.config';
 
 // Import version directly rather than from package.json
 // as Next.js may have issues with direct package.json imports
-export const APP_VERSION = config.env.version;
+export const APP_VERSION = config.env?.version || '0.0.1';
 
 // Export other version-related utilities if needed
 export const isNewerVersion = (v1: string, v2: string): boolean => {
