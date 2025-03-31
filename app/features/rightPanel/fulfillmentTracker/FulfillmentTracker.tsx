@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useProgramsStore } from '@/lib/hooks/stores/useProgramsStore';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import ProgramCard from './ProgramCard';
+import { useShallow } from 'zustand/react/shallow';
 
 export default function FulfillmentTracker() {
   const {
@@ -14,7 +15,17 @@ export default function FulfillmentTracker() {
     deselectProgram,
     evaluateSelectedPrograms,
     loadAvailablePrograms,
-  } = useProgramsStore();
+  } = useProgramsStore(
+    useShallow((state) => ({
+      availablePrograms: state.availablePrograms,
+      selectedPrograms: state.selectedPrograms,
+      programEvaluations: state.programEvaluations,
+      selectProgram: state.selectProgram,
+      deselectProgram: state.deselectProgram,
+      evaluateSelectedPrograms: state.evaluateSelectedPrograms,
+      loadAvailablePrograms: state.loadAvailablePrograms,
+    }))
+  );
 
   const { coursesBySemesterID, courses, semesterOrder } = useScheduleStore();
   const [isLoading, setIsLoading] = useState(false);
@@ -39,13 +50,7 @@ export default function FulfillmentTracker() {
 
       evaluateSelectedPrograms(scheduleBoard, courses);
     }
-  }, [
-    selectedPrograms,
-    coursesBySemesterID,
-    courses,
-    semesterOrder,
-    evaluateSelectedPrograms,
-  ]);
+  }, [selectedPrograms, coursesBySemesterID, evaluateSelectedPrograms]);
 
   const isProgramSelected = (programName: string) => {
     return selectedPrograms.includes(programName);

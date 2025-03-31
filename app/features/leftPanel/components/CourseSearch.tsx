@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { searchCoursesAction } from '@/app/actions/searchCourses';
 import {
   SEARCH_ITEM_DELIMITER,
   SEARCH_CONTAINER_ID,
@@ -106,10 +105,25 @@ export default function CourseSearch() {
       setError(null);
       try {
         const filter_by = selectedCampus ? `mainCampus:${selectedCampus}` : '';
-        const results = await searchCoursesAction({
-          q: searchQuery,
-          filter_by,
+
+        // Replace server action with API call
+        const response = await fetch('/api/courses/search', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            q: searchQuery,
+            filter_by,
+          }),
         });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to search courses');
+        }
+
+        const results = await response.json();
         const limitedResults = results.slice(0, 10);
 
         setSearchResults(limitedResults);
