@@ -346,7 +346,6 @@ function validatePrereqSatisfaction(
 
   // Handle normal prerequisites
   for (const prereq of parsedPrereqs as string[]) {
-    console.log(prereq + ' ' + validatePrereq(prereq, visited));
     if (validatePrereq(prereq, visited)) {
       return true;
     }

@@ -122,10 +122,7 @@ export interface ScheduleActions {
     cores: string[],
     id: CourseID
   ) => CourseID;
-  handleDragOperation: (
-    semesters: CoursesBySemesterID,
-    isNewContainerMove?: boolean
-  ) => void;
+  handleDragOperation: (semesters: CoursesBySemesterID) => void;
   updateCourse: (id: CourseID, updates: Partial<Course>) => void;
   updateSemester: (id: SemesterID, updates: Partial<Semester>) => void;
   removeSemester: (id: SemesterID) => void;

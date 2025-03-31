@@ -4,7 +4,6 @@ requirements:
     # 1st set requires 5 courses; 2nd set requires 1 course.
     sets:
       - ref: 'cs_core_set1'
-        num_req: 5
       - ref: 'cs_core_set2'
         num_req: 1
     sets_num_req: 2
@@ -25,7 +24,7 @@ requirements:
         num_req: 7
       # - ref: 'cs_elec_bs'
       #   num_req: 5
-    sets_num_req: 2
+    sets_num_req: 1
 
   - name: 'Physics or Chemistry Courses'
     # Must satisfy only 1 of the following 6 sets

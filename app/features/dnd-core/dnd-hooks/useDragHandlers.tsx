@@ -88,15 +88,17 @@ export default function useDragHandlers(
   const throttledDragOver = useMemo(
     () =>
       throttle((event: DragOverEvent) => {
+        const latestItems = useScheduleStore.getState().coursesBySemesterID;
+
         const { active, over } = event;
         const overId = over?.id;
 
-        if (overId == null || overId === TRASH_ID || active.id in items) {
+        if (overId == null || overId === TRASH_ID || active.id in latestItems) {
           return;
         }
 
-        const overContainer = findContainer(items, overId);
-        const activeContainer = findContainer(items, active.id);
+        const overContainer = findContainer(latestItems, overId);
+        const activeContainer = findContainer(latestItems, active.id);
 
         const invalidContainers = !overContainer || !activeContainer;
 
@@ -139,14 +141,14 @@ export default function useDragHandlers(
           return;
         }
 
-        const activeItems = items[activeContainer];
-        const overItems = items[overContainer];
+        const activeItems = latestItems[activeContainer];
+        const overItems = latestItems[overContainer];
         const overIndex = overItems.indexOf(overId);
         const activeIndex = activeItems.indexOf(active.id);
 
         let newIndex: number;
 
-        if (overId in items) {
+        if (overId in latestItems) {
           newIndex = overItems.length + 1;
         } else {
           const isBelowOverItem =
@@ -170,7 +172,7 @@ export default function useDragHandlers(
         moveRef.current = true;
 
         const newItems = {
-          ...items,
+          ...latestItems,
           [activeContainer]: activeItems.filter((item) => item !== active.id),
           [overContainer]: [
             ...overItems.slice(0, newIndex),
@@ -180,8 +182,9 @@ export default function useDragHandlers(
         };
 
         setItemsWrapper(newItems);
-      }, 200),
-    [items, setItemsWrapper, moveRef]
+      }, 100),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   );
 
   const handleDragOver = useCallback(
@@ -192,6 +195,8 @@ export default function useDragHandlers(
   );
 
   const handleDragEnd = (event: DragOverEvent) => {
+    throttledDragOver.flush();
+
     const { active, over } = event;
     const activeId = active.id;
 
@@ -218,6 +223,7 @@ export default function useDragHandlers(
     if (overContainer === SEARCH_CONTAINER_ID && draggingCourseIsSearchItem) {
       return;
     }
+
     const overId = over?.id;
 
     if (overId == null) {
@@ -240,8 +246,26 @@ export default function useDragHandlers(
       const newCourseId = activeId
         .toString()
         .replace(SEARCH_ITEM_DELIMITER, '');
+
+      const newCourses = { ...courses };
+
+      // Make a map of all courses in semesters
+      const coursesInSemesters = new Set();
+      Object.values(newItemState).forEach((semesterCourses) => {
+        semesterCourses.forEach((courseId) => {
+          coursesInSemesters.add(courseId.toString());
+        });
+      });
+
+      // Delete courses that don't exist in any semester
+      Object.keys(newCourses).forEach((courseId) => {
+        if (!coursesInSemesters.has(courseId)) {
+          delete newCourses[courseId];
+        }
+      });
+
       setCourses({
-        ...courses,
+        ...newCourses,
         [newCourseId]: {
           ...courses[activeId],
           id: newCourseId,
@@ -256,6 +280,7 @@ export default function useDragHandlers(
     }
 
     setItemsWrapper(newItemState, true);
+
     setActiveId('');
     document.body.style.cursor = '';
   };
@@ -298,47 +323,58 @@ export default function useDragHandlers(
 }
 
 /**
- * Prevents dragOver from being called too frequently.
- * This is necessary because the dragOver event is called
- * a lot of times during a drag operation.
- *
- * Throttle: https://www.geeksforgeeks.org/javascript-throttling/
- *
- *
- * There are two reasons for the re-rendering madness:
- *
- * 1. The many calls of handleDragOver
- * 2. The changing of state when in handleDragOver
- *
- *
- * I chose to address the many calls of handleDragOver.
+ * throttle(...) now returns an object:
+ * {
+ *   fn: <the throttled function>,
+ *   flush: () => void
+ * }
  */
-function throttle<T extends (...args: any[]) => any>(
-  func: T,
-  limit: number
-): (...args: Parameters<T>) => ReturnType<T> | undefined {
-  let lastFunc: number;
-  let lastRan: number;
-  return function (
-    this: any,
-    ...args: Parameters<T>
-  ): ReturnType<T> | undefined {
+function throttle<T extends (...args: any[]) => any>(func: T, limit: number) {
+  let lastFunc: ReturnType<typeof setTimeout> | null = null;
+  let lastRan = 0;
+  let lastArgs: Parameters<T> | null = null;
+
+  function throttled(this: any, ...args: Parameters<T>) {
+    // If it's our first call, invoke the function right away
     if (!lastRan) {
-      const result = func.apply(this, args);
+      func.apply(this, args);
       lastRan = Date.now();
-      return result;
-    } else {
+      return;
+    }
+
+    // Otherwise, store the latest args
+    lastArgs = args;
+
+    // Clear any prior scheduled call
+    if (lastFunc) {
       clearTimeout(lastFunc);
-      lastFunc = window.setTimeout(
-        () => {
-          if (Date.now() - lastRan >= limit) {
-            func.apply(this, args);
-            lastRan = Date.now();
-          }
-        },
-        limit - (Date.now() - lastRan)
-      );
-      return undefined;
+    }
+
+    // Schedule a new call
+    lastFunc = setTimeout(
+      () => {
+        if (Date.now() - lastRan >= limit) {
+          func.apply(this, lastArgs!); // Assert lastArgs is non-null since we check above
+          lastRan = Date.now();
+          lastArgs = null; // reset
+        }
+      },
+      limit - (Date.now() - lastRan)
+    );
+  }
+
+  // The flush method: force any pending call to fire immediately
+  throttled.flush = function (this: any) {
+    if (lastArgs) {
+      func.apply(this, lastArgs);
+      lastRan = Date.now();
+      lastArgs = null;
+    }
+    if (lastFunc) {
+      clearTimeout(lastFunc);
+      lastFunc = null;
     }
   };
+
+  return throttled;
 }
