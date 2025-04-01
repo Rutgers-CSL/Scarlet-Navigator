@@ -50,6 +50,7 @@ export default function FulfillmentTracker() {
 
       evaluateSelectedPrograms(scheduleBoard, courses);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedPrograms, coursesBySemesterID, evaluateSelectedPrograms]);
 
   const isProgramSelected = (programName: string) => {
