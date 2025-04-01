@@ -20,8 +20,9 @@
     "prepare": "husky",
     "security:audit": "pnpm audit",
     "security:outdated": "pnpm outdated",
-    "generateAndUploadFakeCourses": "sh ./scripts/generateAndUploadFakeCourses.sh",
-    "uploadMasterList": "node ./scripts/typesense/uploadMaster.js"
+    "typesense:generateKey": "node ./scripts/typesense/generateSearchKey.js",
+    "typesense:uploadMasterList": "node ./scripts/typesense/uploadMaster.js",
+    "typesense:listKeys": "node ./scripts/typesense/listKeys.js"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
