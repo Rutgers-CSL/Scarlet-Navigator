@@ -6,7 +6,7 @@ import Typesense from 'typesense';
 export async function POST(request: NextRequest) {
   try {
     if (
-      !process.env.TYPESENSE_API_ADMIN_KEY ||
+      !process.env.TYPESENSE_SEARCH_ONLY_API_KEY ||
       !process.env.TYPESENSE_HOST ||
       !process.env.TYPESENSE_PORT
     ) {
@@ -27,10 +27,10 @@ export async function POST(request: NextRequest) {
         {
           host: process.env.TYPESENSE_HOST,
           port: parseInt(process.env.TYPESENSE_PORT),
-          protocol: 'http',
+          protocol: 'https',
         },
       ],
-      apiKey: process.env.TYPESENSE_API_ADMIN_KEY,
+      apiKey: process.env.TYPESENSE_SEARCH_ONLY_API_KEY,
       connectionTimeoutSeconds: 2,
     });
 
@@ -51,6 +51,48 @@ export async function POST(request: NextRequest) {
     }
 
     const courses = searchResults.hits.map((hit) => {
+      /**
+       * Example of a raw course object in the master list:
+       *
+       * {
+            "subject": "620",
+            "preReqNotes": "",
+            "courseString": "53:620:558",
+            "school": {
+                "code": "53",
+                "description": "School of Business - Camden (Graduate)"
+            },
+            "credits": 1,
+            "subjectDescription": "Management",
+            "coreCodes": [],
+            "expandedTitle": "LEAN SIX SIGMA GREEN BELT P2                                                    ",
+            "mainCampus": "CM",
+            "level": "G",
+            "synopsisUrl": "",
+            "Last Offered": "Spring2025",
+            "coreCodes": [
+              {
+                  "id": "2024901198105  21",
+                  "year": "2024",
+                  "term": "9",
+                  "lastUpdated": 1468423768000,
+                  "description": "Information Technology and Research",
+                  "offeringUnitCode": "01",
+                  "offeringUnitCampus": "NB",
+                  "code": "ITR",
+                  "unit": "01",
+                  "course": "105",
+                  "subject": "198",
+                  "effective": "20249",
+                  "coreCodeReferenceId": "21",
+                  "coreCode": "ITR",
+                  "coreCodeDescription": "Information Technology and Research",
+                  "supplement": "  "
+              },
+            ]
+          },
+       */
+
       const rawCourse = hit.document as {
         subject: string;
         preReqNotes: string;
@@ -105,9 +147,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(courses, { status: 200 });
   } catch (error) {
     console.error('Search courses API error:', error);
-    return NextResponse.json(
-      { error: 'Failed to search courses' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }
