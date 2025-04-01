@@ -147,6 +147,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(courses, { status: 200 });
   } catch (error) {
     console.error('Search courses API error:', error);
-    return NextResponse.json({ error: error }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to search courses' },
+      { status: 500 }
+    );
   }
 }

@@ -12,6 +12,7 @@
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "cloudflare:updateSecrets": "node ./scripts/cloudflare/updateSecrets.js",
     "lint": "next lint",
     "format": "prettier --check . --config .prettierrc.json",
     "format:fix": "prettier --write . --max-warnings=0 --config .prettierrc.json",
