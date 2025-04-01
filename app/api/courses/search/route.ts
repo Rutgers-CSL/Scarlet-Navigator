@@ -6,7 +6,7 @@ import Typesense from 'typesense';
 export async function POST(request: NextRequest) {
   try {
     if (
-      !process.env.TYPESENSE_API_KEY ||
+      !process.env.TYPESENSE_API_ADMIN_KEY ||
       !process.env.TYPESENSE_HOST ||
       !process.env.TYPESENSE_PORT
     ) {
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
           protocol: 'http',
         },
       ],
-      apiKey: process.env.TYPESENSE_API_KEY,
+      apiKey: process.env.TYPESENSE_API_ADMIN_KEY,
       connectionTimeoutSeconds: 2,
     });
 

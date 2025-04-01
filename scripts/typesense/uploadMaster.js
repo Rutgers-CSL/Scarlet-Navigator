@@ -1,25 +1,26 @@
-// import dependences
 const path = require('path');
-require('dotenv').config();
+const { determineEnv } = require('./modules/envDeterminer');
+
+determineEnv();
+
 const fs = require('fs');
 const Typesense = require('typesense');
 
-// Initialize TypeSense client with configuration
 const client = new Typesense.Client({
   nodes: [
     {
       host: process.env.TYPESENSE_HOST,
       port: Number(process.env.TYPESENSE_PORT),
-      protocol: 'http',
+      protocol: 'https',
     },
   ],
-  apiKey: process.env.TYPESENSE_API_KEY,
+  apiKey: process.env.TYPESENSE_API_ADMIN_KEY,
   connectionTimeoutSeconds: 2,
 });
 
 // Validate that all required environment variables are present
 const requiredEnvVars = [
-  'TYPESENSE_API_KEY',
+  'TYPESENSE_API_ADMIN_KEY',
   'TYPESENSE_PORT',
   'TYPESENSE_HOST',
 ];
@@ -83,11 +84,6 @@ requiredEnvVars.forEach((envVar) => {
     await client.collections('master').retrieve();
     collectionExists = true;
   } catch (error) {
-    if (error.httpStatus !== 404) {
-      console.error('❌ Error checking collection:', error.message || error);
-      process.exit(1);
-    }
-    // 404 means collection doesn't exist, which is fine
     console.log('ℹ️ Collection "master" does not exist. Will create new.');
   }
 
@@ -111,7 +107,7 @@ requiredEnvVars.forEach((envVar) => {
   }
 
   // Step 5: Import course data from JSONL file
-  const filePath = path.join(__dirname, 'masterlist.jsonl');
+  const filePath = path.join(__dirname, 'out/masterlist.jsonl');
   if (!fs.existsSync(filePath)) {
     console.error(
       `❌ File not found: ${filePath}. Did you run "python3 courses.py"?`

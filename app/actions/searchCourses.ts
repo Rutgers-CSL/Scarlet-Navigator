@@ -14,7 +14,7 @@ export async function searchCoursesAction(
   formData: SearchFormInput
 ): Promise<Course[]> {
   if (
-    !process.env.TYPESENSE_API_KEY ||
+    !process.env.TYPESENSE_API_ADMIN_KEY ||
     !process.env.TYPESENSE_HOST ||
     !process.env.TYPESENSE_PORT
   ) {
@@ -33,7 +33,7 @@ export async function searchCoursesAction(
         protocol: 'http',
       },
     ],
-    apiKey: process.env.TYPESENSE_API_KEY,
+    apiKey: process.env.TYPESENSE_API_ADMIN_KEY,
     connectionTimeoutSeconds: 2,
   });
 

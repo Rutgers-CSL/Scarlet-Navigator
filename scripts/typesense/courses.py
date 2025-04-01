@@ -15,7 +15,7 @@ else:
     mode = "a"
 
 url = "https://classes.rutgers.edu/soc/api/courses.json?year={year}&term={term}&campus={campus}"
-output_file = "masterlist.jsonl"
+output_file = "./out/masterlist.jsonl"
 
 campuses = ["NB", "NK", "CM"]
 years = [2025, 2024, 2023, 2022, 2021]

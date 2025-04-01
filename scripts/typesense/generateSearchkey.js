@@ -1,4 +1,17 @@
-require('dotenv').config();
+const path = require('path');
+const { determineEnv } = require('./modules/envDeterminer');
+
+determineEnv();
+
+const env = process.env.NODE_ENV || 'development';
+
+let dotEnvPath =
+  env === 'production' ? '.env.production.local' : '.env.development';
+
+require('dotenv').config({
+  path: [path.resolve(process.cwd(), dotEnvPath)],
+});
+
 const Typesense = require('typesense');
 
 const client = new Typesense.Client({
@@ -6,10 +19,10 @@ const client = new Typesense.Client({
     {
       host: process.env.TYPESENSE_HOST,
       port: Number(process.env.TYPESENSE_PORT),
-      protocol: 'http',
+      protocol: 'https',
     },
   ],
-  apiKey: process.env.TYPESENSE_API_KEY,
+  apiKey: process.env.TYPESENSE_API_ADMIN_KEY,
   connectionTimeoutSeconds: 2,
 });
 
