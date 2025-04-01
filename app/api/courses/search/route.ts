@@ -15,19 +15,19 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
-
     const formData = await request.json();
 
     const q = formData.q || '*';
     const filter_by = formData.filter_by || '';
     const sort_by = formData.sort_by || '';
+    const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
 
     const client = new Typesense.Client({
       nodes: [
         {
           host: process.env.TYPESENSE_HOST,
           port: parseInt(process.env.TYPESENSE_PORT),
-          protocol: 'https',
+          protocol: protocol,
         },
       ],
       apiKey: process.env.TYPESENSE_SEARCH_ONLY_API_KEY,
