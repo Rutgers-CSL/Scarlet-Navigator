@@ -67,7 +67,7 @@ export default function FulfillmentTracker() {
   };
 
   return (
-    <div className='h-full overflow-y-auto p-2'>
+    <div className='h-full overflow-y-auto p-4'>
       <h2 className='mb-4 text-xl font-bold'>Program Tracker</h2>
 
       <div className='text-base-content/70 mb-4 text-sm'>

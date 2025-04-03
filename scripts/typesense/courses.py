@@ -64,7 +64,6 @@ with open(output_file, mode) as master:
                     course_modified["lastOffered"] = "{season} {year}".format(season=terms[term], year=year)
                     course_modified["uid"] = "{course_id} {campus}".format(course_id=course_id, campus=campus)
 
-
                     master.write(json.dumps(course_modified) + "\n")
                     # json.dump(course_modified, master, indent=4)
 
