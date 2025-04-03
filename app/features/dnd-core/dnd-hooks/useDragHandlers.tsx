@@ -238,7 +238,63 @@ export default function useDragHandlers(
       [overContainer]: arrayMove(items[overContainer], activeIndex, overIndex),
     };
 
+    /**
+     *
+     * There is a very strange race condition where this is called.
+     *
+     * When moving a search item to the course schedule, but the collision detection tells
+     * us that the overIndex is -1, we get an issue where the search item course (unconverted) is still
+     * placed onto the schedule. We need to convert that search item into a course item.
+     *
+     *
+     * This happens due to a glitch with collision detection or some misaligned results between
+     * what the collision detection has determined is the final destination and what
+     * handleOver has determined.
+     *
+     * How dragging and dropping works is still a mystery.
+     *
+     */
     if (!newItemState[overContainer][overIndex]) {
+      // Process all semesters to remove search delimiters from course IDs
+      const processedItemState = { ...newItemState };
+      const newCourses = { ...courses };
+
+      // Go through each semester
+      Object.keys(processedItemState).forEach((semesterId) => {
+        if (semesterId === SEARCH_CONTAINER_ID) return;
+        // Go through each course in the semester
+        processedItemState[semesterId] = processedItemState[semesterId].map(
+          (courseId) => {
+            const courseIdStr = courseId.toString();
+            // Check if the course ID has a search delimiter
+            if (courseIdStr.endsWith(SEARCH_ITEM_DELIMITER)) {
+              // Remove the delimiter
+              const newCourseId = courseIdStr.replace(
+                SEARCH_ITEM_DELIMITER,
+                ''
+              );
+
+              // Update the course in the courses state
+              newCourses[newCourseId] = {
+                ...courses[courseId],
+                id: newCourseId,
+              };
+
+              return newCourseId;
+            }
+            return courseId;
+          }
+        );
+      });
+
+      // Update the courses state
+      setCourses(newCourses);
+
+      // Update the items state with the processed items
+      setItemsWrapper(processedItemState, true);
+      setActiveId('');
+      document.body.style.cursor = '';
+
       return;
     }
 

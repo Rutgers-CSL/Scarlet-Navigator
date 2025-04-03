@@ -18,6 +18,7 @@ import { SEARCH_CONTAINER_ID, SEARCH_ITEM_DELIMITER } from '@/lib/constants';
 import useHistoryStore from './useHistoryStore';
 import { UniqueIdentifier } from '@dnd-kit/core';
 import { SCHEDULE_STORAGE_KEY } from './storeKeys';
+import { fixScheduleDuplicates } from '@/lib/utils/scheduleFixer';
 
 type ScheduleStore = ScheduleActions & Omit<ScheduleState, 'past' | 'future'>;
 type SchedulePersist = (
@@ -156,15 +157,8 @@ export const useScheduleStore = create<ScheduleStore>()(
           //go through every container and remove duplicate courses
           //that appear in any other container
 
-          // const updatedCoursesBySemesterID = { ...semesters };
-
-          // Object.keys(updatedCoursesBySemesterID).forEach((containerId) => {
-          //   const courses = updatedCoursesBySemesterID[containerId];
-          //   const uniqueCourses = Array.from(new Set(courses));
-          //   updatedCoursesBySemesterID[containerId] = uniqueCourses;
-          // });
-
-          set({ coursesBySemesterID: semesters });
+          const cleanedSemesters = fixScheduleDuplicates(semesters);
+          set({ coursesBySemesterID: cleanedSemesters });
         },
 
         undo: () => {
@@ -343,3 +337,5 @@ export const useScheduleStore = create<ScheduleStore>()(
     }
   )
 );
+
+export default useScheduleStore;
