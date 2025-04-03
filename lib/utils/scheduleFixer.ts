@@ -86,3 +86,43 @@ export function fixScheduleDuplicates(
   // Then remove duplicates across semesters
   return removeDuplicateCoursesAcrossSemesters(withoutIntraSemesterDuplicates);
 }
+
+/**
+ * Removes null, undefined, and empty string values from course arrays in the schedule.
+ *
+ * @param semesters The current coursesBySemesterID structure to clean
+ * @returns A new coursesBySemesterID structure with null and blank values removed
+ */
+export function removeNullAndBlankValues(
+  semesters: CoursesBySemesterID
+): CoursesBySemesterID {
+  const cleanedSemesters: CoursesBySemesterID = {};
+
+  Object.keys(semesters).forEach((semesterId) => {
+    // Filter out null, undefined, and empty string values
+    const validCourses = (semesters[semesterId] || []).filter((courseId) => {
+      return courseId !== null && courseId !== undefined && courseId !== '';
+    });
+
+    cleanedSemesters[semesterId] = validCourses;
+  });
+
+  return cleanedSemesters;
+}
+
+/**
+ * Comprehensive schedule fixer that removes all duplicate courses,
+ * as well as null and blank values from the course schedule.
+ *
+ * @param semesters The current coursesBySemesterID structure to clean
+ * @returns A fully cleaned CoursesBySemesterID structure
+ */
+export function cleanSchedule(
+  semesters: CoursesBySemesterID
+): CoursesBySemesterID {
+  // First remove null and blank values
+  const withoutNullsAndBlanks = removeNullAndBlankValues(semesters);
+
+  // Then apply the duplicate fixes
+  return fixScheduleDuplicates(withoutNullsAndBlanks);
+}
