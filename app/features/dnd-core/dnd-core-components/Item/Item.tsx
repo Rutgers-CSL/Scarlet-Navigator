@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import type { DraggableSyntheticListeners } from '@dnd-kit/core';
 import type { Transform } from '@dnd-kit/utilities';
@@ -7,7 +7,6 @@ import { Handle, Remove } from './components';
 
 import styles from './Item.module.scss';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
-import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
 import { CourseID, Course } from '@/lib/types/models';
 import CoreList from '@/app/components/CoreList';
 import { SEARCH_ITEM_DELIMITER } from '@/lib/constants';
@@ -80,10 +79,6 @@ export const Item = React.memo(
       ref
     ) => {
       const setCurrentInfo = useAuxiliaryStore((state) => state.setCurrentInfo);
-      const showGrades = useSettingsStore((state) => state.visuals.showGrades);
-      const showCreditCountOnCourseTitles = useSettingsStore(
-        useCallback((state) => state.visuals.showCreditCountOnCourseTitles, [])
-      );
 
       const rawID = useMemo(
         () => (id as string).replace(SEARCH_ITEM_DELIMITER, ''),
@@ -171,12 +166,6 @@ export const Item = React.memo(
                     <div className='text-info text-sm'>(Already Saved)</div>
                   )}
                 </div>
-
-                {course?.credits && showCreditCountOnCourseTitles && (
-                  <div className='text-base-content text-sm'>
-                    ({course.credits} cr)
-                  </div>
-                )}
               </div>
 
               <div className='text-sm text-gray-500'>{rawID}</div>
@@ -184,12 +173,6 @@ export const Item = React.memo(
               {course?.mainCampus && isSearchItem && (
                 <div className='badge bg-red-400 text-xs font-bold text-white'>
                   {course.mainCampus}
-                </div>
-              )}
-
-              {course?.grade && showGrades && (
-                <div className='text-base-content text-sm font-medium'>
-                  Grade: {course.grade}
                 </div>
               )}
 

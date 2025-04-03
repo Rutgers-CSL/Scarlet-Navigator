@@ -22,21 +22,17 @@ interface ExtendedSetResult {
   requiredCount?: number; // To store the required number of courses
 }
 
-// Constants moved from FulfillmentTracker
+/**
+ * TODO: Move this to YAML files.
+ */
 export const programDisplayNames: Record<string, string> = {
   computerScience: 'Computer Science B.S.',
   sasCore: 'SAS Core',
-  mathematics: 'Mathematics BA',
-  physics: 'Physics BS',
-  psychology: 'Psychology BA',
-  biology: 'Biology BS',
-  businessAdmin: 'Business Administration BBA',
-  communications: 'Communications & Media Studies BA',
-  itiBusiness: 'ITI - Business Concentration',
-  itiDesign: 'ITI - Design Concentration',
-  economics: 'Economics BA',
 };
 
+/**
+ * What school it belongs to. TODO: Move this to YAML.
+ */
 export const programCategories: Record<string, string[]> = {
   'School of Arts & Sciences': [
     'computerScience',
@@ -133,6 +129,9 @@ function ProgramHeader({
   isExpanded,
   toggleExpansion,
 }: ProgramHeaderProps) {
+  /**
+   * TODO: Convert to DaisyUI components
+   */
   return (
     <div className='flex w-full items-center justify-between'>
       <div

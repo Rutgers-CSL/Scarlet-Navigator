@@ -4,7 +4,6 @@ import { animateLayoutChanges } from '../../dnd-utils';
 import { ContainerProps, Container } from '../..';
 import { CSS } from '@dnd-kit/utilities';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
-import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
 import {
   calculateRunningCredits,
   getHeaderColorClass,
@@ -51,10 +50,6 @@ export default function DroppableContainer({
       items.includes(over.id)
     : false;
 
-  const progressivelyDarken = useSettingsStore(
-    (state) => state.visuals.progressivelyDarkenSemestersBasedOnCreditGoal
-  );
-
   const semesterOrder = useScheduleStore((state) => state.semesterOrder);
   const coursesBySemesterID = useScheduleStore(
     (state) => state.coursesBySemesterID
@@ -62,7 +57,7 @@ export default function DroppableContainer({
   const courses = useScheduleStore((state) => state.courses);
 
   let headerColorClass = '';
-  if (progressivelyDarken && typeof id === 'string' && id !== 'placeholder') {
+  if (typeof id === 'string' && id !== 'placeholder') {
     const totalCredits = calculateRunningCredits(
       semesterOrder,
       coursesBySemesterID,

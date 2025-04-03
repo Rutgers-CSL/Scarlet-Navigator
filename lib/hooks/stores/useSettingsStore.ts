@@ -15,12 +15,7 @@ export interface SettingsState {
     validatePrerequisites: boolean;
   };
   visuals: {
-    showGrades: boolean;
-    showCoreLabelsInCoursesInsideScheduleBoard: boolean;
-    showGPAsInSemesterTitles: boolean;
     goalCreditsForGraduation: number;
-    progressivelyDarkenSemestersBasedOnCreditGoal: boolean;
-    showCreditCountOnCourseTitles: boolean;
     showQuarterlyStudentTitlesOnSemesterTitles: boolean;
   };
 }

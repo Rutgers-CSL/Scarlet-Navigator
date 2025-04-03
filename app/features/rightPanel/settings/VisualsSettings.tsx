@@ -14,17 +14,6 @@ export default function VisualsSettings() {
           max={200}
         />
         <SettingsToggle
-          settingKey='progressivelyDarkenSemestersBasedOnCreditGoal'
-          label='Progressively Darken Semesters'
-        />
-        <SettingsToggle settingKey='showGrades' />
-        <SettingsToggle settingKey='showCoreLabelsInCoursesInsideScheduleBoard' />
-        <SettingsToggle
-          settingKey='showGPAsInSemesterTitles'
-          label='Show GPAs in Semester Titles'
-        />
-        <SettingsToggle settingKey='showCreditCountOnCourseTitles' />
-        <SettingsToggle
           settingKey='showQuarterlyStudentTitlesOnSemesterTitles'
           label='Show Student Credit Standing'
         />

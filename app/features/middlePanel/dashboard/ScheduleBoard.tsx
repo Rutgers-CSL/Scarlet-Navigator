@@ -131,10 +131,9 @@ export function ScheduleBoard({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [semesterOrder, coursesBySemesterID, courses, validatePrerequisites]);
 
-  const {
-    showQuarterlyStudentTitlesOnSemesterTitles,
-    showCoreLabelsInCoursesInsideScheduleBoard: showCoreLabels,
-  } = useSettingsStore((state) => state.visuals);
+  const { showQuarterlyStudentTitlesOnSemesterTitles } = useSettingsStore(
+    (state) => state.visuals
+  );
 
   const { recentlyMovedToNewContainer, activeID } = useAuxiliaryStore(
     useShallow((state) => ({
@@ -298,7 +297,7 @@ export function ScheduleBoard({
                             style={getItemStyles}
                             wrapperStyle={wrapperStyle}
                             containerId={containerId}
-                            showCores={showCoreLabels}
+                            showCores
                             error={isInvalid}
                             getIndex={(id) => {
                               return 0;

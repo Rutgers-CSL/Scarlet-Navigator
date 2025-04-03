@@ -247,7 +247,7 @@ export const useScheduleStore = create<ScheduleStore>()(
           const proposedID = updates.id as string;
 
           const errors: string[] = [];
-          if (proposedID && oldCourse) {
+          if (proposedID) {
             //verify that a course ID is in the format xxx:xxxx:xxx
             const regex = /^\d{1,3}:\d{1,3}:\d{1,3}$/;
             if (!regex.test(proposedID)) {
@@ -256,7 +256,11 @@ export const useScheduleStore = create<ScheduleStore>()(
               );
             }
 
-            if (oldCourse.id !== proposedID && keys.includes(proposedID)) {
+            if (
+              oldCourse &&
+              oldCourse.id !== proposedID &&
+              keys.includes(proposedID)
+            ) {
               errors.push('A course with this ID already exists');
             }
           }

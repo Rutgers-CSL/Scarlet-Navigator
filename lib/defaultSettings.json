@@ -21,12 +21,7 @@
     "NP": null
   },
   "visuals": {
-    "showGrades": false,
-    "showCoreLabelsInCoursesInsideScheduleBoard": false,
-    "showGPAsInSemesterTitles": false,
     "goalCreditsForGraduation": 120,
-    "progressivelyDarkenSemestersBasedOnCreditGoal": true,
-    "showCreditCountOnCourseTitles": false,
     "showQuarterlyStudentTitlesOnSemesterTitles": true
   }
 }

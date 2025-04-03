@@ -33,9 +33,8 @@ export const ImportExportPanel: React.FC = () => {
     schedule: true,
     settings: true,
     notes: true,
-    auxiliary: true,
-    history: true,
-    programFulfillment: true,
+    auxiliary: false,
+    programFulfillment: false,
   });
 
   const [importResult, setImportResult] = useState<ImportResult | null>(null);
@@ -48,12 +47,6 @@ export const ImportExportPanel: React.FC = () => {
       label: 'Schedule (includes Notes)',
     },
     { key: 'settings' as keyof ExportOptions, label: 'Settings' },
-    {
-      key: 'programFulfillment' as keyof ExportOptions,
-      label: 'Program Requirements',
-    },
-    // { key: 'auxiliary' as keyof ExportOptions, label: 'UI Settings' },
-    // { key: 'history' as keyof ExportOptions, label: 'History (Undo/Redo)' },
   ];
 
   const handleOptionChange = (key: keyof ExportOptions) => {

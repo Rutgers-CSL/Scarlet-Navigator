@@ -8,9 +8,7 @@ import {
   calculateSemesterCredits,
   calculateRunningCredits,
 } from '../../middlePanel/dashboard/utils/credits';
-
 import { COURSE_POOL_CONTAINER_ID } from '@/app/features/leftPanel/components/CourseCreation';
-import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
 
 export const COLUMNS_DEPRECATED_DO_NOT_USE = 5;
 
@@ -24,9 +22,6 @@ export default function useOverlayComponents(
 ) {
   const courses = useScheduleStore((state) => state.courses);
   const semesterOrder = useScheduleStore((state) => state.semesterOrder);
-  const showCoreLabels = useSettingsStore(
-    (state) => state.visuals.showCoreLabelsInCoursesInsideScheduleBoard
-  );
 
   function renderSortableItemDragOverlay(id: UniqueIdentifier) {
     const courseName = courses[id]?.name ?? 'Loading...';
@@ -52,7 +47,7 @@ export default function useOverlayComponents(
         wrapperStyle={wrapperStyle({ index: 0 })}
         renderItem={renderItem}
         dragOverlay
-        showCores={isFromCoursePool || showCoreLabels}
+        showCores
       />
     );
   }
