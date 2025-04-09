@@ -40,8 +40,8 @@ function TeamMember({
   hideProfilePicture?: boolean;
   role?: string;
 }) {
-  const imageSizeClass = size === 'small' ? 'w-24 h-24' : 'w-32 h-32';
-  const imageSize = size === 'small' ? 96 : 128;
+  const imageSizeClass = size === 'small' ? 'w-24 h-24' : 'w-40 h-40';
+  const imageSize = size === 'small' ? 96 : 160;
   const nameClass = size === 'small' ? 'font-medium' : 'text-xl font-bold';
   const yearClass =
     size === 'small' ? 'text-sm text-gray-600' : 'text-gray-600 mb-2';
@@ -110,14 +110,14 @@ function TeamMember({
 // Organization component for consistent organization display
 function Organization({
   name,
-  description,
+  description = '',
 }: {
   name: string;
-  description: string;
+  description?: string;
 }) {
   return (
-    <div className='card rounded-lg bg-gray-100 p-6 text-center shadow'>
-      <h5 className='mb-2 text-lg font-bold'>{name}</h5>
+    <div className='card flex flex-col items-center justify-center space-y-2 rounded-lg bg-gray-100 p-6 text-center shadow'>
+      <h5 className='text-lg font-bold'>{name}</h5>
       <p className='text-sm text-gray-600'>{description}</p>
     </div>
   );
@@ -305,7 +305,7 @@ export default function Home() {
           <div className='divider' />
 
           <p className='text-gray-600'>
-            Feel free to read the business research and proposals behind the
+            Feel free to read the research, ideas, and proposals behind the
             project.
             <br />
             <Link
@@ -333,7 +333,7 @@ export default function Home() {
               name='Kevin Monisit'
               classYear="'25"
               major='CS'
-              imageUrl='/landing/kevin.png'
+              imageUrl='/landing/kevi.png'
               personalUrl='https://kevinmonisit.me'
               linkedInUrl='https://www.linkedin.com/in/kevinmonisit/'
               role='Team Lead'
@@ -429,7 +429,7 @@ export default function Home() {
 
                 <Organization
                   name='Rutgers Computer Science Department'
-                  description='Faculty and staff'
+                  // description=''
                 />
               </div>
             </div>
