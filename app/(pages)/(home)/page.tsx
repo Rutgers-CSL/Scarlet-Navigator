@@ -209,7 +209,7 @@ export default function Home() {
             Powerful Features
           </h2>
           <p className='mx-auto mb-16 max-w-[700px] text-xl text-gray-600'>
-            Everything you need to plan your academic journey and graduate on
+            Essentials to help you plan your academic journey and graduate on
             time
           </p>
 
@@ -295,6 +295,21 @@ export default function Home() {
           <p className='mb-8 text-gray-600'>
             This is a project brought to you by Scarlet Labs, an open-source
             initiative by the Coding & Social Lounge.
+          </p>
+
+          <div className='divider' />
+
+          <p className='text-gray-600'>
+            Feel free to read the business research and case study behind the
+            project.
+            <br />
+            <Link
+              href='/ScarletNavWhitePaper.pdf'
+              className='btn btn-outline btn-neutral mt-4 font-semibold'
+              target='_blank'
+            >
+              Original Whitepaper
+            </Link>
           </p>
         </div>
       </section>
@@ -437,7 +452,7 @@ export default function Home() {
               Maintained by
               <Link
                 target='_blank'
-                href='https://github.com/Rutgers-CSL/Scarlet-Navigator'
+                href='https://github.com/Rutgers-CSL'
                 className='px-1 font-bold'
               >
                 Scarlet Labs
