@@ -4,7 +4,19 @@ import type React from 'react';
 import { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Linkedin, Github, Globe, Map, Blocks, CodeXml } from 'lucide-react';
+import { Github, Globe, Map, Blocks, CodeXml } from 'lucide-react';
+
+function LinkedInIcon() {
+  return (
+    <svg
+      xmlns='http://www.w3.org/2000/svg'
+      viewBox='0 0 448 512'
+      className='h-4 w-4'
+    >
+      <path d='M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z' />
+    </svg>
+  );
+}
 
 // TeamMember component for consistent team member display
 function TeamMember({
@@ -12,9 +24,9 @@ function TeamMember({
   imageUrl = '/placeholder.svg?height=128&width=128',
   classYear,
   major,
-  linkedInUrl = 'https://linkedin.com',
+  linkedInUrl = '',
+  personalUrl = '',
   size = 'regular',
-  hideLinkedIn = false,
   hideProfilePicture = false,
 }: {
   name: string;
@@ -22,8 +34,8 @@ function TeamMember({
   classYear: string;
   major?: string;
   linkedInUrl?: string;
+  personalUrl?: string;
   size?: 'regular' | 'small';
-  hideLinkedIn?: boolean;
   hideProfilePicture?: boolean;
 }) {
   const imageSizeClass = size === 'small' ? 'w-24 h-24' : 'w-32 h-32';
@@ -47,18 +59,44 @@ function TeamMember({
           />
         </div>
       )}
-      <h3 className={nameClass + ' mb-1'}>{name}</h3>
-      <p className={yearClass}>
-        {major} {classYear}
-      </p>
-      {!hideLinkedIn && linkedInUrl && (
-        <Link
-          href={linkedInUrl}
-          className='text-gray-600 transition-colors hover:text-gray-900'
-        >
-          <Linkedin className='h-4 w-4' />
-        </Link>
+
+      {personalUrl && (
+        <h3 className={nameClass}>
+          <Link
+            href={personalUrl}
+            target='_blank'
+            className='transition-colors hover:text-gray-700'
+          >
+            {name}
+          </Link>
+        </h3>
       )}
+
+      {!personalUrl && <h3 className={nameClass}>{name}</h3>}
+
+      <div className={yearClass + ' mb-1'}>
+        {major} {classYear}
+      </div>
+      <div className='mt-1 flex gap-2'>
+        {linkedInUrl && (
+          <Link
+            href={linkedInUrl}
+            className='text-gray-600 transition-colors hover:text-gray-900'
+            target='_blank'
+          >
+            <LinkedInIcon />
+          </Link>
+        )}
+        {personalUrl && (
+          <Link
+            href={personalUrl}
+            className='text-gray-600 transition-colors hover:text-gray-900'
+            target='_blank'
+          >
+            <Globe className='h-4 w-4' />
+          </Link>
+        )}
+      </div>
     </div>
   );
 }
@@ -109,7 +147,7 @@ export default function Home() {
         } bg-white/80 backdrop-blur-md transition-all duration-200`}
       >
         <div className='navbar-start text-xl font-bold text-red-400'>
-          <span>Scarlet Navigator</span>
+          <Link href='/dashboard'>Scarlet Navigator</Link>
         </div>
         <div className='navbar-end'>
           <div
@@ -266,7 +304,7 @@ export default function Home() {
         <div className='mx-auto max-w-5xl text-center md:px-12 lg:px-16'>
           <h2 className='mb-6 text-3xl font-bold md:text-5xl'>Meet the Team</h2>
           <p className='mx-auto mb-16 max-w-[700px] text-xl text-gray-600'>
-            Scarlet Lab Members
+            Core Members
           </p>
 
           <div className='flex flex-wrap justify-center gap-8'>
@@ -276,13 +314,27 @@ export default function Home() {
               classYear="'25"
               major='CS'
               imageUrl='/landing/kevin.png'
+              personalUrl='https://kevinmonisit.me'
+              linkedInUrl='https://www.linkedin.com/in/kevinmonisit/'
             />
 
             {/* Team Member 2 */}
-            <TeamMember name='Sanvi Patel' classYear="'25" major='CS + Math' />
+            <TeamMember
+              name='Sanvi Patel'
+              classYear="'25"
+              major='CS + Math'
+              imageUrl='/landing/sanvi.jpg'
+              linkedInUrl='https://www.linkedin.com/in/sanvi-patel-9763a021a/'
+            />
 
             {/* Team Member 3 */}
-            <TeamMember name='Sibi Tiruchirapalli' classYear="'25" major='CS' />
+            <TeamMember
+              imageUrl='/landing/sibi.png'
+              name='Sibi Tiruchirapalli'
+              linkedInUrl='https://www.linkedin.com/in/sibi-tiruchi'
+              classYear="'25"
+              major='CS'
+            />
           </div>
 
           {/* Special Thanks Section */}
@@ -291,7 +343,7 @@ export default function Home() {
               Special Thanks
             </h3>
             <p className='mx-auto mb-12 max-w-[700px] text-lg text-gray-600'>
-              Individuals who helped us made this project possible.
+              Individuals who made this project possible
             </p>
 
             {/* Individual Contributors */}
@@ -299,13 +351,13 @@ export default function Home() {
               {/* <h4 className="text-xl font-semibold mb-8">Our Advocates</h4> */}
               <div className='flex flex-wrap justify-center gap-8'>
                 <TeamMember
-                  name='Jamie Lao'
-                  classYear='Program Manager'
+                  name='Jamie Liao'
+                  classYear='Program Director'
                   major=''
                   imageUrl='/placeholder.svg?height=96&width=96'
                   size='small'
-                  hideLinkedIn
                   hideProfilePicture
+                  linkedInUrl='https://www.linkedin.com/in/liaojamie'
                 />
 
                 <TeamMember
@@ -314,7 +366,7 @@ export default function Home() {
                   major=''
                   imageUrl='/placeholder.svg?height=96&width=96'
                   size='small'
-                  hideLinkedIn
+                  linkedInUrl='https://www.linkedin.com/in/rushds'
                   hideProfilePicture
                 />
 
@@ -324,8 +376,9 @@ export default function Home() {
                   major=''
                   imageUrl='/placeholder.svg?height=96&width=96'
                   size='small'
-                  hideLinkedIn
                   hideProfilePicture
+                  linkedInUrl='https://www.linkedin.com/in/hanz-makmur-378021a'
+                  personalUrl='https://people.cs.rutgers.edu/~makmur/'
                 />
 
                 <TeamMember
@@ -334,8 +387,8 @@ export default function Home() {
                   major=''
                   imageUrl='/placeholder.svg?height=96&width=96'
                   size='small'
-                  hideLinkedIn
                   hideProfilePicture
+                  linkedInUrl='https://www.linkedin.com/in/wflynch/'
                 />
               </div>
             </div>
@@ -353,7 +406,7 @@ export default function Home() {
 
                 <Organization
                   name='Rutgers Computer Science Department'
-                  description='Legendary faculty and staff'
+                  description='Faculty and staff'
                 />
               </div>
             </div>
@@ -380,15 +433,28 @@ export default function Home() {
               <span>Scarlet Navigator</span>
             </div>
             {/* <p className="text-gray-600 mb-2">Affiliated with the Coding & Social Lounge and <br /> the Rutgers Computer Science Department</p> */}
-            <p className='mb-4 text-gray-600'>Maintained by Scarlet Labs</p>
+            <p className='mb-4 text-gray-600'>
+              Maintained by
+              <Link
+                target='_blank'
+                href='https://github.com/Rutgers-CSL/Scarlet-Navigator'
+                className='px-1 font-bold'
+              >
+                Scarlet Labs
+              </Link>
+            </p>
             <div className='mt-2 flex items-center gap-6'>
               <Link
-                href='https://github.com'
+                href='https://github.com/Rutgers-CSL/Scarlet-Navigator'
                 className='text-gray-600 transition-colors hover:text-gray-900'
+                target='_blank'
               >
                 <Github className='h-6 w-6' />
               </Link>
-              <Link href=''>
+              <Link
+                href='https://spec.cs.rutgers.edu/spaces/the-csl/'
+                target='_blank'
+              >
                 <Globe className='h-6 w-6' />
               </Link>
             </div>

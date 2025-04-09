@@ -12,7 +12,7 @@ export default function LeftPanel() {
       className='text-base-content relative flex h-full w-full flex-col border-r'
     >
       <div className='mt-4 ml-6 flex shrink-0 flex-col pb-3'>
-        <div className='text-2xl font-bold text-red-500 transition-colors duration-500 hover:text-red-300'>
+        <div className='text-xl font-bold text-red-400 transition-colors duration-500 hover:text-red-500'>
           <Link href='/'>Scarlet Navigator</Link>
         </div>
         <div className='text-xs font-bold'>Unofficial Beta Release</div>
