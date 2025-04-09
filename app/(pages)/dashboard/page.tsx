@@ -29,6 +29,7 @@ import {
 } from '@/lib/constants';
 import useMountStatus from '@/lib/hooks/useMountStatus';
 import DashboardSkeleton from '@/app/components/DashboardSkeleton';
+import Link from 'next/link';
 
 const Page: React.FC = () => {
   useKeyboardShortcuts();
@@ -115,7 +116,16 @@ const Page: React.FC = () => {
       onDragCancel={handleDragCancel}
       onDragMove={handleDragMove}
     >
-      <div className='relative flex h-screen w-full flex-row'>
+      <div className='visible flex h-screen w-full flex-col items-center justify-center px-10 sm:hidden'>
+        <div className='text-center text-2xl font-bold'>
+          Scarlet Navigator is not available on mobile (for now).
+          <br />
+          <button className='btn my-4 bg-red-400 text-white'>
+            <Link href='/'> Return to home page</Link>
+          </button>
+        </div>
+      </div>
+      <div className='relative hidden h-screen w-full flex-row sm:flex'>
         {/* Left Panel */}
         <div
           style={leftPanelStyle}

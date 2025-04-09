@@ -22,7 +22,7 @@ function LinkedInIcon() {
 function TeamMember({
   name,
   imageUrl = '/placeholder.svg?height=128&width=128',
-  classYear,
+  classYear = '',
   major,
   linkedInUrl = '',
   personalUrl = '',
@@ -32,7 +32,7 @@ function TeamMember({
 }: {
   name: string;
   imageUrl?: string;
-  classYear: string;
+  classYear?: string;
   major?: string;
   linkedInUrl?: string;
   personalUrl?: string;
@@ -155,7 +155,7 @@ export default function Home() {
         <div className='navbar-start text-xl font-bold text-red-400'>
           <Link href='/dashboard'>Scarlet Navigator</Link>
         </div>
-        <div className='navbar-end'>
+        <div className='navbar-end invisible md:visible'>
           <div
             className='btn btn-ghost'
             onClick={() => scrollToSection(featuresRef)}
@@ -215,8 +215,7 @@ export default function Home() {
             Powerful Features
           </h2>
           <p className='mx-auto mb-16 max-w-[700px] text-xl text-gray-600'>
-            Essentials to help you plan your academic journey and graduate on
-            time
+            Essentials for building your academic plan and graduating on time.
           </p>
 
           <div className='grid gap-24'>
@@ -306,7 +305,7 @@ export default function Home() {
           <div className='divider' />
 
           <p className='text-gray-600'>
-            Feel free to read the business research and case study behind the
+            Feel free to read the business research and proposals behind the
             project.
             <br />
             <Link
@@ -337,7 +336,7 @@ export default function Home() {
               imageUrl='/landing/kevin.png'
               personalUrl='https://kevinmonisit.me'
               linkedInUrl='https://www.linkedin.com/in/kevinmonisit/'
-              role='Lead Developer'
+              role='Team Lead'
             />
 
             {/* Team Member 2 */}
@@ -356,7 +355,7 @@ export default function Home() {
               name='Sibi Tiruchirapalli'
               linkedInUrl='https://www.linkedin.com/in/sibi-tiruchi'
               classYear="'25"
-              major='CS'
+              major='CS + Data Science'
               role='Developer'
             />
           </div>
@@ -376,41 +375,37 @@ export default function Home() {
               <div className='flex flex-wrap justify-center gap-8'>
                 <TeamMember
                   name='Jamie Liao'
-                  classYear='Program Director'
                   major=''
                   imageUrl='/placeholder.svg?height=96&width=96'
                   size='small'
                   hideProfilePicture
                   linkedInUrl='https://www.linkedin.com/in/liaojamie'
-                  role='Advocate'
+                  role='Program Director'
                 />
 
                 <TeamMember
                   name='Rushd Syed'
-                  classYear='CSL Manager'
                   major=''
                   imageUrl='/placeholder.svg?height=96&width=96'
                   size='small'
                   linkedInUrl='https://www.linkedin.com/in/rushds'
                   hideProfilePicture
-                  role='Manager'
+                  role='CSL Manager'
                 />
 
                 <TeamMember
                   name='Hanz Makmur'
-                  classYear='Technical Advisor & Advocate'
                   major=''
                   imageUrl='/placeholder.svg?height=96&width=96'
                   size='small'
                   hideProfilePicture
                   linkedInUrl='https://www.linkedin.com/in/hanz-makmur-378021a'
                   personalUrl='https://people.cs.rutgers.edu/~makmur/'
-                  role='Technical Advisor'
+                  role='Technical Advisor & Advocate'
                 />
 
                 <TeamMember
                   name='Billy Flynch'
-                  classYear='Technical Advisor'
                   major=''
                   imageUrl='/placeholder.svg?height=96&width=96'
                   size='small'
@@ -426,7 +421,7 @@ export default function Home() {
               <h4 className='mb-8 text-xl font-semibold'>
                 Supporting Organizations
               </h4>
-              <div className='flex flex-wrap justify-center gap-8'>
+              <div className='mx-10 flex flex-wrap justify-center gap-8 md:mx-0'>
                 <Organization
                   name='Coding & Social Lounge'
                   description='Group of student workers engaging the local CS community'
