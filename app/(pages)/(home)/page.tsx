@@ -28,6 +28,7 @@ function TeamMember({
   personalUrl = '',
   size = 'regular',
   hideProfilePicture = false,
+  role = '',
 }: {
   name: string;
   imageUrl?: string;
@@ -37,6 +38,7 @@ function TeamMember({
   personalUrl?: string;
   size?: 'regular' | 'small';
   hideProfilePicture?: boolean;
+  role?: string;
 }) {
   const imageSizeClass = size === 'small' ? 'w-24 h-24' : 'w-32 h-32';
   const imageSize = size === 'small' ? 96 : 128;
@@ -73,6 +75,10 @@ function TeamMember({
       )}
 
       {!personalUrl && <h3 className={nameClass}>{name}</h3>}
+
+      {role && (
+        <div className='mb-1 text-sm font-semibold text-gray-600'>{role}</div>
+      )}
 
       <div className={yearClass + ' mb-1'}>
         {major} {classYear}
@@ -331,6 +337,7 @@ export default function Home() {
               imageUrl='/landing/kevin.png'
               personalUrl='https://kevinmonisit.me'
               linkedInUrl='https://www.linkedin.com/in/kevinmonisit/'
+              role='Lead Developer'
             />
 
             {/* Team Member 2 */}
@@ -340,6 +347,7 @@ export default function Home() {
               major='CS + Math'
               imageUrl='/landing/sanvi.jpg'
               linkedInUrl='https://www.linkedin.com/in/sanvi-patel-9763a021a/'
+              role='Developer'
             />
 
             {/* Team Member 3 */}
@@ -349,6 +357,7 @@ export default function Home() {
               linkedInUrl='https://www.linkedin.com/in/sibi-tiruchi'
               classYear="'25"
               major='CS'
+              role='Developer'
             />
           </div>
 
@@ -373,6 +382,7 @@ export default function Home() {
                   size='small'
                   hideProfilePicture
                   linkedInUrl='https://www.linkedin.com/in/liaojamie'
+                  role='Advocate'
                 />
 
                 <TeamMember
@@ -383,6 +393,7 @@ export default function Home() {
                   size='small'
                   linkedInUrl='https://www.linkedin.com/in/rushds'
                   hideProfilePicture
+                  role='Manager'
                 />
 
                 <TeamMember
@@ -394,6 +405,7 @@ export default function Home() {
                   hideProfilePicture
                   linkedInUrl='https://www.linkedin.com/in/hanz-makmur-378021a'
                   personalUrl='https://people.cs.rutgers.edu/~makmur/'
+                  role='Technical Advisor'
                 />
 
                 <TeamMember
@@ -404,6 +416,7 @@ export default function Home() {
                   size='small'
                   hideProfilePicture
                   linkedInUrl='https://www.linkedin.com/in/wflynch/'
+                  role='Technical Advisor'
                 />
               </div>
             </div>
