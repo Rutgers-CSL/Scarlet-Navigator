@@ -205,10 +205,9 @@ export default function Home() {
                   Easily find the best path towards graduation.
                 </h3>
                 <p className='mb-6 text-lg text-gray-600'>
-                  Automatically verify the prerequisite satisfaction of your
-                  schedule. Instantly track your core requirements. Calculate
-                  your credits and see your progress towards graduation. All in
-                  one place.
+                  Automatically verify the prerequisites of your schedule.
+                  Instantly track your core requirements. Calculate your credits
+                  and see your progress towards graduation. All in one place.
                 </p>
               </div>
               <div className='card flex aspect-video items-center justify-center rounded-lg bg-gray-100 p-6 shadow md:order-1'>

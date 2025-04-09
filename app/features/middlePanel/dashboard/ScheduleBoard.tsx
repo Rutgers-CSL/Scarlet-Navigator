@@ -273,7 +273,7 @@ export function ScheduleBoard({
                     columns={columns}
                     items={coursesBySemesterID[containerId]}
                     scrollable={scrollable}
-                    style={containerStyle}
+                    style={{}}
                     unstyled={minimal}
                     onRemove={() => handleEditSemester(containerId)}
                   >
