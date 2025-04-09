@@ -45,6 +45,9 @@ export async function POST(request: Request) {
     const q = formData.q || '*';
     const filter_by = formData.filter_by || '';
     const sort_by = formData.sort_by || '';
+    const searchMode = formData.searchMode || 'Name'; // Default to Name search
+    const page = parseInt(formData.page) || 1;
+    const per_page = parseInt(formData.per_page) || 10;
 
     // 3. Build the base URL + query params
     const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
@@ -58,7 +61,19 @@ export async function POST(request: Request) {
     // Construct a URL with the necessary query params
     const searchUrl = new URL(`${baseUrl}/master/documents/search`);
     searchUrl.searchParams.set('q', q);
-    searchUrl.searchParams.set('query_by', 'title,expandedTitle,courseString');
+
+    // Set query fields based on search mode
+    const queryFields =
+      searchMode === 'Core'
+        ? 'coreCodes.coreCode'
+        : 'title,expandedTitle,courseString';
+    searchUrl.searchParams.set('query_by', queryFields);
+
+    // Set pagination parameters
+    const offset = (page - 1) * per_page;
+    searchUrl.searchParams.set('page', page.toString());
+    searchUrl.searchParams.set('per_page', per_page.toString());
+
     if (filter_by) searchUrl.searchParams.set('filter_by', filter_by);
     if (sort_by) searchUrl.searchParams.set('sort_by', sort_by);
 
@@ -76,6 +91,7 @@ export async function POST(request: Request) {
     // 5. Parse the search JSON
     const searchData = await searchRes.json();
     const searchResults = searchData.hits || []; // Typically an array
+    const totalResults = searchData.found || 0; // Total number of matches found
 
     // 6. Transform your raw hits into Course objects
     const seenIds = new Set();
@@ -119,7 +135,13 @@ export async function POST(request: Request) {
         return true;
       });
 
-    return Response.json(courses, { status: 200 });
+    return Response.json(
+      {
+        courses,
+        totalResults,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error('Search courses API error:', error);
     return Response.json(

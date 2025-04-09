@@ -418,7 +418,52 @@ interface SetItemProps {
 
 function SetItem({ setResult, idx, evaluations }: SetItemProps) {
   const [showPossibleCourses, setShowPossibleCourses] = useState(false);
+  const [isCoreSet, setIsCoreSet] = useState(false);
+  const [coreCode, setCoreCode] = useState<string | null>(null);
   const requiredCount = getRequiredCoursesCount(setResult.ref, evaluations);
+
+  // Check if this is a core set when component mounts
+  useEffect(() => {
+    async function checkIfCoreSet() {
+      try {
+        const res = await fetch('/courseSets.yaml');
+        if (!res.ok) {
+          return;
+        }
+
+        const text = await res.text();
+        const { parse } = await import('yaml');
+        const courseSets = parse(text) as CourseSet;
+
+        // Check if this set is a core type
+        if (
+          courseSets[setResult.ref] &&
+          courseSets[setResult.ref].type === 'core'
+        ) {
+          setIsCoreSet(true);
+          setCoreCode(courseSets[setResult.ref].coreCode || null);
+        }
+      } catch (error) {
+        console.error('Error checking if core set:', error);
+      }
+    }
+
+    checkIfCoreSet();
+  }, [setResult.ref]);
+
+  const handleShowOptions = () => {
+    if (!isCoreSet) {
+      setShowPossibleCourses(!showPossibleCourses);
+    }
+
+    // For core sets, when "Show Options" is clicked, update search mode and search for that core
+    if (isCoreSet && coreCode && !showPossibleCourses) {
+      // Switch search mode to Core and search for this core
+      const auxiliaryStore = useAuxiliaryStore.getState();
+      auxiliaryStore.setSearchMode('Core');
+      auxiliaryStore.setSearchQuery(coreCode);
+    }
+  };
 
   return (
     <div key={idx} className='rounded border'>
@@ -430,10 +475,15 @@ function SetItem({ setResult, idx, evaluations }: SetItemProps) {
           <span className='font-medium'>{setResult.name || setResult.ref}</span>
           <button
             className='btn btn-xs btn-ghost mx-2 pb-0.5'
-            onClick={() => setShowPossibleCourses(!showPossibleCourses)}
+            onClick={handleShowOptions}
           >
             {showPossibleCourses ? 'Hide Options' : 'Show Options'}
           </button>
+          {isCoreSet && coreCode && (
+            <span className='text-base-content/70 ml-1 text-xs'>
+              (Core: {coreCode})
+            </span>
+          )}
         </div>
         <div className='flex flex-col items-end'>
           <span className='text-sm font-medium'>
@@ -458,7 +508,7 @@ function SetItem({ setResult, idx, evaluations }: SetItemProps) {
           setRef={setResult.ref}
           requiredCount={requiredCount}
         />
-        {showPossibleCourses && (
+        {showPossibleCourses && !isCoreSet && (
           <PossibleCourses
             setRef={setResult.ref}
             coursesUsed={setResult.coursesUsed}

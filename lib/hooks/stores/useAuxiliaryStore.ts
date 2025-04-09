@@ -14,6 +14,7 @@ type AuxiliaryStore = {
   panelDimensions: Record<string, number>;
   searchQuery: string;
   selectedCampus: string;
+  searchMode: 'Name' | 'Core';
   setRecentlyMovedToNewContainer: (flag: RefObject<boolean>) => void;
   setActiveID: (id: SemesterID) => void;
   setCurrentInfo: (
@@ -27,6 +28,7 @@ type AuxiliaryStore = {
   getPanelDimension: (key: string, defaultValue: number) => number;
   setSearchQuery: (query: string) => void;
   setSelectedCampus: (campus: string) => void;
+  setSearchMode: (mode: 'Name' | 'Core') => void;
 };
 
 /**
@@ -44,6 +46,7 @@ const useAuxiliaryStore = create<AuxiliaryStore>()(
       panelDimensions: {},
       searchQuery: '',
       selectedCampus: 'NB', // Default to New Brunswick
+      searchMode: 'Name', // Default to name search
       setRecentlyMovedToNewContainer: (flag: RefObject<boolean>) =>
         set({ recentlyMovedToNewContainer: flag }),
       setActiveID: (id: SemesterID) => {
@@ -79,6 +82,9 @@ const useAuxiliaryStore = create<AuxiliaryStore>()(
       setSelectedCampus: (campus: string) => {
         set({ selectedCampus: campus });
       },
+      setSearchMode: (mode: 'Name' | 'Core') => {
+        set({ searchMode: mode });
+      },
     }),
     {
       name: AUXILIARY_STORAGE_KEY,
@@ -87,6 +93,7 @@ const useAuxiliaryStore = create<AuxiliaryStore>()(
         activeTab: state.activeTab,
         leftPanelTab: state.leftPanelTab,
         selectedCampus: state.selectedCampus,
+        searchMode: state.searchMode,
       }),
     }
   )
