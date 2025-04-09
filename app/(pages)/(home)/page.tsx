@@ -453,7 +453,7 @@ export default function Home() {
               <Link
                 target='_blank'
                 href='https://github.com/Rutgers-CSL'
-                className='px-1 font-bold'
+                className='px-1 font-bold hover:underline hover:underline-offset-4'
               >
                 Scarlet Labs
               </Link>

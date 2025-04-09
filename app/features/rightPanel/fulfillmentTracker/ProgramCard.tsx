@@ -452,14 +452,16 @@ function SetItem({ setResult, idx, evaluations }: SetItemProps) {
   }, [setResult.ref]);
 
   const handleShowOptions = () => {
+    const auxiliaryStore = useAuxiliaryStore.getState();
     if (!isCoreSet) {
       setShowPossibleCourses(!showPossibleCourses);
+      auxiliaryStore.setSearchMode('Name');
+      auxiliaryStore.setSearchQuery(setResult.name);
     }
 
     // For core sets, when "Show Options" is clicked, update search mode and search for that core
     if (isCoreSet && coreCode && !showPossibleCourses) {
       // Switch search mode to Core and search for this core
-      const auxiliaryStore = useAuxiliaryStore.getState();
       auxiliaryStore.setSearchMode('Core');
       auxiliaryStore.setSearchQuery(coreCode);
     }
@@ -479,11 +481,6 @@ function SetItem({ setResult, idx, evaluations }: SetItemProps) {
           >
             {showPossibleCourses ? 'Hide Options' : 'Show Options'}
           </button>
-          {isCoreSet && coreCode && (
-            <span className='text-base-content/70 ml-1 text-xs'>
-              (Core: {coreCode})
-            </span>
-          )}
         </div>
         <div className='flex flex-col items-end'>
           <span className='text-sm font-medium'>
