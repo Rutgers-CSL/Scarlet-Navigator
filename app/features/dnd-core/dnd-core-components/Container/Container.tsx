@@ -68,7 +68,22 @@ export const Container = forwardRef(
       <div
         {...props}
         ref={ref as any}
-        style={{ ...style }}
+        style={
+          {
+            ...style,
+            '--columns': columns,
+          } as React.CSSProperties
+        }
+        className={classNames(
+          styles.Container,
+          'shadow-base-300 shadow-md',
+          unstyled && styles.unstyled,
+          horizontal && styles.horizontal,
+          hover && styles.hover,
+          placeholder && styles.placeholder,
+          scrollable && styles.scrollable,
+          shadow && styles.shadow
+        )}
         onClick={onClick}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
