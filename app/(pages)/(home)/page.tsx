@@ -333,7 +333,7 @@ export default function Home() {
               name='Kevin Monisit'
               classYear="'25"
               major='CS'
-              imageUrl='/landing/kevi.png'
+              imageUrl='/landing/kevin.png'
               personalUrl='https://kevinmonisit.me'
               linkedInUrl='https://www.linkedin.com/in/kevinmonisit/'
               role='Team Lead'
