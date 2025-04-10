@@ -29,6 +29,7 @@ function TeamMember({
   size = 'regular',
   hideProfilePicture = false,
   role = '',
+  hideIcons = false,
 }: {
   name: string;
   imageUrl?: string;
@@ -39,15 +40,21 @@ function TeamMember({
   size?: 'regular' | 'small';
   hideProfilePicture?: boolean;
   role?: string;
+  hideIcons?: boolean;
 }) {
   const imageSizeClass = size === 'small' ? 'w-24 h-24' : 'w-40 h-40';
   const imageSize = size === 'small' ? 96 : 160;
   const nameClass = size === 'small' ? 'font-medium' : 'text-xl font-bold';
   const yearClass =
     size === 'small' ? 'text-sm text-gray-600' : 'text-gray-600 mb-2';
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className='flex w-48 flex-col items-center text-center'>
+    <div
+      className='relative flex w-48 flex-col items-center text-center'
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       {!hideProfilePicture && (
         <div
           className={`${imageSizeClass} overflow-hidden rounded-full ${size === 'small' ? 'mb-4' : 'mb-6'} relative bg-gray-200`}
@@ -67,7 +74,7 @@ function TeamMember({
           <Link
             href={personalUrl}
             target='_blank'
-            className='transition-colors hover:text-gray-700'
+            className='transition-colors hover:text-gray-700 hover:underline hover:underline-offset-2'
           >
             {name}
           </Link>
@@ -83,26 +90,57 @@ function TeamMember({
       <div className={yearClass + ' mb-1'}>
         {major} {classYear}
       </div>
-      <div className='mt-1 flex gap-2'>
-        {linkedInUrl && (
-          <Link
-            href={linkedInUrl}
-            className='text-gray-600 transition-colors hover:text-gray-900'
-            target='_blank'
-          >
-            <LinkedInIcon />
-          </Link>
-        )}
-        {personalUrl && (
-          <Link
-            href={personalUrl}
-            className='text-gray-600 transition-colors hover:text-gray-900'
-            target='_blank'
-          >
-            <Globe className='h-4 w-4' />
-          </Link>
-        )}
-      </div>
+
+      {/* Show always visible icons when hideIcons is false */}
+      {!hideIcons && (linkedInUrl || personalUrl) && (
+        <div className='flex gap-2'>
+          {linkedInUrl && (
+            <Link
+              href={linkedInUrl}
+              className='text-gray-600 transition-colors hover:text-gray-900'
+              target='_blank'
+            >
+              <LinkedInIcon />
+            </Link>
+          )}
+          {personalUrl && (
+            <Link
+              href={personalUrl}
+              className='text-gray-600 transition-colors hover:text-gray-900'
+              target='_blank'
+            >
+              <Globe className='h-4 w-4' />
+            </Link>
+          )}
+        </div>
+      )}
+
+      {/* Show hover-only icons when hideIcons is true */}
+      {hideIcons && (linkedInUrl || personalUrl) && (
+        <div
+          className='absolute right-0 -bottom-4 left-0 flex justify-center gap-2 transition-opacity duration-200'
+          style={{ opacity: isHovered ? 1 : 0 }}
+        >
+          {linkedInUrl && (
+            <Link
+              href={linkedInUrl}
+              className='text-gray-600 transition-colors hover:text-gray-900'
+              target='_blank'
+            >
+              <LinkedInIcon />
+            </Link>
+          )}
+          {personalUrl && (
+            <Link
+              href={personalUrl}
+              className='text-gray-600 transition-colors hover:text-gray-900'
+              target='_blank'
+            >
+              <Globe className='h-4 w-4' />
+            </Link>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -370,54 +408,88 @@ export default function Home() {
             </p>
 
             {/* Individual Contributors */}
-            <div className='mb-16'>
-              {/* <h4 className="text-xl font-semibold mb-8">Our Advocates</h4> */}
-              <div className='flex flex-wrap justify-center gap-8'>
+            <div className='mb-10'>
+              <div className='flex flex-wrap justify-center gap-8 space-y-4'>
                 <TeamMember
                   name='Jamie Liao'
                   major=''
-                  imageUrl='/placeholder.svg?height=96&width=96'
                   size='small'
                   hideProfilePicture
                   linkedInUrl='https://www.linkedin.com/in/liaojamie'
+                  // personalUrl='https://www.linkedin.com/in/liaojamie'
                   role='Program Director'
+                  hideIcons
                 />
 
                 <TeamMember
                   name='Rushd Syed'
                   major=''
-                  imageUrl='/placeholder.svg?height=96&width=96'
                   size='small'
                   linkedInUrl='https://www.linkedin.com/in/rushds'
+                  // personalUrl='https://www.linkedin.com/in/rushds'
                   hideProfilePicture
                   role='CSL Manager'
+                  hideIcons
                 />
 
                 <TeamMember
                   name='Hanz Makmur'
                   major=''
-                  imageUrl='/placeholder.svg?height=96&width=96'
                   size='small'
                   hideProfilePicture
                   linkedInUrl='https://www.linkedin.com/in/hanz-makmur-378021a'
-                  personalUrl='https://people.cs.rutgers.edu/~makmur/'
-                  role='Technical Advisor & Advocate'
+                  // personalUrl='https://people.cs.rutgers.edu/~makmur/'
+                  role='Technical Advisor'
+                  hideIcons
                 />
 
                 <TeamMember
                   name='Billy Flynch'
                   major=''
-                  imageUrl='/placeholder.svg?height=96&width=96'
                   size='small'
                   hideProfilePicture
                   linkedInUrl='https://www.linkedin.com/in/wflynch/'
+                  // personalUrl='https://www.linkedin.com/in/wflynch/'
                   role='Technical Advisor'
+                  hideIcons
+                />
+
+                <TeamMember
+                  name='Anirvin Vaddiyar'
+                  major=''
+                  size='small'
+                  hideProfilePicture
+                  linkedInUrl='https://www.linkedin.com/in/anirvin-vaddiyar'
+                  // personalUrl='https://www.linkedin.com/in/anirvin-vaddiyar'
+                  role='Feedback & Testing'
+                  hideIcons
+                />
+
+                <TeamMember
+                  name='Andrew Hong'
+                  major=''
+                  size='small'
+                  hideProfilePicture
+                  linkedInUrl='https://www.linkedin.com/in/andrew-h-452437184/'
+                  // personalUrl='https://www.linkedin.com/in/andrew-h-452437184/'
+                  role='Peer Advisor'
+                  hideIcons
+                />
+
+                <TeamMember
+                  name='Professor Masiello'
+                  major=''
+                  size='small'
+                  hideProfilePicture
+                  personalUrl='https://wp.rutgers.edu/people/writing-program-faculty/people-details/833-masiello-michael'
+                  role='Advisor'
+                  hideIcons
                 />
               </div>
             </div>
 
             {/* Organizations */}
-            <div>
+            {/* <div>
               <h4 className='mb-8 text-xl font-semibold'>
                 Supporting Organizations
               </h4>
@@ -429,10 +501,10 @@ export default function Home() {
 
                 <Organization
                   name='Rutgers Computer Science Department'
-                  // description=''
+                  description='Department of Computer Science at Rutgers University'
                 />
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
