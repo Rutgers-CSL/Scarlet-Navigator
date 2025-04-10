@@ -191,7 +191,7 @@ export default function Home() {
         } bg-white/80 backdrop-blur-md transition-all duration-200`}
       >
         <div className='navbar-start text-xl font-bold text-red-400'>
-          <Link href='/dashboard'>Scarlet Navigator</Link>
+          <Link href='/dashboard'>Scarlet&nbsp;Navigator</Link>
         </div>
         <div className='navbar-end invisible md:visible'>
           <div
@@ -336,15 +336,16 @@ export default function Home() {
             towards graduation.
           </p>
           <p className='mb-8 text-gray-600'>
-            This is a project brought to you by Scarlet Labs, an open-source
-            initiative by the Coding & Social Lounge.
+            This is a project brought to you by{' '}
+            <a className='italic'>Scarlet Labs</a>, an open-source initiative by
+            the <a className='font-semibold'>Coding & Social Lounge</a>.
           </p>
 
           <div className='divider' />
 
           <p className='text-gray-600'>
-            Feel free to read the research, ideas, and proposals behind the
-            project.
+            Feel free to read the original research, ideas, and proposal behind
+            the project.
             <br />
             <Link
               href='/ScarletNavWhitePaper.pdf'
@@ -399,12 +400,12 @@ export default function Home() {
           </div>
 
           {/* Special Thanks Section */}
-          <div className='mt-24'>
+          <div className='mx-10 mt-24'>
             <h3 className='mb-6 text-2xl font-bold md:text-4xl'>
               Special Thanks
             </h3>
             <p className='mx-auto mb-12 max-w-[700px] text-lg text-gray-600'>
-              Individuals who made this project possible
+              Individuals who helped shape this project
             </p>
 
             {/* Individual Contributors */}
@@ -417,7 +418,7 @@ export default function Home() {
                   hideProfilePicture
                   linkedInUrl='https://www.linkedin.com/in/liaojamie'
                   nameClickRedirect='https://www.linkedin.com/in/liaojamie'
-                  role='Program Director'
+                  role='Program Coordinator'
                   hideIcons
                 />
 
@@ -444,7 +445,7 @@ export default function Home() {
                 />
 
                 <TeamMember
-                  name='Billy Flynch'
+                  name='Billy Lynch'
                   major=''
                   size='small'
                   hideProfilePicture
@@ -490,38 +491,9 @@ export default function Home() {
                 />
               </div>
             </div>
-
-            {/* Organizations */}
-            {/* <div>
-              <h4 className='mb-8 text-xl font-semibold'>
-                Supporting Organizations
-              </h4>
-              <div className='mx-10 flex flex-wrap justify-center gap-8 md:mx-0'>
-                <Organization
-                  name='Coding & Social Lounge'
-                  description='Group of student workers engaging the local CS community'
-                />
-
-                <Organization
-                  name='Rutgers Computer Science Department'
-                  description='Department of Computer Science at Rutgers University'
-                />
-              </div>
-            </div> */}
           </div>
         </div>
       </section>
-
-      {/* CTA Section */}
-      {/* <section className="w-full py-24 border-t border-gray-200 bg-gray-100" >
-        <div className="container px-8 md:px-12 lg:px-16 max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl md:text-5xl font-bold mb-6">Ready to Get Started?</h2>
-          <p className="text-xl text-gray-600 mb-8">
-            Join thousands of Rutgers students who are planning their academic journey with Scarlet Navigator.
-          </p>
-          <button className="btn bg-red-400 text-white text-lg px-8 py-6 normal-case">Login with Google</button>
-        </div>
-      </section> */}
 
       {/* Footer */}
       <footer className='w-full border-t border-gray-200 bg-gray-100 py-12'>
@@ -540,6 +512,19 @@ export default function Home() {
               >
                 Scarlet Labs
               </Link>
+              and the{' '}
+              <Link
+                href='https://spec.cs.rutgers.edu/spaces/the-csl/'
+                target='_blank'
+                className='font-bold hover:underline hover:underline-offset-4'
+              >
+                CSL
+              </Link>
+              .
+            </p>
+            <p className='mb-4 text-gray-600'>
+              We are a small group of student workers dedicated to engaging the
+              CS community and enabling the success of Scarlet Knights.
             </p>
             <div className='mt-2 flex items-center gap-6'>
               <Link

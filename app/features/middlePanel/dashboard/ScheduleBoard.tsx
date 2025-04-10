@@ -199,8 +199,10 @@ export function ScheduleBoard({
       containerId
     );
 
+    const status = getStudentStatus(runningCredits);
+
     const studentStatus = showQuarterlyStudentTitlesOnSemesterTitles
-      ? ` - ${getStudentStatus(runningCredits)}`
+      ? ` - ${status}`
       : '';
 
     // Handle info button click
@@ -212,12 +214,17 @@ export function ScheduleBoard({
     // Use currentInfoID from the component scope instead of calling the hook here
     const isCurrentSemester = containerId === currentInfoID;
 
+    const indicatorColor = (() => {
+      if (status === 'Senior' || status === 'Junior') return 'bg-white';
+      return 'bg-neutral';
+    })();
+
     return (
       <div className='relative flex w-full items-center justify-between p-2'>
         {/* Indicator line for current semester */}
         <div className='absolute bottom-0 left-0 flex w-full justify-center'>
           <div
-            className={`bg-neutral h-1 transition-all duration-500 ${isCurrentSemester ? 'w-12' : 'w-0'}`}
+            className={`${indicatorColor} h-1 transition-all duration-500 ${isCurrentSemester ? 'w-12' : 'w-0'}`}
           />
         </div>
 
