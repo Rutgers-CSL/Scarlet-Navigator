@@ -460,7 +460,7 @@ export default function Home() {
                   size='small'
                   hideProfilePicture
                   linkedInUrl='https://www.linkedin.com/in/anirvin-vaddiyar'
-                  // personalUrl='https://www.linkedin.com/in/anirvin-vaddiyar'
+                  personalUrl='https://anirvinv.github.io/index.html'
                   role='Feedback & Testing'
                   hideIcons
                 />
@@ -471,7 +471,7 @@ export default function Home() {
                   size='small'
                   hideProfilePicture
                   linkedInUrl='https://www.linkedin.com/in/andrew-h-452437184/'
-                  // personalUrl='https://www.linkedin.com/in/andrew-h-452437184/'
+                  personalUrl='https://andrewhong.me/'
                   role='Peer Advisor'
                   hideIcons
                 />
