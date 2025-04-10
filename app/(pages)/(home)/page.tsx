@@ -73,7 +73,7 @@ function TeamMember({
 
       <h3 className={nameClass}>
         <Link
-          href={nameClickRedirect || personalUrl}
+          href={nameClickRedirect || personalUrl || linkedInUrl}
           target='_blank'
           className='transition-colors hover:text-gray-700 hover:underline hover:underline-offset-2'
         >
@@ -114,7 +114,7 @@ function TeamMember({
       )}
 
       {/* Show hover-only icons when hideIcons is true */}
-      {hideIcons && (linkedInUrl || personalUrl) && (
+      {hideIcons && linkedInUrl && personalUrl && (
         <div
           className='absolute right-0 -bottom-3 left-0 flex justify-center transition-opacity duration-200'
           style={{ opacity: isHovered ? 1 : 0 }}
@@ -300,14 +300,14 @@ export default function Home() {
             <div className='grid items-center gap-12 md:grid-cols-2'>
               <div className='text-center'>
                 <h3 className='mb-4 text-center text-2xl font-bold md:text-3xl'>
-                  Open source project.
+                  Free and open source.
                 </h3>
                 <p className='mb-6 text-lg text-gray-600'>
                   Written in TypeScript, Next.js, React, and Tailwind CSS.
                   Hosted on Cloudflare Pages. Contribute to the project on{' '}
                   <Link
                     href='https://github.com/scarletlabs/scarlet-navigator'
-                    className='text-red-400 hover:text-red-500 hover:underline hover:underline-offset-4'
+                    className='font-semibold text-red-400 hover:text-red-500 hover:underline hover:underline-offset-4'
                   >
                     GitHub
                   </Link>
