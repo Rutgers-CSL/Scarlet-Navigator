@@ -27,6 +27,7 @@ function TeamMember({
   linkedInUrl = '',
   personalUrl = '',
   size = 'regular',
+  nameClickRedirect = '',
   hideProfilePicture = false,
   role = '',
   hideIcons = false,
@@ -39,6 +40,7 @@ function TeamMember({
   personalUrl?: string;
   size?: 'regular' | 'small';
   hideProfilePicture?: boolean;
+  nameClickRedirect?: string;
   role?: string;
   hideIcons?: boolean;
 }) {
@@ -69,19 +71,15 @@ function TeamMember({
         </div>
       )}
 
-      {personalUrl && (
-        <h3 className={nameClass}>
-          <Link
-            href={personalUrl}
-            target='_blank'
-            className='transition-colors hover:text-gray-700 hover:underline hover:underline-offset-2'
-          >
-            {name}
-          </Link>
-        </h3>
-      )}
-
-      {!personalUrl && <h3 className={nameClass}>{name}</h3>}
+      <h3 className={nameClass}>
+        <Link
+          href={nameClickRedirect || personalUrl}
+          target='_blank'
+          className='transition-colors hover:text-gray-700 hover:underline hover:underline-offset-2'
+        >
+          {name}
+        </Link>
+      </h3>
 
       {role && (
         <div className='mb-1 text-sm font-semibold text-gray-600'>{role}</div>
@@ -118,27 +116,29 @@ function TeamMember({
       {/* Show hover-only icons when hideIcons is true */}
       {hideIcons && (linkedInUrl || personalUrl) && (
         <div
-          className='absolute right-0 -bottom-4 left-0 flex justify-center gap-2 transition-opacity duration-200'
+          className='absolute right-0 -bottom-3 left-0 flex justify-center transition-opacity duration-200'
           style={{ opacity: isHovered ? 1 : 0 }}
         >
-          {linkedInUrl && (
-            <Link
-              href={linkedInUrl}
-              className='text-gray-600 transition-colors hover:text-gray-900'
-              target='_blank'
-            >
-              <LinkedInIcon />
-            </Link>
-          )}
-          {personalUrl && (
-            <Link
-              href={personalUrl}
-              className='text-gray-600 transition-colors hover:text-gray-900'
-              target='_blank'
-            >
-              <Globe className='h-4 w-4' />
-            </Link>
-          )}
+          <div className='flex flex-row gap-2'>
+            {linkedInUrl && (
+              <Link
+                href={linkedInUrl}
+                className='text-gray-600 transition-colors hover:text-gray-900'
+                target='_blank'
+              >
+                <LinkedInIcon />
+              </Link>
+            )}
+            {personalUrl && (
+              <Link
+                href={personalUrl}
+                className='text-gray-600 transition-colors hover:text-gray-900'
+                target='_blank'
+              >
+                <Globe className='h-4 w-4' />
+              </Link>
+            )}
+          </div>
         </div>
       )}
     </div>
@@ -409,14 +409,14 @@ export default function Home() {
 
             {/* Individual Contributors */}
             <div className='mb-10'>
-              <div className='flex flex-wrap justify-center gap-8 space-y-4'>
+              <div className='flex flex-wrap justify-center gap-8'>
                 <TeamMember
                   name='Jamie Liao'
                   major=''
                   size='small'
                   hideProfilePicture
                   linkedInUrl='https://www.linkedin.com/in/liaojamie'
-                  // personalUrl='https://www.linkedin.com/in/liaojamie'
+                  nameClickRedirect='https://www.linkedin.com/in/liaojamie'
                   role='Program Director'
                   hideIcons
                 />
@@ -426,7 +426,7 @@ export default function Home() {
                   major=''
                   size='small'
                   linkedInUrl='https://www.linkedin.com/in/rushds'
-                  // personalUrl='https://www.linkedin.com/in/rushds'
+                  nameClickRedirect='https://www.linkedin.com/in/rushds'
                   hideProfilePicture
                   role='CSL Manager'
                   hideIcons
@@ -461,7 +461,8 @@ export default function Home() {
                   hideProfilePicture
                   linkedInUrl='https://www.linkedin.com/in/anirvin-vaddiyar'
                   personalUrl='https://anirvinv.github.io/index.html'
-                  role='Feedback & Testing'
+                  role='Technical Peer Advisor'
+                  nameClickRedirect='https://www.linkedin.com/in/anirvin-vaddiyar'
                   hideIcons
                 />
 
@@ -472,7 +473,8 @@ export default function Home() {
                   hideProfilePicture
                   linkedInUrl='https://www.linkedin.com/in/andrew-h-452437184/'
                   personalUrl='https://andrewhong.me/'
-                  role='Peer Advisor'
+                  role='Technical Peer Advisor'
+                  nameClickRedirect='https://www.linkedin.com/in/andrew-h-452437184/'
                   hideIcons
                 />
 
@@ -483,6 +485,7 @@ export default function Home() {
                   hideProfilePicture
                   personalUrl='https://wp.rutgers.edu/people/writing-program-faculty/people-details/833-masiello-michael'
                   role='Advisor'
+                  nameClickRedirect='https://wp.rutgers.edu/people/writing-program-faculty/people-details/833-masiello-michael'
                   hideIcons
                 />
               </div>
