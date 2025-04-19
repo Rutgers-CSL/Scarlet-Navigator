@@ -28,8 +28,9 @@ import {
   RIGHT_PANEL_DEFAULT_WIDTH,
 } from '@/lib/constants';
 import useMountStatus from '@/lib/hooks/useMountStatus';
-import DashboardSkeleton from '@/app/components/DashboardSkeleton';
+// import DashboardSkeleton from '@/app/(pages)/dashboard/components/DashboardSkeleton';
 import Link from 'next/link';
+import DashboardSkeleton from '@/app/(user)/dashboard/components/DashboardSkeleton';
 
 const Page: React.FC = () => {
   useKeyboardShortcuts();

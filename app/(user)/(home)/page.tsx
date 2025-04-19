@@ -183,7 +183,7 @@ export default function Home() {
   };
 
   return (
-    <div className='flex min-h-screen flex-col bg-white text-gray-900'>
+    <div className={`flex min-h-screen flex-col bg-white text-gray-900`}>
       {/* Navigation */}
       <div
         className={`navbar sticky top-0 z-50 px-8 ${

@@ -10,6 +10,17 @@
 }
 
 /*
+
+This is setup for the Nextra theme for documentation page.
+
+From: https://nextra.site/docs/advanced/tailwind-css
+*/
+
+/* Optional: import Nextra theme styles */
+@import 'nextra-theme-docs/style.css'; /* or nextra-theme-blog/style.css */
+@variant dark (&:where(.dark *));
+
+/*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still
   looks the same as it did with Tailwind CSS v3.

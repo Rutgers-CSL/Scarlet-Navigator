@@ -1,5 +1,3 @@
-import config from '@/next.config';
-
 /**
  * Application version inform tion
  * This should be updated when releas ing new versions
@@ -8,7 +6,7 @@ import config from '@/next.config';
 
 // Import version directly rather than from package.json
 // as Next.js may have issues with direct package.json imports
-export const APP_VERSION = config.env?.version || '0.0.1';
+export const APP_VERSION = '0.0.1';
 
 // Export other version-related utilities if needed
 export const isNewerVersion = (v1: string, v2: string): boolean => {
