@@ -2,7 +2,7 @@ import {
   useSettingsStore,
   type SettingsState,
 } from '@/lib/hooks/stores/useSettingsStore';
-import { formatLabel } from '@/app/(app)/dashboard/features/rightPanel/tabs/settings/utils';
+import { formatLabel } from '@/app/(app)/dashboard/panels/rightPanel/tabs/settings/utils';
 
 interface SettingsNumberInputProps {
   settingKey: Extract<keyof SettingsState['visuals'], string>;

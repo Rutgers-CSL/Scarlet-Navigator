@@ -13,7 +13,7 @@ import {
   SemesterID,
   SemesterOrder,
 } from '@/lib/types/models';
-import { COURSE_POOL_CONTAINER_ID } from '@/app/(app)/dashboard/features/leftPanel/tabs/CourseCreation';
+import { COURSE_POOL_CONTAINER_ID } from '@/app/(app)/dashboard/panels/leftPanel/tabs/CourseCreation';
 import { SEARCH_CONTAINER_ID, SEARCH_ITEM_DELIMITER } from '@/lib/constants';
 import useHistoryStore from './useHistoryStore';
 import { UniqueIdentifier } from '@dnd-kit/core';

@@ -1,11 +1,11 @@
 'use client';
 
-import RightPanel from './features/rightPanel/RightPanel';
-import LeftPanel from './features/leftPanel/LeftPanel';
-import { MiddlePanel } from './features/middlePanel/MiddlePanel';
-import { coordinateGetter } from './features/dnd-core/multipleContainersKeyboardCoordinates';
-import { customCollisionDetectionStrategy } from './features/dnd-core/dnd-utils';
-import useDragHandlers from './features/dnd-core/dnd-hooks/useDragHandlers';
+import RightPanel from './panels/rightPanel/RightPanel';
+import LeftPanel from './panels/leftPanel/LeftPanel';
+import { MiddlePanel } from './panels/middlePanel/MiddlePanel';
+import { coordinateGetter } from './dnd-core/multipleContainersKeyboardCoordinates';
+import { customCollisionDetectionStrategy } from './dnd-core/dnd-utils';
+import useDragHandlers from './dnd-core/dnd-hooks/useDragHandlers';
 import { CoursesBySemesterID } from '@/lib/types/models';
 import {
   DndContext,

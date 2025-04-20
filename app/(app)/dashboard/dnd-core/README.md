@@ -4,6 +4,10 @@
 
 This folder contains components that may look different from the rest of the components in this codebase. The reason for this is because the original drag and drop components come from a template showcasing DnD Kit, a wrapper for React DnD library that makes the drag and dropping of components more elegant. The codebase of that template had a lot of excess code that was not needed for this project, but I had to painstakingly refactor the code, organize the utility functions, and integrate it into this Next.js application.
 
+See here: https://codesandbox.io/examples/package/@dnd-kit/core
+
+Click on `react-dndkit-multiple-containers` example or https://codesandbox.io/p/sandbox/react-dndkit-multiple-containers-6wydy9.
+
 Because of these reasons, the code style of these components may look different---perhaps unusual or archaic. Please don't mind that!
 
 If you'd like to see the original template if you're thinking of some crazy feature, feel free to find the repo called something like Scarlet-Navigator-v2 on my GitHub profile, `kevinmonisit`. If you go back to the commit history, you'll most likely find it.

@@ -6,7 +6,7 @@ import NotesEditor from '@/app/(app)/dashboard/components/NotesEditor';
 import CoreList from '@/app/(app)/dashboard/components/CoreList';
 import { parsePreReqNotes } from '@/lib/utils/validation/prereqValidation';
 import { SEARCH_ITEM_DELIMITER, SEARCH_CONTAINER_ID } from '@/lib/constants';
-import { COURSE_POOL_CONTAINER_ID } from '@/app/(app)/dashboard/features/leftPanel/tabs/CourseCreation';
+import { COURSE_POOL_CONTAINER_ID } from '@/app/(app)/dashboard/panels/leftPanel/tabs/CourseCreation';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 import { Check } from 'lucide-react';
 

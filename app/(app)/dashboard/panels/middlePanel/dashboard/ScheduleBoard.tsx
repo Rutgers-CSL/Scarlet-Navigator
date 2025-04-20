@@ -15,19 +15,19 @@ import {
   SortingStrategy,
   rectSortingStrategy,
 } from '@dnd-kit/sortable';
-import SortableItem from '../../dnd-core/dnd-core-components/SortableItem/SortableItem';
-import useOverlayComponents from '../../dnd-core/dnd-hooks/useOverlayComponents';
-import DroppableContainer from '../../dnd-core/dnd-core-components/DroppableContainer/DroppableContainer';
+import SortableItem from '../../../dnd-core/dnd-core-components/SortableItem/SortableItem';
+import useOverlayComponents from '../../../dnd-core/dnd-hooks/useOverlayComponents';
+import DroppableContainer from '../../../dnd-core/dnd-core-components/DroppableContainer/DroppableContainer';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
-import useScheduleHandlers from '../../dnd-core/dnd-hooks/useScheduleHandlers';
+import useScheduleHandlers from '../../../dnd-core/dnd-hooks/useScheduleHandlers';
 import { EMPTY, PLACEHOLDER_ID } from '@/lib/constants';
 import { CoursesBySemesterID, CourseID } from '@/lib/types/models';
 import {
   calculateRunningCredits,
   getStudentStatus,
 } from '../../../../../../lib/utils/calculations/credits';
-import { getColor, dropAnimation } from '../../dnd-core/dnd-utils';
+import { getColor, dropAnimation } from '../../../dnd-core/dnd-utils';
 import NotesBox from './components/NotesBox';
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
 import MenuContainer from './components/MenuContainer';
@@ -309,7 +309,7 @@ export function ScheduleBoard({
                             containerId={containerId}
                             showCores
                             error={isInvalid}
-                            getIndex={(id) => {
+                            getIndex={() => {
                               return 0;
                             }}
                           />

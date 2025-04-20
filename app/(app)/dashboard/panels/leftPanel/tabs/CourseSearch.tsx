@@ -10,7 +10,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { SortableItem } from '@/app/(app)/dashboard/features/dnd-core/dnd-core-components/SortableItem';
+import { SortableItem } from '@/app/(app)/dashboard/dnd-core/dnd-core-components/SortableItem';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import { useShallow } from 'zustand/react/shallow';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
