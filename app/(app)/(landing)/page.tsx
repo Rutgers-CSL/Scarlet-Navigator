@@ -356,7 +356,7 @@ export default function Home() {
             the
             <Link
               href='/docs'
-              className='ml-1 font-semibold text-black underline'
+              className='ml-1 font-semibold text-gray-600 hover:text-gray-900 hover:underline hover:underline-offset-2'
             >
               documentation
             </Link>
