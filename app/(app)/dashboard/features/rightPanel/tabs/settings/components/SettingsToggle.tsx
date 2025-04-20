@@ -2,7 +2,7 @@ import {
   useSettingsStore,
   type SettingsState,
 } from '@/lib/hooks/stores/useSettingsStore';
-import { formatLabel } from '@/lib/utils';
+import { formatLabel } from '@/app/(app)/dashboard/features/rightPanel/tabs/settings/utils';
 
 interface SettingsToggleProps {
   settingKey: keyof SettingsState['visuals'];

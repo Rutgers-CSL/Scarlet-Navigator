@@ -4,7 +4,7 @@ import {
 } from '@/lib/hooks/stores/useSettingsStore';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import { useEffect } from 'react';
-import { calculateSemesterTitle } from '@/lib/utils/semesterTitle';
+import { calculateSemesterTitle } from '@/lib/utils/calculations/semesterTitle';
 
 export default function GeneralSettings() {
   const {

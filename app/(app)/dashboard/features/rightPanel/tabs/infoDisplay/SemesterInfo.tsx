@@ -6,11 +6,11 @@ import {
   calculateSemesterCredits,
   calculateRunningCredits,
   getStudentStatus,
-} from '@/app/(app)/dashboard/features/middlePanel/dashboard/utils/credits';
+} from '@/lib/utils/calculations/credits';
 import {
   calculateSemesterGPA,
   calculateCumulativeGPA,
-} from '@/app/(app)/dashboard/features/middlePanel/dashboard/utils/gpa';
+} from '@/lib/utils/calculations/gpa';
 import CoreList from '@/app/(app)/dashboard/components/CoreList';
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
 import { CourseID } from '@/lib/types/models';

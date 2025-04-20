@@ -7,8 +7,8 @@ import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import {
   calculateRunningCredits,
   getHeaderColorClass,
-} from '../../../middlePanel/dashboard/utils/credits';
-import { COURSE_POOL_CONTAINER_ID } from '../../../leftPanel/components/CourseCreation';
+} from '../../../../../../../lib/utils/calculations/credits';
+import { COURSE_POOL_CONTAINER_ID } from '../../../leftPanel/tabs/CourseCreation';
 import { useState } from 'react';
 
 export default function DroppableContainer({

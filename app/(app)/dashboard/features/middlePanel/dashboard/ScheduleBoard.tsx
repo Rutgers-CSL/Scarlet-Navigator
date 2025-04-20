@@ -23,7 +23,10 @@ import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 import useScheduleHandlers from '../../dnd-core/dnd-hooks/useScheduleHandlers';
 import { EMPTY, PLACEHOLDER_ID } from '@/lib/constants';
 import { CoursesBySemesterID, CourseID } from '@/lib/types/models';
-import { calculateRunningCredits, getStudentStatus } from './utils/credits';
+import {
+  calculateRunningCredits,
+  getStudentStatus,
+} from '../../../../../../lib/utils/calculations/credits';
 import { getColor, dropAnimation } from '../../dnd-core/dnd-utils';
 import NotesBox from './components/NotesBox';
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
@@ -34,7 +37,7 @@ import {
   validateScheduleBoard,
   CourseMap,
   ScheduleBoard as ValidationScheduleBoard,
-} from '@/lib/utils/prereqValidation';
+} from '@/lib/utils/validation/prereqValidation';
 
 interface Props {
   adjustScale?: boolean;

@@ -3,7 +3,7 @@ import { unstable_batchedUpdates } from 'react-dom';
 import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
-import { calculateSemesterTitle } from '@/lib/utils/semesterTitle';
+import { calculateSemesterTitle } from '@/lib/utils/calculations/semesterTitle';
 import { useShallow } from 'zustand/react/shallow';
 
 export default function useScheduleHandlers() {

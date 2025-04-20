@@ -1,4 +1,9 @@
-import { CourseID, CourseByID, CourseSet, Requirement } from '../types/models';
+import {
+  CourseID,
+  CourseByID,
+  CourseSet,
+  Requirement,
+} from '@/lib/types/models';
 
 /** A CourseMap is a dictionary of CourseID -> Course object. */
 type CourseMap = CourseByID;

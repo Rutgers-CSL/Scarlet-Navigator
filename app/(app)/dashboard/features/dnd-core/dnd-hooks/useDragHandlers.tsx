@@ -11,7 +11,7 @@ import {
   SEARCH_ITEM_DELIMITER,
   TRASH_ID,
 } from '@/lib/constants';
-import { COURSE_POOL_CONTAINER_ID } from '@/app/(app)/dashboard/features/leftPanel/components/CourseCreation';
+import { COURSE_POOL_CONTAINER_ID } from '@/app/(app)/dashboard/features/leftPanel/tabs/CourseCreation';
 import { useShallow } from 'zustand/react/shallow';
 
 export default function useDragHandlers(

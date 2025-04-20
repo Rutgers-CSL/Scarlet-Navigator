@@ -7,8 +7,8 @@ import { useScheduleStore } from '@/lib/hooks/stores/useScheduleStore';
 import {
   calculateSemesterCredits,
   calculateRunningCredits,
-} from '../../middlePanel/dashboard/utils/credits';
-import { COURSE_POOL_CONTAINER_ID } from '@/app/(app)/dashboard/features/leftPanel/components/CourseCreation';
+} from '../../../../../../lib/utils/calculations/credits';
+import { COURSE_POOL_CONTAINER_ID } from '@/app/(app)/dashboard/features/leftPanel/tabs/CourseCreation';
 
 export const COLUMNS_DEPRECATED_DO_NOT_USE = 5;
 

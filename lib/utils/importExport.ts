@@ -4,7 +4,10 @@ import { useSettingsStore } from '@/lib/hooks/stores/useSettingsStore';
 import { useNotesStore } from '@/lib/hooks/stores/useNotesStore';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 import useHistoryStore from '@/lib/hooks/stores/useHistoryStore';
-import { APP_VERSION, checkVersionCompatibility } from '@/lib/utils/version';
+import {
+  APP_VERSION,
+  checkVersionCompatibility,
+} from '@/lib/utils/validation/version';
 import {
   ALL_STORAGE_KEYS,
   SCHEDULE_STORAGE_KEY,

@@ -1,5 +1,5 @@
-import CourseCreation from './components/CourseCreation';
-import CourseSearch from './components/CourseSearch';
+import CourseCreation from './tabs/CourseCreation';
+import CourseSearch from './tabs/CourseSearch';
 import Link from 'next/link';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 

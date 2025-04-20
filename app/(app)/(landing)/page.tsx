@@ -21,7 +21,7 @@ function LinkedInIcon() {
 // TeamMember component for consistent team member display
 function TeamMember({
   name,
-  imageUrl = '/placeholder.svg?height=128&width=128',
+  imageUrl = '/',
   classYear = '',
   major,
   linkedInUrl = '',
@@ -212,6 +212,13 @@ export default function Home() {
           >
             Team
           </div>
+          {/* <div
+            className='btn btn-ghost'
+          >
+            <Link href="/docs">
+              Docs
+            </Link>
+          </div> */}
         </div>
       </div>
 
@@ -345,7 +352,15 @@ export default function Home() {
 
           <p className='text-gray-600'>
             Feel free to read the original research, ideas, and proposal behind
-            the project.
+            the project. For more in-depth and technical information, check out
+            the
+            <Link
+              href='/docs'
+              className='ml-1 font-semibold text-black underline'
+            >
+              documentation
+            </Link>
+            .
             <br />
             <Link
               href='/ScarletNavWhitePaper.pdf'

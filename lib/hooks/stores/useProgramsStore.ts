@@ -7,7 +7,7 @@ import { fetchProgramRequirementsAndCourseSets } from '@/lib/utils/fetchYAMLData
 import {
   evaluateAllRequirements,
   RequirementEvaluation,
-} from '@/lib/utils/programValidation';
+} from '@/lib/utils/validation/programValidation';
 
 export interface ProgramState {
   availablePrograms: string[]; // List of program file names (without extension)

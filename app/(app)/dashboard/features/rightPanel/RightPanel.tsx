@@ -1,6 +1,6 @@
-import InfoDisplay from './infoDisplay/InfoDisplay';
-import FulfillmentTracker from './fulfillmentTracker/FulfillmentTracker';
-import Settings from './settings/Settings';
+import InfoDisplay from './tabs/infoDisplay/InfoDisplay';
+import FulfillmentTracker from './tabs/fulfillmentTracker/FulfillmentTracker';
+import Settings from './tabs/settings/Settings';
 import useAuxiliaryStore from '@/lib/hooks/stores/useAuxiliaryStore';
 
 export default function RightPanel() {
