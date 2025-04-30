@@ -1,4 +1,5 @@
 import useHistoryStore from '@/lib/hooks/stores/useHistoryStore';
+import { signIn } from 'next-auth/react';
 import clsx from 'clsx';
 import { Undo2, Redo2 } from 'lucide-react';
 import { useState } from 'react';
@@ -45,6 +46,14 @@ function MenuContainer() {
             <span className='loading loading-spinner loading-sm'></span>
           ) : null}
           Sync
+        </button>
+      </li>
+      <li>
+        <button
+          onClick={() => signIn('google')}
+          className='btn btn-ghost btn-sm'
+        >
+          Log in
         </button>
       </li>
     </ul>

@@ -28,12 +28,15 @@ import {
   RIGHT_PANEL_DEFAULT_WIDTH,
 } from '@/lib/constants';
 import useMountStatus from '@/lib/hooks/useMountStatus';
-// import DashboardSkeleton from '@/app/(pages)/dashboard/components/DashboardSkeleton';
 import Link from 'next/link';
 import DashboardSkeleton from '@/app/(app)/dashboard/components/DashboardSkeleton';
+import { SessionProvider, useSession } from 'next-auth/react';
 
 const Page: React.FC = () => {
   useKeyboardShortcuts();
+  const { data: session } = useSession();
+  console.log(session);
+
   const { DragHandle: LeftDragHandle, dimensionValue: leftPanelWidth } =
     useDraggable({
       dimensionValueModifier: (delta) =>
@@ -157,4 +160,12 @@ const Page: React.FC = () => {
   );
 };
 
-export default Page;
+function PageAuthSessionWrapper() {
+  return (
+    <SessionProvider>
+      <Page />
+    </SessionProvider>
+  );
+}
+
+export default PageAuthSessionWrapper;
